@@ -1,0 +1,42 @@
+[
+  {
+    "tag_name": "v0.1.0-alpha.999",
+    "published_at": "2026-05-22T12:00:00Z",
+    "html_url": "https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.999",
+    "draft": false,
+    "assets": [
+      {
+        "name": "jik-v0.1.0-alpha.999-windows-x64.zip",
+        "browser_download_url": "https://example.com/jik-v0.1.0-alpha.999-windows-x64.zip"
+      },
+      {
+        "name": "jik-v0.1.0-alpha.999-linux-x64.tar.gz",
+        "browser_download_url": "https://example.com/jik-v0.1.0-alpha.999-linux-x64.tar.gz"
+      },
+      {
+        "name": "jik-language-tools-v0.1.0-alpha.999.vsix",
+        "browser_download_url": "https://example.com/jik-language-tools-v0.1.0-alpha.999.vsix"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.1.0-alpha.998",
+    "published_at": "2026-05-21T12:00:00Z",
+    "html_url": "https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.998",
+    "draft": false,
+    "assets": [
+      {
+        "name": "jik-v0.1.0-alpha.998-windows-x64.zip",
+        "browser_download_url": "https://example.com/jik-v0.1.0-alpha.998-windows-x64.zip"
+      },
+      {
+        "name": "jik-v0.1.0-alpha.998-linux-x64.tar.gz",
+        "browser_download_url": "https://example.com/jik-v0.1.0-alpha.998-linux-x64.tar.gz"
+      },
+      {
+        "name": "jik-language-tools-v0.1.0-alpha.998.vsix",
+        "browser_download_url": "https://example.com/jik-language-tools-v0.1.0-alpha.998.vsix"
+      }
+    ]
+  }
+]

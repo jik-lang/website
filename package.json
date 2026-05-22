@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-site.js",
+    "releases": "node scripts/update-releases.js",
+    "releases:test": "node scripts/update-releases.js --source test/fixtures/github-releases.json"
+  }
+}

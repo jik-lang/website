@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Install Jik</title>
+    <meta
+      name="description"
+      content="Download Jik releases and install the Jik compiler on Windows or Linux."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="index.html#overview">Overview</a>
+          <a href="install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="https://github.com/jik-lang/jik/blob/main/docs/index.md">Docs</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="container page-title">
+        <h1>Install Jik</h1>
+        <p>
+          Download a release archive for your platform, extract it, and run
+          <code>jik</code>. Releases are listed newest first.
+        </p>
+      </section>
+
+      <section id="latest" class="container section">
+        <h2>Latest Release</h2>
+        <!-- RELEASE_LATEST_START -->
+        <article class="release-card latest-release">
+          <div class="release-head">
+            <div>
+              <h3>v0.1.0-alpha.7</h3>
+              <p>Published May 22, 2026</p>
+            </div>
+            <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.7">Release notes</a>
+          </div>
+          <div class="download-grid">
+            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.7/jik-v0.1.0-alpha.7-windows-x64.zip">Windows x64 ZIP</a>
+            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.7/jik-v0.1.0-alpha.7-linux-x64.tar.gz">Linux x64 tar.gz</a>
+            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.7/jik-language-tools-v0.1.0-alpha.7.vsix">VS Code extension VSIX</a>
+          </div>
+        </article>
+        <!-- RELEASE_LATEST_END -->
+      </section>
+
+      <section class="container section">
+        <h2>Install Jik</h2>
+
+        <h3>Windows</h3>
+        <ol>
+          <li>Download the Windows x64 ZIP from the latest release.</li>
+          <li>Extract it to a stable location, for example <code>C:\tools\jik</code>.</li>
+          <li>Add that directory to your user or system <code>PATH</code>.</li>
+          <li>Open a new terminal and verify the compiler works.</li>
+        </ol>
+        <pre><code>jik help</code></pre>
+
+        <h3>Linux</h3>
+        <ol>
+          <li>Download and extract the Linux x64 archive into a directory owned by your user.</li>
+          <li>Add that directory to <code>PATH</code>.</li>
+          <li>Verify the compiler from a new shell.</li>
+        </ol>
+        <pre><code>mkdir -p "$HOME/.local/share/jik"
+curl -L -o /tmp/jik-linux-x64.tar.gz \
+  https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.7/jik-v0.1.0-alpha.7-linux-x64.tar.gz
+tar -xzf /tmp/jik-linux-x64.tar.gz -C "$HOME/.local/share/jik" --strip-components=1
+export PATH="$HOME/.local/share/jik:$PATH"
+jik help</code></pre>
+        <p>
+          Note: the Linux x64 archive requires glibc 2.34 or newer. On older WSL/Linux distributions, use a newer distro image or build Jik from source.
+          To make <code>jik</code> available in new terminals, add
+          <code>$HOME/.local/share/jik</code> to your shell startup file.
+        </p>
+
+      </section>
+
+      <section class="container section">
+        <h2>Configure a Host C Compiler</h2>
+        <p>
+          <code>jik run</code> and <code>jik build</code> need a host C compiler.
+          Configure one either by using the <code>--cc</code> CLI option or (recommended) by setting the <code>JIK_CC</code> environment variable.
+          For example, on Windows: <code>set JIK_CC=clang</code>
+        </p>
+      </section>
+
+      <section class="container section">
+        <h2>Test the Installation</h2>
+        <p>Create a file named <code>hello.jik</code>:</p>
+
+        <pre><code>func main():
+    println("Hello, Jik!")
+end</code></pre>
+
+        <p>
+          Run it with <code>jik run hello.jik</code>. If you do not want to use
+          <code>JIK_CC</code>, run it with <code>jik run hello.jik --cc clang</code>.
+        </p>
+      </section>
+
+      <section class="container section">
+        <h2>VS Code Extension</h2>
+        <p>
+          Download the <code>.vsix</code> file from the same release and install
+          it from VS Code's Extensions view, or from a terminal.
+        </p>
+        <pre><code>code --install-extension jik-language-tools-*.vsix</code></pre>
+      </section>
+
+      <section class="container section">
+        <h2>All Releases</h2>
+        <div class="release-list">
+          <!-- RELEASE_LIST_START -->
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.7</h3>
+                <p>Published May 22, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.7">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.7/jik-v0.1.0-alpha.7-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.7/jik-v0.1.0-alpha.7-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.7/jik-language-tools-v0.1.0-alpha.7.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.6</h3>
+                <p>Published May 20, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.6">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.6/jik-v0.1.0-alpha.6-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.6/jik-v0.1.0-alpha.6-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.6/jik-language-tools-v0.1.0-alpha.6.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.5</h3>
+                <p>Published May 18, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.5">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.5/jik-v0.1.0-alpha.5-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.5/jik-v0.1.0-alpha.5-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.5/jik-language-tools-v0.1.0-alpha.5.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.4</h3>
+                <p>Published May 15, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.4">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.4/jik-v0.1.0-alpha.4-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.4/jik-v0.1.0-alpha.4-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.4/jik-language-tools-v0.1.0-alpha.4.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.3</h3>
+                <p>Published May 11, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.3">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.3/jik-v0.1.0-alpha.3-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.3/jik-v0.1.0-alpha.3-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.3/jik-language-tools-v0.1.0-alpha.3.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.2</h3>
+                <p>Published April 26, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.2">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.2/jik-v0.1.0-alpha.2-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.2/jik-v0.1.0-alpha.2-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.2/jik-language-tools-v0.1.0-alpha.2.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.1</h3>
+                <p>Published April 26, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.1">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.1/jik-v0.1.0-alpha.1-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.1/jik-v0.1.0-alpha.1-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.1/jik-language-tools-v0.1.0-alpha.1.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.0</h3>
+                <p>Published April 25, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.0">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.0/jik-v0.1.0-alpha.0-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.0/jik-v0.1.0-alpha.0-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.0/jik-language-tools-v0.1.0-alpha.0.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+          <!-- RELEASE_LIST_END -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+      </div>
+    </footer>
+  </body>
+</html>

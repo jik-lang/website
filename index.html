@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jik Programming Language</title>
+    <meta
+      name="description"
+      content="Jik is a readable systems programming language with region-based memory management that compiles to C."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="index.html#overview">Overview</a>
+          <a href="install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="https://github.com/jik-lang/jik/blob/main/docs/index.md">Docs</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="intro container">
+        <div class="intro-logo">
+          <img src="assets/jik-logo-mark.png" alt="Jik logo">
+        </div>
+        <div class="intro-copy">
+          <h1>Jik</h1>
+          <p class="tagline">
+            A readable programming language with region-based memory management
+            that compiles to C.
+          </p>
+          <p class="links cta-links">
+            <a class="button primary" href="install.html#latest">Download latest release</a>
+            <a
+              class="button secondary"
+              href="https://codespaces.new/jik-lang/jik?quickstart=1"
+              title="Open a ready-to-use Jik development environment"
+            >Try in GitHub Codespaces</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="examples" class="container section">
+        <h2>Examples</h2>
+        <div class="example-panel">
+          <label class="example-picker" for="example-select">
+            <select id="example-select">
+              <option value="config">Parsing a small config</option>
+              <option value="errors">Error handling</option>
+              <option value="variants">Variants</option>
+              <option value="regions">Caller-selected region</option>
+              <option value="newton">Newton's method</option>
+              <option value="hello">Hello, Jik!</option>
+            </select>
+          </label>
+          <pre class="code-block"><code id="example-code" class="language-jik"></code></pre>
+        </div>
+      </section>
+
+      <section id="overview" class="container section">
+        <h2>What Jik Is Built For</h2>
+        <div class="principle-grid">
+          <article>
+            <h3>Simple and Readable Code</h3>
+            <p>
+              Jik is statically typed, but keeps common programs concise with
+              type inference, optional annotations, and straightforward syntax.
+            </p>
+          </article>
+          <article>
+            <h3>Practical Language Features</h3>
+            <p>
+              Vectors, dictionaries, options, variants, error handling, modules, and a
+              small standard library give Jik the building blocks for writing real programs.
+            </p>
+          </article>
+          <article>
+            <h3>Region-Based Memory</h3>
+            <p>
+              Composite values are allocated into explicit regions that
+              determine lifetime, avoiding garbage collection while preventing
+              invalid cross-region use.
+            </p>
+          </article>
+          <article>
+            <h3>Predictable C Output</h3>
+            <p>
+              Jik uses a source-to-C compilation model, producing readable C
+              that can be inspected, debugged, and built with existing
+              toolchains.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="docs" class="container section">
+        <h2>Documentation</h2>
+        <ul class="doc-list">
+          <li>
+            <a href="https://github.com/jik-lang/jik/blob/main/docs/overview.md">Language overview</a>
+            <span>Tour of syntax, types, modules, memory management, error handling, and other things.</span>
+          </li>
+          <li>
+            <a href="https://github.com/jik-lang/jik/blob/main/docs/overview/08-memory-management.md">Memory management</a>
+            <span>Region allocation, local regions, explicit allocation targets, and returning composite values.</span>
+          </li>
+          <li>
+            <a href="https://github.com/jik-lang/jik/blob/main/docs/overview/18-standard-library.md">Standard library</a>
+            <span>The Jik standard library reference.</span>
+          </li>
+          <li>
+            <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+            <span>Complete example programs from the repository.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="container section">
+        <h2>Status</h2>
+        <p>
+          Jik is currently in the 0.1.x stabilization phase. The near-term work
+          is compiler correctness, support library fixes, standard library
+          growth, more tests, and real programs to validate the implementation.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
