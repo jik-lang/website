@@ -268,7 +268,9 @@ p {
 }
 
 .example-panel .code-block {
+  height: 26rem;
   margin: 0;
+  overflow: auto;
   color: #f2f4f8;
   background: #20242c;
   border-width: 1px 0 0;
@@ -537,5 +539,9 @@ p {
 
   .download-grid {
     grid-template-columns: 1fr;
+  }
+
+  .example-panel .code-block {
+    height: 20rem;
   }
 }
