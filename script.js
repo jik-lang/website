@@ -20,6 +20,12 @@ func main():
             settings[key] = value
         end
     end
+    
+    host := settings["host"]
+    port := settings["port"]
+    if host is Some and port is Some:
+        println("connecting to ", host?, ":", must string::to_int(port?))
+    end
 end`,
 
   errors: `throws func safe_div(x, y):
@@ -35,12 +41,17 @@ func show_div(x, y):
     except:
         println("cannot divide ", x, " by ", y, ": ", error_msg())
     end
+end
+
+func main():
+    show_div(3, 2)
+    show_div(2, 0)
 end`,
 
   variants: `variant Packet:
     ID: int
     TEXT: String
-    BYTES: Vec[char]
+    NUMS: Vec[int]
 end
 
 func inspect(pkt):
@@ -49,9 +60,18 @@ func inspect(pkt):
             println("id packet: ", id)
         case Packet.TEXT{text}:
             println("text packet: ", text)
-        case Packet.BYTES{bytes}:
-            println("length of bytes packet: ", len(bytes))
+        case Packet.NUMS{nums}:
+            println("nums packet, len = ", len(nums), ", first = ", nums[0])
     end
+end
+
+func main():
+    pkt := Packet.ID{41}
+    println("raw id: ", pkt[Packet.ID])
+    inspect(pkt)
+
+    inspect(Packet.TEXT{"hello"})
+    inspect(Packet.NUMS{[10, 20, 30]})
 end`,
 
   regions: `struct Person:
@@ -59,36 +79,96 @@ end`,
     age: int
 end
 
-func make_person(name, age, r: Region) -> Person:
-    return Person{name = name, age = age}[r]
+func make_person(name, age, r: Region):
+    p := Person{name = name, age = age}[r]
+    return p
 end
 
 func main():
-    p := make_person("Alice", 30, _)
-    println(p.name)
+    p := make_person("Methusalem", 100, _)
+    println(p)
 end`,
 
-  newton: `use "jik/math"
-
-struct NewtonResult:
-    root: double
-    converged: bool
-    xs: Vec[double]
+  primes: `// Sieve of Eratosthenes
+func sieve(n, r):
+    is_prime := [n + 1 of true][r]
+    is_prime[0] = false
+    is_prime[1] = false
+    p := 2
+    while p * p <= n:
+        if is_prime[p]:
+            i := p * p
+            while i <= n:
+                is_prime[i] = false
+                i = i + p
+            end
+        end
+        p = p + 1
+    end
+    return is_prime
 end
 
-func solve(x0: double, tol: double, max_steps: int, r: Region) -> NewtonResult:
-    xs := [0 of 0.0][r]
-    x := x0
-    push(xs, x)
-    for step = 0, max_steps:
-        fx := math::cos(x) - x
-        if math::abs(fx) <= tol:
-            return NewtonResult{root = x, converged = true, xs = xs}[r]
+func main():
+    n := 100
+    res := sieve(n, _)
+    println("Primes up to ", n, ":")
+    for i = 2, n:
+        if res[i]:
+            print(i, ", ")
         end
-        x = x - fx / (-math::sin(x) - 1.0)
-        push(xs, x)
     end
-    return NewtonResult{root = x, converged = false, xs = xs}[r]
+end`,
+
+  counts: `// Count lines, words, and bytes in a text file.
+use "jik/io"
+use "jik/char"
+
+
+struct Counts:
+    lines: int
+    words: int
+    bytes: int
+end
+
+func count_text(s: String, r: Region) -> Counts:
+    lines := 0
+    words := 0
+    bytes := len(s)
+    in_word := false
+
+    for i = 0, len(s):
+        c := s[i]
+        if c == '\\n':
+            lines = lines + 1
+        end
+        if char::isspace(c):
+            in_word = false
+        elif not in_word:
+            words = words + 1
+            in_word = true
+        end
+    end
+
+    return Counts{
+        lines = lines,
+        words = words,
+        bytes = bytes
+    }[r]
+end
+
+func main(args):
+    if len(args) < 2:
+        println("usage: word_count <file>")
+    else:
+        path := args[1]
+        text := must io::read_file(path, _)
+        counts := count_text(text, _)
+
+        println("file:  ", path)
+        println("lines: ", counts.lines)
+        println("words: ", counts.words)
+        println("bytes: ", counts.bytes)
+    end
 end`
 };
 
