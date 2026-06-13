@@ -28,7 +28,7 @@
       <section class="container page-title">
         <h1>Jik Packages</h1>
         <p>
-          Official Jik packages live in the
+          Official Jik packages can be found in the
           <a href="https://github.com/jik-lang/jik-packages">jik-packages repository</a>.
           Clone the repository, point Jik at it, and import packages from your programs.
         </p>
@@ -87,6 +87,21 @@ git pull</code></pre>
           <code>JIK_PKG_PATH</code>, such as
           <code>$HOME/.local/share/jik-packages</code>.
         </p>
+      </section>
+
+      <section class="container section">
+        <h2>Use a Specific Package Repository Version</h2>
+        <p>
+          Because <code>JIK_PKG_PATH</code> points at a local Git checkout, you
+          can use normal Git commands to switch the package repository to a
+          specific tag, branch, or commit. Package repository versions are
+          separate from Jik compiler versions.
+        </p>
+
+        <pre><code>cd C:\tools\jik-packages
+git fetch --tags
+git checkout &lt;tag-or-commit&gt;
+</code></pre>
       </section>
     </main>
 
