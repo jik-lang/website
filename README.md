@@ -48,6 +48,7 @@ Commit `install.html` after regenerating it.
 
 - `index.html` - homepage
 - `install.html` - install instructions and generated release list
+- `packages.html` - official package setup and usage instructions
 - `styles.css` - site styling
 - `script.js` - syntax highlighting and examples dropdown
 - `assets/` - logo images

@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const pages = ["index.html", "install.html"];
+const pages = ["index.html", "install.html", "packages.html"];
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8").trimEnd();

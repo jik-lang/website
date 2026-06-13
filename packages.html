@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jik Packages</title>
+    <meta
+      name="description"
+      content="Set up and use official packages for the Jik programming language."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="index.html#overview">Overview</a>
+          <a href="install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="https://github.com/jik-lang/jik/blob/main/docs/index.md">Docs</a>
+          <a href="packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="container page-title">
+        <h1>Jik Packages</h1>
+        <p>
+          Official Jik packages live in the
+          <a href="https://github.com/jik-lang/jik-packages">jik-packages repository</a>.
+          Clone the repository, point Jik at it, and import packages from your programs.
+        </p>
+      </section>
+
+      <section class="container section">
+        <h2>Set the Package Path</h2>
+        <p>
+          Jik resolves official packages from the directory configured by
+          <code>JIK_PKG_PATH</code>. Set it to the root of a local
+          <code>jik-packages</code> checkout.
+        </p>
+
+        <h3>Windows</h3>
+        <pre><code>git clone https://github.com/jik-lang/jik-packages C:\tools\jik-packages
+set JIK_PKG_PATH=C:\tools\jik-packages
+jik env</code></pre>
+
+        <h3>Linux</h3>
+        <pre><code>git clone https://github.com/jik-lang/jik-packages "$HOME/.local/share/jik-packages"
+export JIK_PKG_PATH="$HOME/.local/share/jik-packages"
+jik env</code></pre>
+
+        <p>
+          <code>jik env</code> prints the resolved package path as
+          <code>pkg_path=&lt;path&gt;</code>.
+        </p>
+      </section>
+
+      <section class="container section">
+        <h2>Import a Package</h2>
+        <p>
+          Import packages by path from the configured package root. For example:
+        </p>
+
+        <pre><code>use "pkg/toml"</code></pre>
+
+        <p>
+          Package names and examples are listed in the
+          <a href="https://github.com/jik-lang/jik-packages">jik-packages repository</a>.
+        </p>
+      </section>
+
+      <section class="container section">
+        <h2>Update Packages</h2>
+        <p>
+          Pull the latest package changes from the checkout when you want to update
+          your local package set.
+        </p>
+
+        <pre><code>cd C:\tools\jik-packages
+git pull</code></pre>
+
+        <p>
+          On Linux, use the directory you chose for
+          <code>JIK_PKG_PATH</code>, such as
+          <code>$HOME/.local/share/jik-packages</code>.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>
