@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fs - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="../overview/01-introduction.html">1. Introduction</a>
+          <a href="../overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="../overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="../overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="../overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="../overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="../overview/07-structs.html">7. Structs</a>
+          <a href="../overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="../overview/09-enumerations.html">9. Enumerations</a>
+          <a href="../overview/10-options.html">10. Options</a>
+          <a href="../overview/11-variants.html">11. Variants</a>
+          <a href="../overview/12-vectors.html">12. Vectors</a>
+          <a href="../overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="../overview/14-control-flow.html">14. Control Flow</a>
+          <a href="../overview/15-error-handling.html">15. Error handling</a>
+          <a href="../overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="../overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="fs">fs</h1>
+<p>Filesystem utilities.</p>
+<p>This module provides filesystem object and directory operations.</p>
+<h2 id="types">Types</h2>
+<p>_None._</p>
+<h2 id="functions">Functions</h2>
+<h3 id="exists-foreign-path-string-bool"><code>exists(foreign path: String) -&gt; bool</code></h3>
+<p>Return whether a filesystem path exists.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Filesystem path.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> if the path exists, otherwise <code>false</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="is-file-foreign-path-string-bool"><code>is_file(foreign path: String) -&gt; bool</code></h3>
+<p>Return whether a filesystem path refers to a regular file.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Filesystem path.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> only for regular files.</li>
+</ul>
+<p>---</p>
+<h3 id="is-dir-foreign-path-string-bool"><code>is_dir(foreign path: String) -&gt; bool</code></h3>
+<p>Return whether a filesystem path refers to a directory.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Filesystem path.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> only for directories.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-mkdir-foreign-path-string-void"><code>throws mkdir(foreign path: String) -&gt; void</code></h3>
+<p>Create a directory.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Directory path.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-mkdir-all-foreign-path-string-void"><code>throws mkdir_all(foreign path: String) -&gt; void</code></h3>
+<p>Create a directory path and any missing parents.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Directory path.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-remove-file-foreign-path-string-void"><code>throws remove_file(foreign path: String) -&gt; void</code></h3>
+<p>Remove a file.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - File path.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-remove-dir-foreign-path-string-void"><code>throws remove_dir(foreign path: String) -&gt; void</code></h3>
+<p>Remove an empty directory.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Directory path.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-remove-dir-all-foreign-path-string-void"><code>throws remove_dir_all(foreign path: String) -&gt; void</code></h3>
+<p>Remove a directory tree recursively.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Directory path.</li>
+</ol>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Implemented in Jik by composing <code>read_dir</code>, predicates, and removal primitives.</li>
+  <li>Symlink-specific behavior is not guaranteed in v1.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-rename-foreign-old-path-string-foreign-new-path-string-void"><code>throws rename(foreign old_path: String, foreign new_path: String) -&gt; void</code></h3>
+<p>Rename or move a filesystem object.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign old_path: String</code> - Source path.</li>
+  <li><code>foreign new_path: String</code> - Destination path.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-copy-file-foreign-src-path-string-foreign-dst-path-string-void"><code>throws copy_file(foreign src_path: String, foreign dst_path: String) -&gt; void</code></h3>
+<p>Copy a file.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign src_path: String</code> - Source path.</li>
+  <li><code>foreign dst_path: String</code> - Destination path.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-read-dir-foreign-path-string-region-region-vec-string"><code>throws read_dir(foreign path: String, region: Region) -&gt; Vec[String]</code></h3>
+<p>Return the names of entries directly inside a directory.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - Directory path.</li>
+  <li><code>region: Region</code> - Allocation region for the returned vector and strings.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Directory entry names.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Entry names are returned without directory prefixes.</li>
+  <li>Entry ordering is platform-dependent.</li>
+</ul>
+<p>---</p>
+<h3 id="temp-dir-region-region-string"><code>temp_dir(region: Region) -&gt; String</code></h3>
+<p>Return the platform temporary directory path.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>region: Region</code> - Allocation region for the returned string.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Temporary directory path.</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

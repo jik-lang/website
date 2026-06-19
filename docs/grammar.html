@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jik Grammar Reference - Jik Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../index.html#overview">Overview</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="./index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="./index.html">Jik Docs</a>
+          <a href="./cli.html">Jik CLI Reference</a>
+          <a href="./grammar.html" aria-current="page">Jik Grammar Reference</a>
+          <a href="./known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="./overview.html">Jik Language Overview</a>
+          <a href="./overview/01-introduction.html">1. Introduction</a>
+          <a href="./overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="./overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./overview/07-structs.html">7. Structs</a>
+          <a href="./overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./overview/09-enumerations.html">9. Enumerations</a>
+          <a href="./overview/10-options.html">10. Options</a>
+          <a href="./overview/11-variants.html">11. Variants</a>
+          <a href="./overview/12-vectors.html">12. Vectors</a>
+          <a href="./overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="./overview/14-control-flow.html">14. Control Flow</a>
+          <a href="./overview/15-error-handling.html">15. Error handling</a>
+          <a href="./overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="jik-grammar-reference">Jik Grammar Reference</h1>
+<p>This document is an implementation-derived grammar reference for Jik. It is based on the current lexer and parser in <code>src/jik/lexer.c</code> and <code>src/jik/parser.c</code>.</p>
+<p>It is intended to describe the accepted surface syntax of the language. It is not yet a complete formal language specification, because some forms are resolved later during semantic analysis.</p>
+<h2 id="scope">Scope</h2>
+<p>semantically restricted.</p>
+<ul>
+  <li>This grammar describes syntax, not full typing or region semantics.</li>
+  <li>Some constructs are context-sensitive. In particular:
+<ul>
+  <li><code>Type.Member</code> may denote enum values or variant tags.</li>
+  <li><code>x[Tag]</code> may denote variant payload access only after semantic resolution.</li>
+  <li>allocation suffixes such as <code>[r]</code> and <code>[.x]</code> are syntactically regular, but</li>
+</ul></li>
+  <li>Newlines are significant between statements and after block headers.</li>
+</ul>
+<h2 id="lexical-structure">Lexical Structure</h2>
+<h3 id="comments">Comments</h3>
+<pre><code class="language-ebnf">comment ::= &quot;//&quot; { any-char-except-newline }</code></pre>
+<h3 id="identifiers">Identifiers</h3>
+<pre><code class="language-ebnf">identifier ::= letter { letter | digit | &quot;_&quot; } | &quot;_&quot;
+qualified_identifier ::= identifier [ &quot;::&quot; identifier ]</code></pre>
+<p>Notes:</p>
+<ul>
+  <li><code>_</code> is a reserved standalone token for the local region.</li>
+  <li><code>Vec</code>, <code>Dict</code>, <code>Option</code>, <code>Some</code>, and <code>None</code> are reserved keywords.</li>
+  <li>Identifiers are currently ASCII-only.</li>
+</ul>
+<h3 id="literals">Literals</h3>
+<pre><code class="language-ebnf">integer_literal ::= digit { digit }
+float_literal   ::= digit { digit } &quot;.&quot; digit { digit }
+                  | digit { digit } [ &quot;.&quot; digit { digit } ] exponent
+exponent        ::= (&quot;e&quot; | &quot;E&quot;) [ &quot;+&quot; | &quot;-&quot; ] digit { digit }
+
+char_literal    ::= &quot;'&quot; char-char &quot;'&quot;
+string_literal  ::= '&quot;' { string-char } '&quot;'
+ml_string       ::= '&quot;&quot;&quot;' { any-char } '&quot;&quot;&quot;'</code></pre>
+<p>Notes:</p>
+<p>while <code>.5</code> is not.</p>
+<ul>
+  <li>The current lexer requires a float to begin with a digit, so <code>0.5</code> is valid</li>
+  <li>Character escapes support <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\0</code>, <code>\xNN</code>, <code>\\</code>, <code>\'</code>, and <code>\&quot;</code>.</li>
+  <li>Ordinary string literals support <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\xNN</code>, <code>\\</code>, <code>\'</code>, and <code>\&quot;</code>.</li>
+  <li>Ordinary and multiline string literals may contain UTF-8 text.</li>
+  <li>Source files that contain non-ASCII text should be saved as UTF-8.</li>
+  <li>Ordinary string literals do not support <code>\0</code>; Jik strings are currently null-terminated.</li>
+  <li>String length, indexing, and slicing are byte-based.</li>
+</ul>
+<h3 id="embedded-c">Embedded C</h3>
+<pre><code class="language-ebnf">embed_block ::= &quot;@embed&quot; &quot;{&quot; identifier &quot;}&quot; newline
+                { any-line }
+                identifier newline?</code></pre>
+<p>The closing delimiter must appear alone on its line, apart from trailing whitespace.</p>
+<p>Embedded C is copied through to the generated C translation. Non-ASCII text in embedded C therefore remains dependent on the host C compiler's handling of C source encoding.</p>
+<h2 id="types">Types</h2>
+<pre><code class="language-ebnf">type_desc ::= named_type [ alloc_suffix ]
+            | &quot;Vec&quot; &quot;[&quot; type_desc &quot;]&quot; [ alloc_suffix ]
+            | &quot;Dict&quot; &quot;[&quot; type_desc &quot;]&quot; [ alloc_suffix ]
+            | &quot;Option&quot; &quot;[&quot; type_desc &quot;]&quot; [ alloc_suffix ]
+
+named_type ::= qualified_identifier</code></pre>
+<p>Named types include built-in names such as:</p>
+<ul>
+  <li><code>int</code></li>
+  <li><code>double</code></li>
+  <li><code>bool</code></li>
+  <li><code>char</code></li>
+  <li><code>String</code></li>
+  <li><code>Region</code></li>
+  <li><code>Site</code></li>
+</ul>
+<p>They also include user-defined <code>struct</code>, <code>enum</code>, and <code>variant</code> names.</p>
+<h2 id="allocation-suffixes">Allocation Suffixes</h2>
+<p>Composite literals and some type descriptions may be followed by an allocation suffix:</p>
+<pre><code class="language-ebnf">alloc_suffix ::= &quot;[&quot; identifier &quot;]&quot;
+               | &quot;[&quot; &quot;.&quot; identifier &quot;]&quot;</code></pre>
+<p>Examples:</p>
+<pre><code class="language-jik">Point{}[r]
+Point{}[.p]
+Some{&quot;x&quot;}[r]
+None[r]</code></pre>
+<p>The parser also accepts the local region value <code>_</code> as an ordinary expression, but allocation suffix syntax itself expects either <code>id</code> or <code>.id</code>.</p>
+<p>Allocation suffix syntax takes precedence immediately after composite literals. As a result, forms like <code>[1, 2][0]</code> are not parsed as direct subscripting of a literal. In the current language, composite temporaries must first be bound to a name before subscripting, member access, mutation, or iteration.</p>
+<h2 id="program-structure">Program Structure</h2>
+<pre><code class="language-ebnf">program ::= { newline | use_decl | global_decl | top_decl | variant_decl
+            | enum_decl | embed_block }</code></pre>
+<h3 id="imports">Imports</h3>
+<pre><code class="language-ebnf">use_decl ::= &quot;use&quot; string_literal [ &quot;as&quot; identifier ]</code></pre>
+<h3 id="globals">Globals</h3>
+<pre><code class="language-ebnf">global_decl ::= identifier &quot;:=&quot; expr</code></pre>
+<p>Top-level typed globals such as <code>x: int</code> are not parsed directly. The current parser accepts only top-level <code>:=</code> declarations.</p>
+<h3 id="top-level-declarations">Top-Level Declarations</h3>
+<pre><code class="language-ebnf">top_decl ::= decl_prefix ( func_decl | struct_decl )
+decl_prefix ::= { &quot;extern&quot; | &quot;throws&quot; | &quot;init&quot; }</code></pre>
+<p>Current parser restrictions:</p>
+<p>struct return type.</p>
+<ul>
+  <li><code>extern</code> and <code>throws</code> may prefix <code>func</code>.</li>
+  <li><code>extern init func ...</code> declares the default initializer for an opaque extern</li>
+  <li><code>init</code> is valid only with <code>extern func</code>.</li>
+  <li><code>extern</code> may prefix <code>struct</code>.</li>
+  <li><code>throws struct ...</code> is rejected.</li>
+</ul>
+<h3 id="functions">Functions</h3>
+<pre><code class="language-ebnf">func_decl ::= &quot;func&quot; identifier &quot;(&quot; [ params ] &quot;)&quot; [ &quot;-&gt;&quot; type_desc ] &quot;:&quot;
+              newline block &quot;end&quot;</code></pre>
+<p>Extern functions use a different form:</p>
+<pre><code class="language-ebnf">extern_func_decl ::= &quot;extern&quot; [ &quot;init&quot; | &quot;throws&quot; ] &quot;func&quot;
+                     identifier &quot;as&quot; identifier
+                     &quot;(&quot; [ extern_params ] &quot;)&quot;
+                     &quot;-&gt;&quot; type_desc</code></pre>
+<h3 id="parameters">Parameters</h3>
+<pre><code class="language-ebnf">params ::= param { &quot;,&quot; param }
+param  ::= [ &quot;foreign&quot; ] identifier [ &quot;:&quot; type_desc ]
+
+extern_params ::= extern_param { &quot;,&quot; extern_param }
+extern_param  ::= [ &quot;foreign&quot; ] identifier &quot;:&quot; type_desc</code></pre>
+<p>Notes:</p>
+<ul>
+  <li>Ordinary function parameters may omit type annotations.</li>
+  <li>Extern function parameters must have type annotations.</li>
+</ul>
+<h3 id="structs">Structs</h3>
+<pre><code class="language-ebnf">struct_decl ::= &quot;struct&quot; identifier &quot;:&quot; newline
+                { identifier &quot;:&quot; type_desc newline }
+                &quot;end&quot;
+
+extern_struct_decl ::= &quot;extern&quot; &quot;struct&quot; identifier &quot;as&quot; identifier</code></pre>
+<h3 id="variants">Variants</h3>
+<pre><code class="language-ebnf">variant_decl ::= &quot;variant&quot; identifier &quot;:&quot; newline
+                 { identifier &quot;:&quot; type_desc newline }
+                 &quot;end&quot;</code></pre>
+<h3 id="enums">Enums</h3>
+<pre><code class="language-ebnf">enum_decl ::= &quot;enum&quot; identifier &quot;:&quot; newline
+              { identifier newline }
+              &quot;end&quot;</code></pre>
+<h2 id="blocks-and-statements">Blocks and Statements</h2>
+<pre><code class="language-ebnf">block ::= { statement newline }</code></pre>
+<p>The current parser expects at least one newline after each statement in a block.</p>
+<h3 id="statements">Statements</h3>
+<pre><code class="language-ebnf">statement ::= return_stmt
+            | if_stmt
+            | match_stmt
+            | while_stmt
+            | for_stmt
+            | break_stmt
+            | continue_stmt
+            | try_stmt
+            | decl_stmt
+            | assign_stmt
+            | call_stmt
+            | must_call_stmt</code></pre>
+<pre><code class="language-ebnf">return_stmt    ::= &quot;return&quot; [ expr ]
+break_stmt     ::= &quot;break&quot;
+continue_stmt  ::= &quot;continue&quot;
+
+decl_stmt      ::= identifier &quot;:=&quot; expr
+                 | identifier &quot;:&quot; type_desc
+
+assign_stmt    ::= lvalue assign_op expr
+assign_op      ::= &quot;=&quot; | &quot;+=&quot; | &quot;-=&quot; | &quot;*=&quot; | &quot;/=&quot;
+
+call_stmt      ::= call_expr
+must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
+<p>Valid lvalues in the parser are:</p>
+<pre><code class="language-ebnf">lvalue ::= identifier
+         | primary &quot;.&quot; identifier
+         | primary &quot;[&quot; expr &quot;]&quot;</code></pre>
+<h3 id="if">If</h3>
+<pre><code class="language-ebnf">if_stmt ::= &quot;if&quot; expr &quot;:&quot; newline block
+            { &quot;elif&quot; expr &quot;:&quot; newline block }
+            [ &quot;else&quot; &quot;:&quot; newline block ]
+            &quot;end&quot;</code></pre>
+<h3 id="while">While</h3>
+<pre><code class="language-ebnf">while_stmt ::= &quot;while&quot; expr &quot;:&quot; newline block &quot;end&quot;</code></pre>
+<h3 id="for">For</h3>
+<pre><code class="language-ebnf">for_stmt ::= &quot;for&quot; identifier &quot;=&quot; expr &quot;,&quot; expr &quot;:&quot; newline block &quot;end&quot;
+           | &quot;for&quot; identifier &quot;in&quot; expr &quot;:&quot; newline block &quot;end&quot;
+           | &quot;for&quot; identifier &quot;,&quot; identifier &quot;in&quot; expr &quot;:&quot; newline block &quot;end&quot;</code></pre>
+<h3 id="try-except">Try / Except</h3>
+<pre><code class="language-ebnf">try_stmt ::= &quot;try&quot; ( call_expr | identifier &quot;:=&quot; call_expr )
+             &quot;:&quot; newline block
+             &quot;except&quot; &quot;:&quot; newline block
+             &quot;end&quot;</code></pre>
+<p>The parser currently permits only:</p>
+<ul>
+  <li>a direct call, or</li>
+  <li>a declaration initialized by a direct call</li>
+</ul>
+<p>after <code>try</code>.</p>
+<h3 id="match">Match</h3>
+<pre><code class="language-ebnf">match_stmt ::= &quot;match&quot; expr &quot;:&quot; newline
+               { case_clause }
+               &quot;end&quot;
+
+case_clause ::= &quot;case&quot; variant_pattern &quot;:&quot; newline block
+variant_pattern ::= qualified_identifier &quot;.&quot; identifier &quot;{&quot; identifier &quot;}&quot;</code></pre>
+<p>Current implementation note:</p>
+<ul>
+  <li><code>case Value.TAG{x}:</code> is the supported pattern form.</li>
+  <li>The parser expects a bound identifier payload in the case pattern.</li>
+</ul>
+<h2 id="expressions">Expressions</h2>
+<p>The parser uses the following precedence, from lowest to highest.</p>
+<h3 id="ternary">Ternary</h3>
+<pre><code class="language-ebnf">expr ::= ternary
+
+ternary ::= logical_or [ &quot;if&quot; expr &quot;else&quot; ternary ]</code></pre>
+<p>This yields expressions such as:</p>
+<pre><code class="language-jik">2 if x == 3 else 12</code></pre>
+<h3 id="logical-operators">Logical Operators</h3>
+<pre><code class="language-ebnf">logical_or  ::= logical_and { &quot;or&quot; logical_and }
+logical_and ::= is_expr { &quot;and&quot; is_expr }</code></pre>
+<h3 id="is"><code>is</code></h3>
+<pre><code class="language-ebnf">is_expr ::= comparison [ &quot;is&quot; is_target ]
+is_target ::= &quot;Some&quot;
+            | &quot;None&quot;
+            | qualified_identifier &quot;.&quot; identifier</code></pre>
+<p>Examples:</p>
+<pre><code class="language-jik">x is Some
+x is None
+v is Value.INT</code></pre>
+<h3 id="comparison-and-arithmetic">Comparison and Arithmetic</h3>
+<pre><code class="language-ebnf">comparison ::= term { (&quot;==&quot; | &quot;!=&quot; | &quot;&lt;&quot; | &quot;&gt;&quot; | &quot;&lt;=&quot; | &quot;&gt;=&quot;) term }
+term       ::= factor { (&quot;+&quot; | &quot;-&quot;) factor }
+factor     ::= unary { (&quot;*&quot; | &quot;/&quot; | &quot;%&quot;) unary }
+unary      ::= ( &quot;not&quot; | &quot;-&quot; | &quot;must&quot; ) unary | primary</code></pre>
+<h3 id="primary-expressions">Primary Expressions</h3>
+<pre><code class="language-ebnf">primary ::= atom { postfix }
+
+postfix ::= &quot;.&quot; identifier
+          | &quot;[&quot; expr &quot;]&quot;
+          | &quot;?&quot;</code></pre>
+<p>Examples:</p>
+<pre><code class="language-jik">point.x
+values[i]
+opt?
+v[Value.INT]</code></pre>
+<h3 id="atoms">Atoms</h3>
+<pre><code class="language-ebnf">atom ::= integer_literal
+       | float_literal
+       | char_literal
+       | &quot;true&quot;
+       | &quot;false&quot;
+       | string_literal [ alloc_suffix ]
+       | ml_string [ alloc_suffix ]
+       | &quot;Some&quot; &quot;{&quot; expr &quot;}&quot; [ alloc_suffix ]
+       | &quot;None&quot; [ alloc_suffix ]
+       | qualified_identifier
+       | call_expr
+       | struct_literal [ alloc_suffix ]
+       | variant_literal [ alloc_suffix ]
+       | &quot;(&quot; expr &quot;)&quot;
+       | vector_literal [ alloc_suffix ]
+       | dict_literal [ alloc_suffix ]
+       | &quot;.&quot; identifier
+       | &quot;_&quot;</code></pre>
+<h3 id="calls">Calls</h3>
+<pre><code class="language-ebnf">call_expr ::= qualified_identifier &quot;(&quot; [ args ] &quot;)&quot;
+args      ::= expr { &quot;,&quot; expr }</code></pre>
+<p>Special implementation rule:</p>
+<ul>
+  <li><code>unwrap(x)</code> is parsed specially and treated as equivalent to <code>x?</code>.</li>
+</ul>
+<h3 id="struct-literals">Struct Literals</h3>
+<pre><code class="language-ebnf">struct_literal ::= qualified_identifier &quot;{&quot;
+                   [ struct_field { &quot;,&quot; struct_field } ]
+                   &quot;}&quot;
+
+struct_field ::= identifier &quot;=&quot; expr</code></pre>
+<h3 id="variant-literals">Variant Literals</h3>
+<pre><code class="language-ebnf">variant_literal ::= qualified_identifier &quot;.&quot; identifier &quot;{&quot;
+                    [ expr ]
+                    &quot;}&quot;</code></pre>
+<p>Examples:</p>
+<pre><code class="language-jik">Value.INT{3}
+Value.TEXT{&quot;hi&quot;}[r]
+Value.INT{}</code></pre>
+<h3 id="vector-literals">Vector Literals</h3>
+<pre><code class="language-ebnf">vector_literal ::= &quot;[&quot; expr &quot;of&quot; expr &quot;]&quot;
+                 | &quot;[&quot; expr { &quot;,&quot; expr } &quot;]&quot;</code></pre>
+<p>Examples:</p>
+<pre><code class="language-jik">[10 of 0]
+[1, 2, 3]</code></pre>
+<h3 id="dictionary-literals">Dictionary Literals</h3>
+<pre><code class="language-ebnf">dict_literal ::= &quot;{&quot;
+                 [ dict_entry { &quot;,&quot; dict_entry } [ &quot;,&quot; ] ]
+                 &quot;}&quot;
+
+dict_entry ::= expr &quot;:&quot; expr</code></pre>
+<p>Keys are checked semantically and must be of type <code>String</code>.</p>
+<h2 id="semantic-resolution-notes">Semantic Resolution Notes</h2>
+<p>These forms are parsed first and refined later:</p>
+<p>enum value during semantic analysis.</p>
+<p>variant tag marker during semantic analysis.</p>
+<p>variant payload access only after semantic resolution.</p>
+<ul>
+  <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an</li>
+  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten as a</li>
+  <li><code>value[VariantName.TAG]</code> is syntactically a subscript expression and becomes</li>
+</ul>
+<h2 id="current-implementation-gaps-and-constraints">Current Implementation Gaps and Constraints</h2>
+<p>are not part of the current parser.</p>
+<ul>
+  <li>Top-level typed globals are not currently parsed.</li>
+  <li><code>match</code> supports the current <code>case Variant.Tag{name}:</code> form; richer patterns</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../script.js"></script>
+</body>
+</html>

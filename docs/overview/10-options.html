@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10. Options - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html" aria-current="page">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="10-options">10. Options</h1>
+<p><code>Option[T]</code> is used when a value of type <code>T</code> may or may not be present.</p>
+<h3 id="10-1-creating-options">10.1 Creating options</h3>
+<p>An option has two states:</p>
+<ul>
+  <li><code>Some{value}</code> means a value is present</li>
+  <li><code>None</code> means no value is present</li>
+</ul>
+<p>Examples:</p>
+<pre><code class="language-jik">a := Some{3}
+b: Option[int]
+c: Option[String]</code></pre>
+<p><code>a</code> has type <code>Option[int]</code>. Both <code>b</code> and <code>c</code> default to <code>None</code>.</p>
+<p>When writing <code>None</code> directly, the payload type must be known from context:</p>
+<pre><code class="language-jik">x: Option[int]
+x = None</code></pre>
+<h3 id="10-2-checking-options">10.2 Checking options</h3>
+<p>Use <code>is Some</code> and <code>is None</code>:</p>
+<pre><code class="language-jik">item := Some{&quot;hello&quot;}
+
+if item is Some:
+    println(&quot;present&quot;)
+end
+
+if item is None:
+    println(&quot;missing&quot;)
+end</code></pre>
+<p>These checks always produce <code>bool</code>.</p>
+<h3 id="10-3-extracting-the-payload">10.3 Extracting the payload</h3>
+<p>If <code>x</code> has type <code>Option[T]</code>, then <code>x?</code> has type <code>T</code>:</p>
+<pre><code class="language-jik">item := Some{7}
+println(item?)</code></pre>
+<p>Applying <code>?</code> to <code>None</code> is a runtime error, so it is usually used after an <code>is Some</code> check when absence is possible. Another way to extract the payload is to use the builtin function <code>unwrap</code>, so <code>unwrap(x)</code> is equivalent to <code>x?</code>.</p>
+<h3 id="10-4-common-uses">10.4 Common uses</h3>
+<p>Options are the natural way to model:</p>
+<ul>
+  <li>dictionary lookup results</li>
+  <li>recursive links such as <code>next: Option[Node]</code></li>
+</ul>
+<p>Examples:</p>
+<pre><code class="language-jik">ages: Dict[int]
+ages[&quot;Alice&quot;] = 31
+
+if ages[&quot;Alice&quot;] is Some:
+    println(ages[&quot;Alice&quot;]?)
+end</code></pre>
+<pre><code class="language-jik">struct Node:
+    next: Option[Node]
+end</code></pre>
+<p>Recursive struct and variant cycles must pass through <code>Option[...]</code>. Direct cycles such as <code>next: Node</code> or <code>items: Vec[Node]</code> are compile errors.</p>
+<p>---</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

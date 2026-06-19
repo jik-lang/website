@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>15. Error handling - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html" aria-current="page">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="15-error-handling">15. Error handling</h1>
+<p>Jik uses <strong>throwing functions</strong> and structured handling at the call site. The current model is centered around four language constructs:</p>
+<ul>
+  <li><code>throws func</code> marks a function as one which may fail</li>
+  <li><code>fail(String[, int])</code> marks failure inside a throwing function</li>
+  <li><code>try ... except ... end</code> handles a failure locally</li>
+  <li><code>must f(...)</code> requires a throwing call to succeed</li>
+</ul>
+<p>Errors are therefore handled as <strong>control flow</strong>.</p>
+<h3 id="15-1-declaring-a-throwing-function">15.1 Declaring a throwing function</h3>
+<p>A function which may fail must be declared with <code>throws func</code>:</p>
+<pre><code class="language-jik">throws func div_safe(x, y):
+    if y == 0:
+        fail(&quot;division by 0&quot;)
+    end
+    return x / y
+end</code></pre>
+<p>Inside such a function, <code>fail(...)</code> marks the operation as failed. <code>fail(msg)</code> uses the default error code <code>1</code>, while <code>fail(msg, code)</code> lets you set an explicit integer error code. <code>fail(...)</code> also terminates the current control-flow path. Any statement that follows <code>fail(...)</code> in the same block is unreachable and is a compile error.</p>
+<h3 id="15-2-handling-failures-with-try-except">15.2 Handling failures with <code>try / except</code></h3>
+<p>A throwing call can be wrapped in a <code>try</code> block:</p>
+<pre><code class="language-jik">try x := div_safe(3, 0):
+    print(&quot;ok: &quot;, x)
+except:
+    print(&quot;error&quot;)
+end</code></pre>
+<p>If the call succeeds, execution continues in the <code>try</code> body. If it fails, the <code>except</code> branch runs instead.</p>
+<p>The variable introduced in <code>try x := ...</code> is only valid in the <code>try</code> body. Referring to it inside <code>except</code> or after the entire <code>try/except/end</code> construct is a compile error.</p>
+<p>If the throwing function returns nothing, we simply write:</p>
+<pre><code class="language-jik">try foo():
+    print(&quot;OK&quot;)
+except:
+    print(&quot;err&quot;)
+end</code></pre>
+<h3 id="15-3-requiring-success-with-must">15.3 Requiring success with <code>must</code></h3>
+<p>When a failure does not need to be handled separately, use <code>must</code>:</p>
+<pre><code class="language-jik">x := must div_safe(10, 2)</code></pre>
+<p><code>must</code> calls a throwing function and panics if the call results in an error.</p>
+<h3 id="15-4-inspecting-the-current-error">15.4 Inspecting the current error</h3>
+<p>Inside an <code>except</code> block, the current error can be inspected with:</p>
+<ul>
+  <li><code>error_msg([Region]) -&gt; String</code></li>
+  <li><code>error_code() -&gt; int</code></li>
+</ul>
+<p><code>error_msg()</code> may be called with no argument, in which case the local region <code>_</code> is used.</p>
+<p>Example:</p>
+<pre><code class="language-jik">try result := div_safe(10, 0):
+    println(&quot;result = &quot;, result)
+except:
+    println(&quot;failed: &quot;, error_msg())
+    println(&quot;code = &quot;, error_code())
+end</code></pre>
+<h3 id="15-5-example">15.5 Example</h3>
+<pre><code class="language-jik">throws func div_safe(x, y):
+    if y == 0:
+        fail(&quot;division by 0&quot;)
+    end
+    return x / y
+end
+
+func main():
+    try result := div_safe(10, 0):
+        println(&quot;result = &quot;, result)
+    except:
+        println(&quot;division failed&quot;)
+    end
+
+    ok := must div_safe(10, 2)
+    println(ok)
+end</code></pre>
+<p>---</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

@@ -22,33 +22,30 @@ On Windows PowerShell, this also works:
 npm.cmd run build
 ```
 
-## Update Releases
+## Update After a Jik Release
 
-Release cards on `install.html` are generated from GitHub releases:
-
-```powershell
-npm.cmd run releases
-```
-
-To test without publishing a real Jik release:
+After publishing a new Jik release, regenerate the website content:
 
 ```powershell
-npm.cmd run releases:test
+npm.cmd run update
 ```
 
-Then restore real release data:
+This updates the generated documentation pages and release cards. To test the
+flow with fixtures:
 
 ```powershell
-npm.cmd run releases
+npm.cmd run update:test
 ```
 
-Commit `install.html` after regenerating it.
+Commit `install.html` and the generated `docs/` HTML files after regenerating
+them.
 
 ## Files
 
 - `index.html` - homepage
 - `install.html` - install instructions and generated release list
 - `packages.html` - official package setup and usage instructions
+- `docs/` - generated documentation pages
 - `styles.css` - site styling
 - `script.js` - syntax highlighting and examples dropdown
 - `assets/` - logo images

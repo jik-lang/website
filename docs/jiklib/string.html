@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>string - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="../overview/01-introduction.html">1. Introduction</a>
+          <a href="../overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="../overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="../overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="../overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="../overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="../overview/07-structs.html">7. Structs</a>
+          <a href="../overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="../overview/09-enumerations.html">9. Enumerations</a>
+          <a href="../overview/10-options.html">10. Options</a>
+          <a href="../overview/11-variants.html">11. Variants</a>
+          <a href="../overview/12-vectors.html">12. Vectors</a>
+          <a href="../overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="../overview/14-control-flow.html">14. Control Flow</a>
+          <a href="../overview/15-error-handling.html">15. Error handling</a>
+          <a href="../overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="../overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="string">string</h1>
+<p>String utilities.</p>
+<p><code>String</code> stores UTF-8 bytes, but the operations in this module are byte-based. Lengths, indices, and slices refer to byte offsets, not Unicode characters.</p>
+<h2 id="types">Types</h2>
+<p>_None._</p>
+<h2 id="functions">Functions</h2>
+<h3 id="concat-foreign-left-string-foreign-right-string-region-region-string"><code>concat(foreign left: String, foreign right: String, region: Region) -&gt; String</code></h3>
+<p>Concatenate two strings.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign left: String</code> - Left string.</li>
+  <li><code>foreign right: String</code> - Right string.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Concatenated string.</li>
+</ul>
+<p>---</p>
+<h3 id="ends-with-foreign-s-string-foreign-suffix-string-bool"><code>ends_with(foreign s: String, foreign suffix: String) -&gt; bool</code></h3>
+<p>Return whether <code>s</code> ends with <code>suffix</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>foreign suffix: String</code> - Suffix to check.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> if <code>s</code> ends with <code>suffix</code>, otherwise <code>false</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="find-foreign-s-string-foreign-needle-string-int"><code>find(foreign s: String, foreign needle: String) -&gt; int</code></h3>
+<p>Find the first occurrence of <code>needle</code> in <code>s</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>foreign needle: String</code> - Substring to search for.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>First match byte index or <code>-1</code>.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Returns the start byte index of the first match, or <code>-1</code> if no match exists.</li>
+</ul>
+<p>---</p>
+<h3 id="join-foreign-parts-vec-string-foreign-delim-string-r-region-string"><code>join(foreign parts: Vec[String], foreign delim: String, r: Region) -&gt; String</code></h3>
+<p>Join strings from <code>parts</code> with <code>delim</code> inserted between adjacent elements.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign parts: Vec[String]</code> - Input string parts.</li>
+  <li><code>foreign delim: String</code> - Delimiter string.</li>
+  <li><code>r: Region</code> - Allocation region for the joined string.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A newly allocated joined string.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>If <code>parts</code> is empty, the function returns an empty string.</li>
+</ul>
+<p>---</p>
+<h3 id="replace-foreign-s-string-foreign-needle-string-foreign-repl-string-region-region-string"><code>replace(foreign s: String, foreign needle: String, foreign repl: String, region: Region) -&gt; String</code></h3>
+<p>Replace all occurrences of <code>needle</code> in <code>s</code> with <code>repl</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>foreign needle: String</code> - Substring to replace.</li>
+  <li><code>foreign repl: String</code> - Replacement substring.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A newly allocated string with all matches replaced.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>If <code>needle</code> is empty, the function returns a copy of <code>s</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="copy-foreign-s-string-region-region-string"><code>copy(foreign s: String, region: Region) -&gt; String</code></h3>
+<p>Copy a string into a different allocation region.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A newly allocated string in the destination region.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-slice-foreign-s-string-from-int-to-int-region-region-string"><code>throws slice(foreign s: String, from: int, to: int, region: Region) -&gt; String</code></h3>
+<p>Return a substring of <code>s</code> from byte index <code>start</code> (inclusive) to byte index <code>end</code> (exclusive).</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>from: int</code> - Start byte index (inclusive).</li>
+  <li><code>to: int</code> - End byte index (exclusive).</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A newly allocated substring.</li>
+</ul>
+<p>---</p>
+<h3 id="split-foreign-s-string-foreign-delim-string-r-region-vec-string"><code>split(foreign s: String, foreign delim: String, r: Region) -&gt; Vec[String]</code></h3>
+<p>Split a string by a delimiter.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Input string.</li>
+  <li><code>foreign delim: String</code> - Delimiter string.</li>
+  <li><code>r: Region</code> - Allocation region for the output vector.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A vector of tokens.</li>
+</ul>
+<p>---</p>
+<h3 id="starts-with-foreign-s-string-foreign-prefix-string-bool"><code>starts_with(foreign s: String, foreign prefix: String) -&gt; bool</code></h3>
+<p>Return whether <code>s</code> starts with <code>prefix</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>foreign prefix: String</code> - Prefix to check.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> if <code>s</code> starts with <code>prefix</code>, otherwise <code>false</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-to-double-s-string-double"><code>throws to_double(s: String) -&gt; double</code></h3>
+<p>Convert a string to a double.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>s: String</code> - Input string.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Parsed double value.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-to-int-s-string-int"><code>throws to_int(s: String) -&gt; int</code></h3>
+<p>Convert a string to an integer.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>s: String</code> - Input string.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Parsed integer value.</li>
+</ul>
+<p>---</p>
+<h3 id="trim-foreign-s-string-region-region-string"><code>trim(foreign s: String, region: Region) -&gt; String</code></h3>
+<p>Return a copy of <code>s</code> with leading and trailing whitespace removed.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Trimmed string.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Whitespace is classified using <code>char::isspace</code>.</li>
+  <li>Whitespace classification is byte-based.</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

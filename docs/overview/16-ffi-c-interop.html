@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>16. Foreign Function Interface (C interop) - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html" aria-current="page">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="16-foreign-function-interface-c-interop">16. Foreign Function Interface (C interop)</h1>
+<p>Within Jik, one can embed C code and expose it through a foreign function interface, using the <code>extern</code> keyword. One can expose functions and structs. Extern structs are opaque handle types. Their fields are not visible to Jik, so construction and access must go through extern functions.</p>
+<h3 id="16-1-extern-functions">16.1 Extern functions</h3>
+<p>Extern functions are declared like so:</p>
+<pre><code class="language-jik">extern func impl_adder as adder(x: int, y: int) -&gt; int</code></pre>
+<p>This assumes that <code>impl_adder</code> is either available through the Jik support library (<code>core.h</code>), or that it is embedded within Jik code, like so:</p>
+<pre><code class="language-jik">@embed{C_END}
+
+int32_t
+impl_adder(int32_t x, int32_t y)
+{
+    return x + y;
+}
+
+C_END</code></pre>
+<p>Here, <code>C_END</code> is a user-defined label which marks the end of embedded C code. The idea is that this label should not be contained in any of the C code, so it can correctly be processed by the Jik compiler.</p>
+<p>One can then use it like any other function:</p>
+<pre><code class="language-jik">assert(adder(3, 2) == 5)</code></pre>
+<h3 id="16-2-extern-structs">16.2 Extern structs</h3>
+<p>Regarding structs, here is an example:</p>
+<pre><code class="language-jik">extern struct impl_Point as Point
+extern func impl_Point_new as point_new(x: double, y: double, region: Region) -&gt; Point
+extern func impl_Point_x as point_x(p: Point) -&gt; double
+
+@embed{C_END}
+
+typedef struct impl_Point {
+    double x;
+    double y;
+} impl_Point;
+
+impl_Point *
+impl_Point_new(double x, double y, JikRegion *r)
+{
+    impl_Point *p = jik_region_alloc(r, sizeof(impl_Point));
+    p-&gt;x = x;
+    p-&gt;y = y;
+    return p;
+}
+
+double
+impl_Point_x(impl_Point *p)
+{
+    return p-&gt;x;
+}
+
+
+C_END
+</code></pre>
+<p>Typically, when creating composite objects, we need to pass a region where they should be allocated.</p>
+<p>Extern structs cannot be read or modified the same way as non-extern structs, since they are opaque. Field access and mutation must be exposed through a specifically constructed API, as demonstrated above.</p>
+<h3 id="16-3-default-initialization-for-extern-structs">16.3 Default initialization for extern structs</h3>
+<p>Some extern structs have a meaningful empty value. These can declare one extern function as the type's default initializer:</p>
+<pre><code class="language-jik">extern struct impl_Buffer as Buffer
+
+extern init func impl_Buffer_new as
+    new(region: Region) -&gt; Buffer</code></pre>
+<p>An <code>extern init func</code> must:</p>
+<ul>
+  <li>return an extern struct type</li>
+  <li>take exactly one <code>Region</code> parameter</li>
+  <li>not be <code>throws</code></li>
+  <li>be the only init function declared for that extern struct type</li>
+</ul>
+<p>The public function name is not special. <code>new</code> is only a convention; the <code>init</code> marker is what makes the function a default initializer.</p>
+<p>When an extern struct has an init function, default construction uses it:</p>
+<pre><code class="language-jik">b1: Buffer
+b2 := Buffer{}</code></pre>
+<p>Both declarations above are lowered as if they called the marked init function with the current allocation region:</p>
+<pre><code class="language-jik">b := new(_)</code></pre>
+<p>Only empty construction is allowed. Extern structs are still opaque, so a fielded construction such as <code>Buffer{x = 1}</code> is invalid.</p>
+<p>Extern structs without an init function cannot be default-constructed:</p>
+<pre><code class="language-jik">f: io::File // error because io::File has no extern init function</code></pre>
+<p>---</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

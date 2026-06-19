@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5. Values and Types - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html" aria-current="page">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="5-values-and-types">5. Values and Types</h1>
+<p>Jik has a small core of built-in types, upon which richer data types can be built. Types in Jik are divided into two categories - Primitives and Composites. Composite types are always dynamically allocated.</p>
+<h3 id="5-1-primitive-types">5.1 Primitive types</h3>
+<ul>
+  <li><strong>Integers</strong>: <code>0</code>, <code>1</code>, <code>42</code>, <code>-7</code>
+<ul>
+  <li>type name: <code>int</code></li>
+  <li>translates to C type: <code>int32_t</code></li>
+</ul></li>
+  <li><strong>Doubles</strong>: <code>3.22</code>, <code>0.5</code>, <code>3e-5</code>
+<ul>
+  <li>type name: <code>double</code></li>
+  <li>translates to C type: <code>double</code></li>
+</ul></li>
+  <li><strong>Booleans</strong>: <code>true</code>, <code>false</code>
+<ul>
+  <li>type name: <code>bool</code></li>
+  <li>translates to C type: <code>bool</code></li>
+</ul></li>
+  <li><strong>Characters</strong>: <code>'a'</code>, <code>'+'</code>, <code>'['</code>
+<ul>
+  <li>type name: <code>char</code></li>
+  <li>translates to C type: <code>unsigned char</code></li>
+  <li><code>char</code> is a single-byte value; it is not a Unicode code-point type</li>
+</ul></li>
+</ul>
+<h3 id="5-2-composite-types">5.2 Composite types</h3>
+<p>Composite types are specific because they are allocated in dynamic memory. Jik handles memory management with regions, where these types are allocated. More on that topic in the next section.</p>
+<ul>
+  <li><strong>Strings</strong>: <code>&quot;fubar&quot;</code>
+<ul>
+  <li>type name: <code>String</code></li>
+  <li>translates to C type defined in the Jik support library</li>
+  <li>strings store UTF-8 bytes</li>
+  <li>ordinary string literals support <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\xNN</code>, <code>\\</code>, <code>\'</code>, and <code>\&quot;</code></li>
+  <li>ordinary and multiline string literals may contain UTF-8 text</li>
+  <li>source files that contain non-ASCII string text should be saved as UTF-8</li>
+  <li>string length, indexing, and slicing are byte-based</li>
+  <li>strings are currently NUL-terminated, so ordinary string literals do not support embedded <code>\0</code></li>
+</ul></li>
+  <li><strong>Options</strong>: <code>Option[T]</code>, <code>Some{3}</code>, <code>None</code>
+<ul>
+  <li>type name: <code>Option[T]</code></li>
+  <li>represents either a present value (<code>Some</code>) or no value (<code>None</code>)</li>
+</ul></li>
+  <li><strong>Vectors</strong>: <code>[1, 2, 3]</code>, <code>[10 of 1]</code>, <code>Vec[Person]</code>
+<ul>
+  <li>type name: <code>Vec[T]</code></li>
+  <li>translates to C type defined in the Jik support library</li>
+</ul></li>
+  <li><strong>Dictionaries</strong>: <code>{&quot;foo&quot;: 0.54, &quot;bar&quot;: 2.33}</code>, <code>Dict[double]</code>
+<ul>
+  <li>type name: <code>Dict[T]</code></li>
+  <li>string-keyed map from <code>String</code> keys to values of type <code>T</code></li>
+  <li>translates to C type defined in the Jik support library</li>
+</ul></li>
+  <li><strong>Structs</strong>
+<ul>
+  <li>type name: <code>&lt;struct_name&gt;</code></li>
+  <li>translates to C type defined in the Jik support library</li>
+</ul></li>
+  <li><strong>Variants</strong>
+<ul>
+  <li>type name: <code>&lt;variant_name&gt;</code></li>
+  <li>translates to C type defined in the Jik support library</li>
+</ul></li>
+</ul>
+<p>In general, capitalized type names imply a composite type, e.g. one which is allocated in a region.</p>
+<p>When referring to a user-defined type from another module, qualify it with the module alias, for example <code>test::TestSuite</code>, <code>shapes::Person</code>, or <code>net::Message</code>.</p>
+<p>---</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3. Files, Modules, and Imports - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html" aria-current="page">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="3-files-modules-and-imports">3. Files, Modules, and Imports</h1>
+<p>Jik code lives in plain <code>.jik</code> files. Each file is its own <strong>module</strong>.</p>
+<h3 id="3-1-importing-modules">3.1 Importing modules</h3>
+<p>You import modules with <code>use</code>:</p>
+<pre><code class="language-jik">use &quot;jik/testing&quot; as test
+use &quot;app/utils&quot;
+use &quot;pkg/csv&quot;</code></pre>
+<ul>
+  <li>The string is a <strong>module path</strong> which points to a <code>.jik</code> file with the same name</li>
+  <li>Module paths always use <code>/</code> as the separator, on all platforms.</li>
+  <li><code>as</code> gives the module a short alias (<code>test</code> in this example).</li>
+  <li>If you omit <code>as</code>, the module is referred to by its basename (<code>utils</code> in the example above).</li>
+  <li>Import aliases must be unique within a module. This applies to both explicit <code>as</code> aliases and implicit basename aliases.</li>
+</ul>
+<p>The <code>use</code> syntax is the same for all module imports. The module path determines which resolver is used.</p>
+<h4 id="3-1-1-local-module-imports">3.1.1 Local module imports</h4>
+<p>Normal module imports are resolved relative to the directory of the file that contains the <code>use</code> declaration.</p>
+<pre><code class="language-jik">use &quot;app/utils&quot;
+use &quot;shapes&quot;</code></pre>
+<p>For example, if <code>main.jik</code> contains <code>use &quot;app/utils&quot;</code>, Jik looks for <code>app/utils.jik</code> relative to the directory containing <code>main.jik</code>.</p>
+<h4 id="3-1-2-standard-library-jiklib-imports">3.1.2 Standard library (<code>jiklib</code>) imports</h4>
+<p>Standard library modules live in <code>jiklib</code>, use the <code>jik/</code> prefix, and are resolved relative to the <code>jik</code> installation directory.</p>
+<pre><code class="language-jik">use &quot;jik/io&quot;
+use &quot;jik/testing&quot; as test</code></pre>
+<p>These modules are documented in the <a href="./18-standard-library.html">standard library chapter</a>.</p>
+<h4 id="3-1-3-package-imports">3.1.3 Package imports</h4>
+<p>Package modules use the <code>pkg/</code> prefix and are resolved relative to the package path configured with the <code>JIK_PKG_PATH</code> environment variable.</p>
+<p>In the current package layout, <code>JIK_PKG_PATH</code> should point to a local clone of <code>https://github.com/jik-lang/jik-packages</code>, whose top-level <code>packages/</code> directory contains package source trees.</p>
+<p>For package imports, <code>use &quot;pkg/&lt;name&gt;&quot;</code> resolves to:</p>
+<pre><code class="language-text">&lt;JIK_PKG_PATH&gt;/packages/&lt;name&gt;/src/&lt;name&gt;.jik</code></pre>
+<p>For example, <code>use &quot;pkg/csv&quot;</code> resolves to:</p>
+<pre><code class="language-text">&lt;JIK_PKG_PATH&gt;/packages/csv/src/csv.jik</code></pre>
+<p>During compilation, Jik resolves all modules reachable from the main module (e.g. the one which is the input to the compiler), and creates a meaningful compilation order for the modules.</p>
+<h3 id="3-2-qualified-names">3.2 Qualified names</h3>
+<p>Symbols from a module are accessed using <code>::</code>:</p>
+<pre><code class="language-jik">use &quot;jik/io&quot;
+use &quot;jik/testing&quot; as test
+
+func main():
+    ts := test::suite_new(_)
+    text := must io::read_file(&quot;notes.txt&quot;, _)
+    test::suite_assert(ts, len(text) &gt; 0, site())
+end</code></pre>
+<p>Top-level symbols from another module are accessed via <code>module::name</code>.</p>
+<p>This includes:</p>
+<ul>
+  <li>functions</li>
+  <li>global declarations</li>
+  <li>structs</li>
+  <li>enums</li>
+  <li>variants</li>
+</ul>
+<p>For example, qualified type names such as <code>test::TestSuite</code>, <code>shapes::Person</code>, and <code>msg::Message</code> are valid in the same way as qualified functions such as <code>io::read_file</code>.</p>
+<p>Jik does not currently present separate user-visible namespaces for types versus other top-level declarations inside a module. By convention, symbols whose names start with <code>_</code> are considered internal implementation details. This is not enforced by the compiler in the current language.</p>
+<p>---</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

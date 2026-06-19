@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>13. Dictionaries - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html" aria-current="page">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="13-dictionaries">13. Dictionaries</h1>
+<p>Dictionaries map <strong>string keys</strong> to values.</p>
+<h3 id="13-1-creating-dictionaries">13.1 Creating dictionaries</h3>
+<p>Like vectors, we can create empty dictionaries from type descriptions:</p>
+<pre><code class="language-jik">counts: Dict[int]
+buckets: Dict[Vec[String]]</code></pre>
+<p>Also, we can directly specify the initial key-value pairs:</p>
+<pre><code class="language-jik">config := {
+    &quot;host&quot;: &quot;localhost&quot;,
+    &quot;port&quot;: 8080,
+}
+
+commands := {
+    &quot;copy&quot;: {&quot;overwrite&quot;: true, &quot;recursive&quot;: false},
+    &quot;move&quot;: {&quot;overwrite&quot;: true, &quot;recursive&quot;: true},
+}</code></pre>
+<h3 id="13-2-dictionary-lookup">13.2 Dictionary lookup</h3>
+<p>Access returns an <code>Option[T]</code>, where <code>T</code> is the dictionary value type.</p>
+<p>Example:</p>
+<pre><code class="language-jik">counts: Dict[int]
+
+counts[&quot;apple&quot;] = 3
+counts[&quot;banana&quot;] = 5
+
+item := counts[&quot;apple&quot;]
+if item is Some:
+    print(item?)
+end
+
+missing := counts[&quot;orange&quot;]
+if missing is None:
+    print(&quot;no oranges found&quot;)
+end</code></pre>
+<p>Forced lookup is concise with <code>?</code>:</p>
+<pre><code class="language-jik">print(counts[&quot;apple&quot;]?)</code></pre>
+<p>This throws a runtime error if the key is missing.</p>
+<h3 id="13-3-dictionary-iteration">13.3 Dictionary iteration</h3>
+<p>This is achieved using a <code>for</code> loop:</p>
+<pre><code class="language-jik">for k, v in counts:
+    print(&quot;key = &quot;, k, &quot;, value = &quot;, v)
+end</code></pre>
+<p>---</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

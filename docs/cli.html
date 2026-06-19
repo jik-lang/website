@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jik CLI Reference - Jik Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../index.html#overview">Overview</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="./index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="./index.html">Jik Docs</a>
+          <a href="./cli.html" aria-current="page">Jik CLI Reference</a>
+          <a href="./grammar.html">Jik Grammar Reference</a>
+          <a href="./known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="./overview.html">Jik Language Overview</a>
+          <a href="./overview/01-introduction.html">1. Introduction</a>
+          <a href="./overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="./overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./overview/07-structs.html">7. Structs</a>
+          <a href="./overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./overview/09-enumerations.html">9. Enumerations</a>
+          <a href="./overview/10-options.html">10. Options</a>
+          <a href="./overview/11-variants.html">11. Variants</a>
+          <a href="./overview/12-vectors.html">12. Vectors</a>
+          <a href="./overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="./overview/14-control-flow.html">14. Control Flow</a>
+          <a href="./overview/15-error-handling.html">15. Error handling</a>
+          <a href="./overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="jik-cli-reference">Jik CLI Reference</h1>
+<p>The <code>jik</code> command-line tool is used to parse, check, translate, build, and runs Jik programs. Usage is:</p>
+<pre><code class="language-sh">jik &lt;command&gt; [&lt;args&gt;...] [--&lt;option&gt; [&lt;value&gt;]]...</code></pre>
+<p>Run <code>jik help</code> to list available commands, or <code>jik help &lt;topic&gt;</code> to show help for a command, language topic, or standard library entry.</p>
+<p>Command arguments come before command options. For example, use <code>jik run hello.jik --cc clang</code>.</p>
+<h2 id="commands">Commands</h2>
+<h3 id="jik-run"><code>jik run &lt;filepath&gt;</code></h3>
+<p>Translate a Jik source file to C, compile it with the selected C compiler, run the executable, and then remove the executable.</p>
+<p>Options:</p>
+<ul>
+  <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
+  <li><code>--ccflags &lt;args&gt;</code>: Extra C compiler arguments.</li>
+  <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
+  <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
+  <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
+  <li><code>--verbose</code>: Print detailed pipeline status information.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-sh">jik run hello.jik --cc clang</code></pre>
+<h3 id="jik-build"><code>jik build &lt;filepath&gt;</code></h3>
+<p>Translate a Jik source file to C and compile it to an executable.</p>
+<p>Options:</p>
+<p>default output path is <code>&lt;input_file&gt;.exe</code> on Windows and <code>&lt;input_file&gt;</code> on Linux.</p>
+<ul>
+  <li><code>--out &lt;filepath&gt;</code>: Write the executable to this path. When omitted, the</li>
+  <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
+  <li><code>--ccflags &lt;args&gt;</code>: Extra C compiler arguments.</li>
+  <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
+  <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
+  <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
+  <li><code>--verbose</code>: Print detailed pipeline status information.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-sh">jik build hello.jik --release</code></pre>
+<h3 id="jik-tran"><code>jik tran &lt;filepath&gt;</code></h3>
+<p>Translate a Jik source file to C.</p>
+<p>Options:</p>
+<p>default output path is <code>&lt;input-basename&gt;.c</code>.</p>
+<ul>
+  <li><code>--out &lt;filepath&gt;</code>: Write the generated C to this path. When omitted, the</li>
+  <li><code>--embed-core</code>: Embed the Jik support library into the generated translation.</li>
+  <li><code>--format-c</code>: Format the generated C file in place with <code>clang-format</code>.</li>
+  <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
+  <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
+  <li><code>--verbose</code>: Print detailed pipeline status information.</li>
+</ul>
+<p>Generated C includes the Jik support header as <code>#include &quot;core.h&quot;</code>. For manual compilation, include the support include directory from <code>jik env</code>'s <code>core_include=&lt;path&gt;</code> value, or use <code>--embed-core</code> to write a self-contained C translation.</p>
+<p>Example:</p>
+<pre><code class="language-sh">jik tran hello.jik --embed-core</code></pre>
+<h3 id="jik-check"><code>jik check &lt;filepath&gt;</code></h3>
+<p>Parse and analyze a Jik source file.</p>
+<p>Options:</p>
+<ul>
+  <li><code>--verbose</code>: Print detailed pipeline status information.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-sh">jik check hello.jik</code></pre>
+<h3 id="jik-memchk"><code>jik memchk &lt;filepath&gt;</code></h3>
+<p>Translate a Jik source file to C, compile it with debug flags, and run <code>valgrind</code> memcheck.</p>
+<p>Options:</p>
+<ul>
+  <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-sh">jik memchk hello.jik --cc gcc</code></pre>
+<h3 id="jik-env"><code>jik env</code></h3>
+<p>Print resolved Jik configuration values as <code>key=value</code> lines, including the Jik version, platform, root directory, <code>jiklib</code> path, package path, support include path, and selected C compiler.</p>
+<p>Example:</p>
+<pre><code class="language-sh">jik env</code></pre>
+<h3 id="jik-version"><code>jik version</code></h3>
+<p>Print the Jik version.</p>
+<p>Example:</p>
+<pre><code class="language-sh">jik version</code></pre>
+<h3 id="jik-help-topic"><code>jik help [topic]</code></h3>
+<p>Show general CLI help, or help for a command, language topic, standard library module, or standard library member.</p>
+<p>Examples:</p>
+<pre><code class="language-sh">jik help
+jik help run
+jik help vector
+jik help jik/string
+jik help jik/io</code></pre>
+<p>Documentation topic keys are defined in <code>docs/help-index.txt</code>. <code>jik help topics</code> prints the available documentation keys.</p>
+<h2 id="compiler-selection">Compiler Selection</h2>
+<p>Commands that compile generated C select the host C compiler in this order:</p>
+<ol>
+  <li>The <code>--cc &lt;compiler_name&gt;</code> option.</li>
+  <li>The <code>JIK_CC</code> environment variable.</li>
+  <li>The host default compiler, when available.</li>
+</ol>
+<p>If no compiler is found, <code>jik run</code>, <code>jik build</code>, and <code>jik memchk</code> fail before compilation.</p>
+<h2 id="package-imports">Package Imports</h2>
+<p>Imports under <code>pkg/...</code> are resolved from the directory configured by the <code>JIK_PKG_PATH</code> environment variable.</p>
+<p>For example:</p>
+<pre><code class="language-jik">use &quot;pkg/csv&quot;</code></pre>
+<p>resolves to:</p>
+<pre><code class="language-text">&lt;JIK_PKG_PATH&gt;/packages/csv/src/csv.jik</code></pre>
+<p>Use <code>jik env</code> to check the currently resolved value. It is printed as <code>pkg_path=&lt;path&gt;</code>. If <code>JIK_PKG_PATH</code> is not set and a program imports <code>pkg/...</code>, compilation fails with a package path error.</p>
+<h2 id="common-workflows">Common Workflows</h2>
+<ul>
+  <li>Use <code>jik check &lt;file&gt;</code> for a fast parse and semantic check.</li>
+  <li>Use <code>jik run &lt;file&gt;</code> while developing a program.</li>
+  <li>Use <code>jik tran &lt;file&gt;</code> when you want to inspect or format the generated C.</li>
+  <li>Use <code>jik build &lt;file&gt; --release</code> when you want an optimized executable.</li>
+  <li>Use <code>jik env</code> to debug how the CLI resolved paths and compiler settings.</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>process - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="../overview/01-introduction.html">1. Introduction</a>
+          <a href="../overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="../overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="../overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="../overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="../overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="../overview/07-structs.html">7. Structs</a>
+          <a href="../overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="../overview/09-enumerations.html">9. Enumerations</a>
+          <a href="../overview/10-options.html">10. Options</a>
+          <a href="../overview/11-variants.html">11. Variants</a>
+          <a href="../overview/12-vectors.html">12. Vectors</a>
+          <a href="../overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="../overview/14-control-flow.html">14. Control Flow</a>
+          <a href="../overview/15-error-handling.html">15. Error handling</a>
+          <a href="../overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="../overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="process">process</h1>
+<p>Shell-free process execution.</p>
+<p>This module provides a small argv-based process API. It does not invoke a shell, so arguments are passed as structured values instead of one quoted command string.</p>
+<h2 id="types">Types</h2>
+<h3 id="result"><code>Result</code></h3>
+<p>Completed captured child process result.</p>
+<p>Fields:</p>
+<ol>
+  <li><code>code: int</code> - Child exit code.</li>
+  <li><code>out: bytes::Bytes</code> - Captured stdout bytes.</li>
+  <li><code>err: bytes::Bytes</code> - Captured stderr bytes.</li>
+</ol>
+<h2 id="functions">Functions</h2>
+<h3 id="throws-run-foreign-program-string-foreign-args-vec-string-int"><code>throws run(foreign program: String, foreign args: Vec[String]) -&gt; int</code></h3>
+<p>Run a child process with inherited stdio and wait for it.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws if the child cannot be started or if waiting for it fails.</li>
+  <li>A nonzero child exit code is returned, not thrown.</li>
+  <li>No shell is invoked.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign program: String</code> - Executable name or path.</li>
+  <li><code>foreign args: Vec[String]</code> - Child process arguments.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Child exit code.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li><code>args</code> contains only child arguments, not <code>argv[0]</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-capture-foreign-program-string-foreign-args-vec-string-region-region-result"><code>throws capture(foreign program: String, foreign args: Vec[String], region: Region) -&gt; Result</code></h3>
+<p>Run a child process, capture stdout and stderr, and wait for it.</p>
+<p><strong>Behavior</strong></p>
+<p>fails, or pipe reads fail.</p>
+<ul>
+  <li>Throws if pipes cannot be created, the child cannot be started, waiting</li>
+  <li>A nonzero child exit code is returned in <code>Result.code</code>, not thrown.</li>
+  <li>No shell is invoked.</li>
+  <li>Stdout and stderr are captured separately as raw bytes.</li>
+  <li>Stdin is inherited from the parent process.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign program: String</code> - Executable name or path.</li>
+  <li><code>foreign args: Vec[String]</code> - Child process arguments.</li>
+  <li><code>region: Region</code> - Allocation region for the returned result and captured bytes.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>Result</code> containing the child exit code, stdout bytes, and stderr bytes.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<p>inspecting it.</p>
+<ul>
+  <li><code>args</code> contains only child arguments, not <code>argv[0]</code>.</li>
+  <li>Captured output may not be valid text. Use <code>bytes</code> helpers when decoding or</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

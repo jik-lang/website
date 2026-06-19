@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>17. Builtins - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html" aria-current="page">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="17-builtins">17. Builtins</h1>
+<p>Builtins are functions which are part of the language and are always available, without any additional <code>use</code> statements.</p>
+<p>Builtin names may not be reused for non-callable ordinary declarations such as globals, locals, parameters, loop variables, match-bound variables, or top-level type names.</p>
+<p>---</p>
+<h3 id="17-1-output">17.1 Output</h3>
+<h4 id="print-void"><code>print(...) -&gt; void</code></h4>
+<p>Takes any number of arguments and writes each argument to the standard output using the argument's default textual representation. Each argument can be of any type. Options print as <code>&lt;Some: val&gt;</code> or <code>&lt;None[T]&gt;</code>, for example:</p>
+<pre><code class="language-jik">println(Some{12})
+println(None[String])</code></pre>
+<h4 id="println-void"><code>println(...) -&gt; void</code></h4>
+<p>Same as <code>print</code>, and additionally writes a newline after the arguments.</p>
+<h4 id="concat-string-region-string"><code>concat(...String, Region) -&gt; String</code></h4>
+<p>Concatenates one or more strings and allocates the result in the final <code>Region</code> argument.</p>
+<p>All arguments except the last must be of type <code>String</code>. The last argument must be a <code>Region</code>.</p>
+<p><strong>Example</strong></p>
+<pre><code class="language-jik">msg := concat(&quot;hello&quot;, &quot;, &quot;, name, &quot;!&quot;, _)</code></pre>
+<p>---</p>
+<h3 id="17-2-container-builtins">17.2 Container builtins</h3>
+<h4 id="push-vec-t-t-void"><code>push(Vec[T], T) -&gt; void</code></h4>
+<p>Pushes a value of type <code>T</code> to the end of a vector of type <code>Vec[T]</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Vector</li>
+  <li>Value to push</li>
+</ol>
+<pre><code class="language-jik">v := [1, 2]
+push(v, 10)</code></pre>
+<h4 id="pop-vec-t-t"><code>pop(Vec[T]) -&gt; T</code></h4>
+<p>Pops the last element from a vector of type <code>Vec[T]</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Vector</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A value of type <code>T</code>.</li>
+</ul>
+<p><strong>Example</strong></p>
+<pre><code class="language-jik">v := [1, 2, 3]
+assert(pop(v) == 3)</code></pre>
+<h4 id="len-t-int"><code>len(T) -&gt; int</code></h4>
+<p>Returns the length of a container or string.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Value of type <code>Vec</code>, <code>Dict</code> or <code>String</code></li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Length of the container or string</li>
+</ul>
+<p><strong>Example</strong></p>
+<pre><code class="language-jik">n = len(v)
+m = len(s)</code></pre>
+<h4 id="clear-t-void"><code>clear(T) -&gt; void</code></h4>
+<p>Resets the size of a vector or dictionary to 0 and does not free memory.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Value of type <code>Vec</code> or <code>Dict</code></li>
+</ol>
+<p><strong>Example</strong></p>
+<pre><code class="language-jik">d := {&quot;foo&quot;: 12, &quot;bar&quot;: 13}
+clear(d)</code></pre>
+<p>---</p>
+<h3 id="17-3-debugging">17.3 Debugging</h3>
+<p>Debugging builtins return information about a call site. Basic debugging information is obtained through the opaque type <code>Site</code>.</p>
+<h4 id="site-site"><code>site() -&gt; Site</code></h4>
+<p>Returns an opaque structured representation of the current site information.</p>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>value of type <code>Site</code></li>
+</ul>
+<h4 id="site-file-site-region-string"><code>site_file(Site, Region) -&gt; String</code></h4>
+<p>Returns the source file path/name for the current site, as a string allocated in the given region.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Site</li>
+  <li>Region to allocate the filepath</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>filepath</li>
+</ul>
+<h4 id="site-line-site-int"><code>site_line(Site) -&gt; int</code></h4>
+<p>Returns the source line number for the current site.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Site</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>line number</li>
+</ul>
+<h4 id="site-code-site-region-string"><code>site_code(Site, Region) -&gt; String</code></h4>
+<p>Returns the Jik source code line for the current site, as a string allocated in the given region.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Site</li>
+  <li>Region to allocate the codeline</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>code line</li>
+</ul>
+<p><strong>Example</strong></p>
+<pre><code class="language-jik">s := site()
+println(site_file(s, _), site_line(s), site_code(s, _))</code></pre>
+<p>---</p>
+<h3 id="17-4-misc">17.4 Misc</h3>
+<h4 id="assert-bool-void"><code>assert(bool) -&gt; void</code></h4>
+<p>Checks a condition and fails (aborts execution) if the condition is false.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li>Boolean expression</li>
+</ol>
+<p><strong>Example</strong></p>
+<pre><code class="language-jik">v := [10 of 1]
+assert(len(v) == 10)</code></pre>
+<h4 id="fail-string-int-void"><code>fail(String[, int]) -&gt; void</code></h4>
+<p>Marks the current throwing function as failed. See <a href="./15-error-handling.html">Error Handling</a>.</p>
+<h4 id="error-msg-region-string"><code>error_msg([Region]) -&gt; String</code></h4>
+<p>Returns the current error message. Most commonly used inside <code>except</code>. See <a href="./15-error-handling.html">Error Handling</a>.</p>
+<h4 id="error-code-int"><code>error_code() -&gt; int</code></h4>
+<p>Returns the current error code. See <a href="./15-error-handling.html">Error Handling</a>.</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

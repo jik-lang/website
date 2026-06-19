@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12. Vectors - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html" aria-current="page">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="12-vectors">12. Vectors</h1>
+<p>Vectors are dynamic arrays which can hold any type, primitive or composite. All elements in a vector need to be of the same type. Vector elements can be initialized from any literal or composite object.</p>
+<p>Vector creation and initialization syntax is flexible, as there are multiple ways to do that:</p>
+<h3 id="12-1-vectors-initialized-from-type">12.1 Vectors initialized from type</h3>
+<pre><code class="language-jik">// create an empty vector of integers, which is initialized to an empty
+// vector which holds type int with default initializer value
+v: Vec[int]</code></pre>
+<h3 id="12-2-vectors-initialized-with-a-repeat-initializer">12.2 Vectors initialized with a repeat initializer</h3>
+<pre><code class="language-jik">// create a vector of 10 Persons with name &quot;foo&quot;
+v := [10 of Person{name=&quot;foo&quot;}]</code></pre>
+<p>The form <code>[n of value]</code> creates a vector of length <code>n</code>, with each element initialized from <code>value</code>.</p>
+<h3 id="12-3-vectors-initialized-from-arbitrary-initializer">12.3 Vectors initialized from arbitrary initializer</h3>
+<pre><code class="language-jik">v := [false, true, false]</code></pre>
+<h3 id="12-4-basic-operations-with-vectors">12.4 Basic operations with vectors</h3>
+<p>Examples.</p>
+<pre><code class="language-jik">numbers: Vec[int]
+push(numbers, 1)
+push(numbers, 2)
+assert(len(numbers) == 2)
+numbers[1] = 3
+assert(pop(numbers) == 3)
+assert(len(numbers) == 1)</code></pre>
+<p><code>push</code>, <code>pop</code> and <code>len</code> are builtin functions which work on vectors and dictionaries.</p>
+<h3 id="12-5-iterating-over-vector-elements">12.5 Iterating over vector elements</h3>
+<p>One can iterate over vector elements with a <code>for</code> loop:</p>
+<pre><code class="language-jik">chars := ['a', 'b', 'c']
+for ch in chars:
+    if ch == 'd':
+        print(&quot;d found&quot;)
+    end
+end</code></pre>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

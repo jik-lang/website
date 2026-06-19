@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>strbuf - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="../overview/01-introduction.html">1. Introduction</a>
+          <a href="../overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="../overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="../overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="../overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="../overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="../overview/07-structs.html">7. Structs</a>
+          <a href="../overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="../overview/09-enumerations.html">9. Enumerations</a>
+          <a href="../overview/10-options.html">10. Options</a>
+          <a href="../overview/11-variants.html">11. Variants</a>
+          <a href="../overview/12-vectors.html">12. Vectors</a>
+          <a href="../overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="../overview/14-control-flow.html">14. Control Flow</a>
+          <a href="../overview/15-error-handling.html">15. Error handling</a>
+          <a href="../overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="../overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="strbuf">strbuf</h1>
+<p>Growable string buffer.</p>
+<p><code>StrBuf</code> stores a NUL-terminated byte buffer in a region. Growth allocates a new buffer in the same region and copies existing content.</p>
+<p>Notes:</p>
+<ul>
+  <li>This is a byte buffer; it does not enforce UTF-8 boundaries.</li>
+  <li>All allocations are performed in the provided <code>Region</code>.</li>
+</ul>
+<h2 id="types">Types</h2>
+<h3 id="strbuf-2"><code>StrBuf</code></h3>
+<p>Opaque string buffer allocated in a <code>Region</code>.</p>
+<h2 id="functions">Functions</h2>
+<h3 id="append-buf-strbuf-foreign-text-string-void"><code>append(buf: StrBuf, foreign text: String) -&gt; void</code></h3>
+<p>Append a string to the end of the buffer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: StrBuf</code> - Buffer.</li>
+  <li><code>foreign text: String</code> - String to append.</li>
+</ol>
+<p>---</p>
+<h3 id="append-char-buf-strbuf-ch-char-void"><code>append_char(buf: StrBuf, ch: char) -&gt; void</code></h3>
+<p>Append a single byte to the end of the buffer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: StrBuf</code> - Buffer.</li>
+  <li><code>ch: char</code> - Byte to append.</li>
+</ol>
+<p>---</p>
+<h3 id="clear-buf-strbuf-void"><code>clear(buf: StrBuf) -&gt; void</code></h3>
+<p>Clears the buffer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: StrBuf</code> - Buffer.</li>
+</ol>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Does not deallocate or free anything, just resets the buffer pointer.</li>
+</ul>
+<p>---</p>
+<h3 id="len-buf-strbuf-int"><code>len(buf: StrBuf) -&gt; int</code></h3>
+<p>Get the length of the buffer in bytes.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: StrBuf</code> - Buffer.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>The number of bytes in the buffer.</li>
+</ul>
+<p>---</p>
+<h3 id="new-foreign-text-string-region-region-strbuf"><code>new(foreign text: String, region: Region) -&gt; StrBuf</code></h3>
+<p>Create a new buffer from initial content.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign text: String</code> - Initial content.</li>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A new <code>StrBuf</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="pop-buf-strbuf-char"><code>pop(buf: StrBuf) -&gt; char</code></h3>
+<p>Pop a single byte from the end of the buffer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: StrBuf</code> - Buffer.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A byte from the end of the buffer.</li>
+</ul>
+<p>---</p>
+<h3 id="print-buf-strbuf-void"><code>print(buf: StrBuf) -&gt; void</code></h3>
+<p>Prints the buffer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: StrBuf</code> - Buffer.</li>
+</ol>
+<p>---</p>
+<h3 id="to-string-foreign-buf-strbuf-region-region-string"><code>to_string(foreign buf: StrBuf, region: Region) -&gt; String</code></h3>
+<p>Converts the buffer contents to a String.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign buf: StrBuf</code> - Buffer.</li>
+  <li><code>region: Region</code> - Region to allocate the String.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Contents of the buffer as a String.</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

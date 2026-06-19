@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>math - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="../overview/01-introduction.html">1. Introduction</a>
+          <a href="../overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="../overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="../overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="../overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="../overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="../overview/07-structs.html">7. Structs</a>
+          <a href="../overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="../overview/09-enumerations.html">9. Enumerations</a>
+          <a href="../overview/10-options.html">10. Options</a>
+          <a href="../overview/11-variants.html">11. Variants</a>
+          <a href="../overview/12-vectors.html">12. Vectors</a>
+          <a href="../overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="../overview/14-control-flow.html">14. Control Flow</a>
+          <a href="../overview/15-error-handling.html">15. Error handling</a>
+          <a href="../overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="../overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="math">math</h1>
+<p>Minimal scalar math utilities.</p>
+<p>This module is a thin wrapper over a small subset of C <code>&lt;math.h&gt;</code>. Trigonometric functions use radians.</p>
+<p>Notes:</p>
+<ul>
+  <li>Floating-point behavior follows the platform C math library (NaN/Inf propagation).</li>
+  <li><code>is_nan</code> / <code>is_finite</code> return <code>int</code> (0 or 1) to avoid assuming a specific <code>bool</code> ABI.</li>
+</ul>
+<h2 id="types">Types</h2>
+<p>_None._</p>
+<h2 id="constants">Constants</h2>
+<h3 id="pi"><code>PI</code></h3>
+<p>pi.</p>
+<p>---</p>
+<h3 id="e"><code>E</code></h3>
+<p>Euler's number e.</p>
+<p>---</p>
+<h2 id="functions">Functions</h2>
+<h3 id="abs-x-double-double"><code>abs(x: double) -&gt; double</code></h3>
+<p>Compute the absolute value.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Input value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Absolute value of <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="approx-eq-a-double-b-double-eps-double-bool"><code>approx_eq(a: double, b: double, eps: double) -&gt; bool</code></h3>
+<p>Check whether two values are equal within a tolerance.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>a: double</code> - Left-hand value.</li>
+  <li><code>b: double</code> - Right-hand value.</li>
+  <li><code>eps: double</code> - Maximum allowed absolute difference.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>True if values are within tolerance, else false.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Returns true if <code>abs(a - b) &lt;= eps</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="atan2-y-double-x-double-double"><code>atan2(y: double, x: double) -&gt; double</code></h3>
+<p>Compute the arctangent of <code>y/x</code> using the signs of <code>y</code> and <code>x</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>y: double</code> - y coordinate.</li>
+  <li><code>x: double</code> - x coordinate.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Angle in radians.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>The result is in radians.</li>
+</ul>
+<p>---</p>
+<h3 id="cos-x-double-double"><code>cos(x: double) -&gt; double</code></h3>
+<p>Compute the cosine of an angle in radians.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Angle in radians.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Cosine of <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="tan-x-double-double"><code>tan(x: double) -&gt; double</code></h3>
+<p>Compute the tangent of an angle in radians.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Angle in radians.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Tangent of <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="floor-x-double-double"><code>floor(x: double) -&gt; double</code></h3>
+<p>Round down to the next integer value.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Largest integer value not greater than <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="ceil-x-double-double"><code>ceil(x: double) -&gt; double</code></h3>
+<p>Round up to the next integer value.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Smallest integer value not less than <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="round-x-double-double"><code>round(x: double) -&gt; double</code></h3>
+<p>Round to the nearest integer value.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Nearest integer value to <code>x</code>.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Halfway cases follow the platform C math library.</li>
+</ul>
+<p>---</p>
+<h3 id="pow-x-double-y-double-double"><code>pow(x: double, y: double) -&gt; double</code></h3>
+<p>Raise a value to a power.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Base value.</li>
+  <li><code>y: double</code> - Exponent.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>x</code> raised to the power <code>y</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="log-x-double-double"><code>log(x: double) -&gt; double</code></h3>
+<p>Compute the natural logarithm.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Natural logarithm of <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="exp-x-double-double"><code>exp(x: double) -&gt; double</code></h3>
+<p>Compute the natural exponential.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>e raised to the power <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="fmod-x-double-y-double-double"><code>fmod(x: double, y: double) -&gt; double</code></h3>
+<p>Compute the floating-point remainder (C <code>fmod</code>).</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Numerator.</li>
+  <li><code>y: double</code> - Denominator.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Remainder.</li>
+</ul>
+<p>---</p>
+<h3 id="is-finite-x-double-int"><code>is_finite(x: double) -&gt; int</code></h3>
+<p>Test whether the value is finite.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>1 if finite (not NaN and not +/-Inf), else 0.</li>
+</ul>
+<p>---</p>
+<h3 id="is-inf-x-double-int"><code>is_inf(x: double) -&gt; int</code></h3>
+<p>Test whether the value is positive or negative infinity.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>1 if <code>x</code> is +/-Inf, else 0.</li>
+</ul>
+<p>---</p>
+<h3 id="is-nan-x-double-int"><code>is_nan(x: double) -&gt; int</code></h3>
+<p>Test whether the value is NaN.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>1 if NaN, else 0.</li>
+</ul>
+<p>---</p>
+<h3 id="max-a-double-b-double-double"><code>max(a: double, b: double) -&gt; double</code></h3>
+<p>Return the larger of two values.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>a: double</code> - First value to compare.</li>
+  <li><code>b: double</code> - Second value to compare.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>The larger value.</li>
+</ul>
+<p>---</p>
+<h3 id="min-a-double-b-double-double"><code>min(a: double, b: double) -&gt; double</code></h3>
+<p>Return the smaller of two values.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>a: double</code> - First value to compare.</li>
+  <li><code>b: double</code> - Second value to compare.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>The smaller value.</li>
+</ul>
+<p>---</p>
+<h3 id="sin-x-double-double"><code>sin(x: double) -&gt; double</code></h3>
+<p>Compute the sine of an angle in radians.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Angle in radians.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Sine of <code>x</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="sqrt-x-double-double"><code>sqrt(x: double) -&gt; double</code></h3>
+<p>Compute the square root.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>x: double</code> - Value.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Square root of <code>x</code>.</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

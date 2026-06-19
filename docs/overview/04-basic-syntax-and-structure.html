@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4. Basic Syntax and Structure - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="./01-introduction.html">1. Introduction</a>
+          <a href="./02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="./04-basic-syntax-and-structure.html" aria-current="page">4. Basic Syntax and Structure</a>
+          <a href="./05-values-and-types.html">5. Values and Types</a>
+          <a href="./06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="./07-structs.html">7. Structs</a>
+          <a href="./08-memory-management.html">8. Memory management in Jik</a>
+          <a href="./09-enumerations.html">9. Enumerations</a>
+          <a href="./10-options.html">10. Options</a>
+          <a href="./11-variants.html">11. Variants</a>
+          <a href="./12-vectors.html">12. Vectors</a>
+          <a href="./13-dictionaries.html">13. Dictionaries</a>
+          <a href="./14-control-flow.html">14. Control Flow</a>
+          <a href="./15-error-handling.html">15. Error handling</a>
+          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="./17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<p><a href="../overview.html">Back to overview</a></p>
+<h1 id="4-basic-syntax-and-structure">4. Basic Syntax and Structure</h1>
+<p>Jik uses <strong>explicit block delimiters</strong> and does not rely on indentation. However, there is only one sane way to write readable Jik code - which is consistent indentation per block.</p>
+<p>A Jik module may consist of the following top-level entities:</p>
+<ul>
+  <li>global declarations written with <code>:=</code></li>
+  <li>functions</li>
+  <li>data type definitions (enums, structs, variants)</li>
+</ul>
+<h3 id="4-1-functions">4.1 Functions</h3>
+<p>Functions are declared with <code>func</code> and closed with <code>end</code>:</p>
+<pre><code class="language-jik">func add(x, y):
+    return x + y
+end</code></pre>
+<ul>
+  <li>Arguments are written with or without types; the compiler infers / assigns C types from usages (calls)</li>
+  <li><code>return</code> exits the function with a value.</li>
+  <li>each Jik program needs to have a <code>main</code> function defined, which is treated as the program entry point</li>
+</ul>
+<p>A version of the same function with types would look like:</p>
+<pre><code class="language-jik">func add(x: int, y: int) -&gt; int:
+    return x + y
+end</code></pre>
+<p>This is useful for writing library functions which have no usages/calls which can be used for inference by the compiler.</p>
+<h3 id="4-2-blocks-and-control-keywords">4.2 Blocks and control keywords</h3>
+<p>Blocks are always closed with <code>end</code>, for example:</p>
+<ul>
+  <li><code>if ... end</code></li>
+  <li><code>while ... end</code></li>
+  <li><code>for ... end</code></li>
+  <li><code>match ... end</code></li>
+  <li><code>struct ... end</code></li>
+  <li><code>variant ... end</code></li>
+  <li><code>func ... end</code></li>
+</ul>
+<p>Each block introduces a new scope.</p>
+<p>However, Jik currently uses stricter redeclaration rules than C-style block shadowing:</p>
+<ul>
+  <li>an inner local scope may not redeclare a name that already exists in an outer local scope of the same function</li>
+  <li>this includes parameters and loop variables from enclosing scopes</li>
+  <li>a local declaration also may not shadow a same-module global</li>
+</ul>
+<p>A colon <code>:</code> follows most control headers:</p>
+<pre><code class="language-jik">if n &lt; 0:
+    return -n
+end</code></pre>
+<h3 id="4-3-comments">4.3 Comments</h3>
+<p>Use <code>//</code> for single-line comments:</p>
+<pre><code class="language-jik">// This is a comment
+x = x + 1      // trailing comment</code></pre>
+<h3 id="4-4-arithmetic-and-logical-operators">4.4 Arithmetic and Logical operators</h3>
+<p>Arithmetic and comparison operators look as in C-style languages:</p>
+<pre><code class="language-jik">x := 3 + 4 * (8 - 7)
+ok := (x &gt;= 10) and (x != 13)</code></pre>
+<p>Supported comparisons include: <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>.</p>
+<p>Boolean expressions use:</p>
+<pre><code class="language-jik">not a
+a and b
+a or b</code></pre>
+<p>with the usual short-circuit behavior (mirroring C).</p>
+<p>---</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>

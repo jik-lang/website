@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bytes - Jik Documentation</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../../index.html#overview">Overview</a>
+          <a href="../../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../index.html">Docs</a>
+          <a href="../../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container docs-layout">
+        <aside class="docs-sidebar" aria-label="Documentation">
+          <h2>Documentation</h2>
+          <a href="../index.html">Jik Docs</a>
+          <a href="../cli.html">Jik CLI Reference</a>
+          <a href="../grammar.html">Jik Grammar Reference</a>
+          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../overview/18-standard-library.html">Jik Standard Library</a>
+          <a href="../overview.html">Jik Language Overview</a>
+          <a href="../overview/01-introduction.html">1. Introduction</a>
+          <a href="../overview/02-running-jik-code.html">2. Running Jik Code</a>
+          <a href="../overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
+          <a href="../overview/04-basic-syntax-and-structure.html">4. Basic Syntax and Structure</a>
+          <a href="../overview/05-values-and-types.html">5. Values and Types</a>
+          <a href="../overview/06-variables-and-assignment.html">6. Variables and Assignment</a>
+          <a href="../overview/07-structs.html">7. Structs</a>
+          <a href="../overview/08-memory-management.html">8. Memory management in Jik</a>
+          <a href="../overview/09-enumerations.html">9. Enumerations</a>
+          <a href="../overview/10-options.html">10. Options</a>
+          <a href="../overview/11-variants.html">11. Variants</a>
+          <a href="../overview/12-vectors.html">12. Vectors</a>
+          <a href="../overview/13-dictionaries.html">13. Dictionaries</a>
+          <a href="../overview/14-control-flow.html">14. Control Flow</a>
+          <a href="../overview/15-error-handling.html">15. Error handling</a>
+          <a href="../overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
+          <a href="../overview/17-builtins.html">17. Builtins</a>
+        </aside>
+        <article class="docs-content">
+<h1 id="bytes">bytes</h1>
+<p>Binary-safe byte sequences and growable byte buffers.</p>
+<p><code>Bytes</code> stores immutable raw byte data. <code>ByteBuf</code> is a mutable growable byte buffer for constructing binary data. Neither type is NUL-terminated by contract, and both can contain byte value <code>0</code>.</p>
+<p>Notes:</p>
+<p>into binary storage.</p>
+<p><code>bytes::ByteBuf{}</code>, and typed declarations such as <code>b: bytes::Bytes</code> create empty values in the local region.</p>
+<ul>
+  <li><code>String</code> is text. Use <code>from_string</code> or <code>buf_append_string</code> to copy text bytes</li>
+  <li>Use <code>to_hex</code> for binary display.</li>
+  <li>Use <code>to_string_ascii</code> only when the bytes are known ASCII text.</li>
+  <li>All allocations are performed in the provided <code>Region</code>.</li>
+  <li><code>Bytes</code> and <code>ByteBuf</code> have default initializers. <code>bytes::Bytes{}</code>,</li>
+</ul>
+<h2 id="types">Types</h2>
+<h3 id="bytebuf"><code>ByteBuf</code></h3>
+<p>Mutable growable byte buffer allocated in a <code>Region</code>.</p>
+<h3 id="bytes-2"><code>Bytes</code></h3>
+<p>Immutable byte sequence allocated in a <code>Region</code>.</p>
+<h2 id="functions">Functions</h2>
+<h3 id="buf-append-buf-bytebuf-bytes-bytes-void"><code>buf_append(buf: ByteBuf, bytes: Bytes) -&gt; void</code></h3>
+<p>Append all bytes from an immutable byte sequence.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+  <li><code>bytes: Bytes</code> - Bytes to append.</li>
+</ol>
+<p>---</p>
+<h3 id="buf-append-string-buf-bytebuf-foreign-text-string-void"><code>buf_append_string(buf: ByteBuf, foreign text: String) -&gt; void</code></h3>
+<p>Append a string's exact bytes.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+  <li><code>foreign text: String</code> - String to append.</li>
+</ol>
+<p>---</p>
+<h3 id="buf-clear-buf-bytebuf-void"><code>buf_clear(buf: ByteBuf) -&gt; void</code></h3>
+<p>Clear a byte buffer without reclaiming region memory.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+</ol>
+<p>---</p>
+<h3 id="buf-from-string-foreign-text-string-region-region-bytebuf"><code>buf_from_string(foreign text: String, region: Region) -&gt; ByteBuf</code></h3>
+<p>Create a byte buffer initialized from a string's exact bytes.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign text: String</code> - Source string.</li>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>New <code>ByteBuf</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="buf-get-buf-bytebuf-index-int-char"><code>buf_get(buf: ByteBuf, index: int) -&gt; char</code></h3>
+<p>Get one byte from a byte buffer by index.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+  <li><code>index: int</code> - Byte index.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Byte at <code>index</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="buf-len-buf-bytebuf-int"><code>buf_len(buf: ByteBuf) -&gt; int</code></h3>
+<p>Get the length of a byte buffer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Number of bytes currently stored.</li>
+</ul>
+<p>---</p>
+<h3 id="buf-new-region-region-bytebuf"><code>buf_new(region: Region) -&gt; ByteBuf</code></h3>
+<p>Create an empty mutable byte buffer. This is also the default initializer used by <code>bytes::ByteBuf{}</code> and typed declarations without an initializer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Empty <code>ByteBuf</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="buf-push-buf-bytebuf-byte-char-void"><code>buf_push(buf: ByteBuf, byte: char) -&gt; void</code></h3>
+<p>Append one byte.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+  <li><code>byte: char</code> - Byte to append.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-buf-push-int-buf-bytebuf-byte-int-void"><code>throws buf_push_int(buf: ByteBuf, byte: int) -&gt; void</code></h3>
+<p>Append one integer value after validating it is a byte.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+  <li><code>byte: int</code> - Integer byte value.</li>
+</ol>
+<p><strong>Throws</strong></p>
+<ul>
+  <li>If <code>byte</code> is outside <code>0..255</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="equals-left-bytes-right-bytes-bool"><code>equals(left: Bytes, right: Bytes) -&gt; bool</code></h3>
+<p>Return whether two byte sequences have identical contents.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>left: Bytes</code> - Left byte sequence.</li>
+  <li><code>right: Bytes</code> - Right byte sequence.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> if lengths and contents are equal.</li>
+</ul>
+<p>---</p>
+<h3 id="from-string-foreign-text-string-region-region-bytes"><code>from_string(foreign text: String, region: Region) -&gt; Bytes</code></h3>
+<p>Copy a string's exact bytes into a byte sequence.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign text: String</code> - Source string.</li>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Copied <code>Bytes</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="get-bytes-bytes-index-int-char"><code>get(bytes: Bytes, index: int) -&gt; char</code></h3>
+<p>Get one byte by index.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>bytes: Bytes</code> - Byte sequence.</li>
+  <li><code>index: int</code> - Byte index.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Byte at <code>index</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="len-bytes-bytes-int"><code>len(bytes: Bytes) -&gt; int</code></h3>
+<p>Get the length of a byte sequence.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>bytes: Bytes</code> - Byte sequence.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Number of bytes.</li>
+</ul>
+<p>---</p>
+<h3 id="new-region-region-bytes"><code>new(region: Region) -&gt; Bytes</code></h3>
+<p>Create an empty byte sequence. This is also the default initializer used by <code>bytes::Bytes{}</code> and typed declarations without an initializer.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Empty <code>Bytes</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="slice-bytes-bytes-start-int-stop-int-region-region-bytes"><code>slice(bytes: Bytes, start: int, stop: int, region: Region) -&gt; Bytes</code></h3>
+<p>Copy a byte range.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>bytes: Bytes</code> - Byte sequence.</li>
+  <li><code>start: int</code> - Start byte index, inclusive.</li>
+  <li><code>stop: int</code> - Stop byte index, exclusive.</li>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Copied byte range.</li>
+</ul>
+<p>---</p>
+<h3 id="to-bytes-buf-bytebuf-region-region-bytes"><code>to_bytes(buf: ByteBuf, region: Region) -&gt; Bytes</code></h3>
+<p>Copy a byte buffer into an immutable byte sequence.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>buf: ByteBuf</code> - Byte buffer.</li>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Copied <code>Bytes</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="to-hex-bytes-bytes-region-region-string"><code>to_hex(bytes: Bytes, region: Region) -&gt; String</code></h3>
+<p>Convert bytes to lowercase hexadecimal text.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>bytes: Bytes</code> - Byte sequence.</li>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Hexadecimal representation.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-to-string-ascii-bytes-bytes-region-region-string"><code>throws to_string_ascii(bytes: Bytes, region: Region) -&gt; String</code></h3>
+<p>Convert known ASCII text bytes to a <code>String</code>.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>bytes: Bytes</code> - Byte sequence.</li>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Copied ASCII text.</li>
+</ul>
+<p><strong>Throws</strong></p>
+<ul>
+  <li>If any byte is <code>0</code> or greater than <code>127</code>.</li>
+</ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="../../script.js"></script>
+</body>
+</html>
