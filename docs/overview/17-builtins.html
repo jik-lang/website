@@ -113,6 +113,21 @@ m = len(s)</code></pre>
 <p><strong>Example</strong></p>
 <pre><code class="language-jik">d := {&quot;foo&quot;: 12, &quot;bar&quot;: 13}
 clear(d)</code></pre>
+<h4 id="copy-t-region-t"><code>copy(T[, Region]) -&gt; T</code></h4>
+<p>Copies a composite value into the destination region. If the final <code>Region</code> argument is omitted, the copy is allocated in the caller's local region.</p>
+<p>Supported source types:</p>
+<ul>
+  <li><code>String</code></li>
+  <li><code>Vec[P]</code></li>
+  <li><code>Dict[P]</code></li>
+  <li><code>Option[P]</code></li>
+  <li>structs whose each field type is <code>P</code></li>
+  <li>variants whose every payload type is <code>P</code></li>
+</ul>
+<p>Here <code>P</code> means <code>int</code>, <code>double</code>, <code>bool</code>, <code>char</code>, <code>String</code>, or an enum type. Strings inside supported containers and variants are allocated in the destination region.</p>
+<p><strong>Example</strong></p>
+<pre><code class="language-jik">names2 := copy(names, out_region)
+label2 := copy(label)</code></pre>
 <p>---</p>
 <h3 id="17-3-debugging">17.3 Debugging</h3>
 <p>Debugging builtins return information about a call site. Basic debugging information is obtained through the opaque type <code>Site</code>.</p>

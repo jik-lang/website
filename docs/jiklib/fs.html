@@ -56,40 +56,40 @@
 <h2 id="types">Types</h2>
 <p>_None._</p>
 <h2 id="functions">Functions</h2>
-<h3 id="exists-foreign-path-string-bool"><code>exists(foreign path: String) -&gt; bool</code></h3>
+<h3 id="exists-path-string-bool"><code>exists(path: String) -&gt; bool</code></h3>
 <p>Return whether a filesystem path exists.</p>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - Filesystem path.</li>
+  <li><code>path: String</code> - Filesystem path.</li>
 </ol>
 <p><strong>Returns</strong></p>
 <ul>
   <li><code>true</code> if the path exists, otherwise <code>false</code>.</li>
 </ul>
 <p>---</p>
-<h3 id="is-file-foreign-path-string-bool"><code>is_file(foreign path: String) -&gt; bool</code></h3>
+<h3 id="is-file-path-string-bool"><code>is_file(path: String) -&gt; bool</code></h3>
 <p>Return whether a filesystem path refers to a regular file.</p>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - Filesystem path.</li>
+  <li><code>path: String</code> - Filesystem path.</li>
 </ol>
 <p><strong>Returns</strong></p>
 <ul>
   <li><code>true</code> only for regular files.</li>
 </ul>
 <p>---</p>
-<h3 id="is-dir-foreign-path-string-bool"><code>is_dir(foreign path: String) -&gt; bool</code></h3>
+<h3 id="is-dir-path-string-bool"><code>is_dir(path: String) -&gt; bool</code></h3>
 <p>Return whether a filesystem path refers to a directory.</p>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - Filesystem path.</li>
+  <li><code>path: String</code> - Filesystem path.</li>
 </ol>
 <p><strong>Returns</strong></p>
 <ul>
   <li><code>true</code> only for directories.</li>
 </ul>
 <p>---</p>
-<h3 id="throws-mkdir-foreign-path-string-void"><code>throws mkdir(foreign path: String) -&gt; void</code></h3>
+<h3 id="throws-mkdir-path-string-void"><code>throws mkdir(path: String) -&gt; void</code></h3>
 <p>Create a directory.</p>
 <p><strong>Behavior</strong></p>
 <ul>
@@ -97,10 +97,10 @@
 </ul>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - Directory path.</li>
+  <li><code>path: String</code> - Directory path.</li>
 </ol>
 <p>---</p>
-<h3 id="throws-mkdir-all-foreign-path-string-void"><code>throws mkdir_all(foreign path: String) -&gt; void</code></h3>
+<h3 id="throws-mkdir-all-path-string-void"><code>throws mkdir_all(path: String) -&gt; void</code></h3>
 <p>Create a directory path and any missing parents.</p>
 <p><strong>Behavior</strong></p>
 <ul>
@@ -108,10 +108,10 @@
 </ul>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - Directory path.</li>
+  <li><code>path: String</code> - Directory path.</li>
 </ol>
 <p>---</p>
-<h3 id="throws-remove-file-foreign-path-string-void"><code>throws remove_file(foreign path: String) -&gt; void</code></h3>
+<h3 id="throws-remove-file-path-string-void"><code>throws remove_file(path: String) -&gt; void</code></h3>
 <p>Remove a file.</p>
 <p><strong>Behavior</strong></p>
 <ul>
@@ -119,10 +119,10 @@
 </ul>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - File path.</li>
+  <li><code>path: String</code> - File path.</li>
 </ol>
 <p>---</p>
-<h3 id="throws-remove-dir-foreign-path-string-void"><code>throws remove_dir(foreign path: String) -&gt; void</code></h3>
+<h3 id="throws-remove-dir-path-string-void"><code>throws remove_dir(path: String) -&gt; void</code></h3>
 <p>Remove an empty directory.</p>
 <p><strong>Behavior</strong></p>
 <ul>
@@ -130,10 +130,10 @@
 </ul>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - Directory path.</li>
+  <li><code>path: String</code> - Directory path.</li>
 </ol>
 <p>---</p>
-<h3 id="throws-remove-dir-all-foreign-path-string-void"><code>throws remove_dir_all(foreign path: String) -&gt; void</code></h3>
+<h3 id="throws-remove-dir-all-path-string-void"><code>throws remove_dir_all(path: String) -&gt; void</code></h3>
 <p>Remove a directory tree recursively.</p>
 <p><strong>Behavior</strong></p>
 <ul>
@@ -141,7 +141,7 @@
 </ul>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>foreign path: String</code> - Directory path.</li>
+  <li><code>path: String</code> - Directory path.</li>
 </ol>
 <p><strong>Notes</strong></p>
 <ul>

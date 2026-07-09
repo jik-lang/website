@@ -279,23 +279,39 @@ end</code></pre>
   <li><code>print</code></li>
   <li><code>println</code></li>
   <li><code>concat</code></li>
+  <li><code>copy</code></li>
 </ul>
-<p><code>concat</code> is still explicit about its destination region: its last argument must be a <code>Region</code>, and the returned <code>String</code> is allocated there.</p>
+<p><code>concat</code> is still explicit about its destination region: its last argument must be a <code>Region</code>, and the returned <code>String</code> is allocated there. <code>copy</code> is also explicit about its destination region, but unlike ordinary calls its source value may come from any region.</p>
 <pre><code class="language-jik">func show(foreign left: String, right: String, r: Region):
     println(left, right)
     joined := concat(left, right, r)
+    left_copy := copy(left, r)
 end</code></pre>
 <h3 id="8-6-copying-values-between-regions">8.6 Copying values between regions</h3>
-<p>Copying values between different regions is currently only supported for values of type <code>String</code>, through the <code>jik/string</code> standard library <code>copy</code> function, whose signature is:</p>
-<p><code>copy(foreign s: String, region: Region) -&gt; String</code></p>
-<p>It copies the given string (which can be allocated in any region, hence marked as <code>foreign</code>) to the destination region.</p>
+<p>Use the builtin <code>copy</code> to explicitly copy specific composite values into a chosen destination region:</p>
+<pre><code class="language-jik">copy(value, region) -&gt; T
+copy(value)         -&gt; T  // allocated in the local region</code></pre>
+<p>Supported copyable types are:</p>
+<ul>
+  <li><code>String</code></li>
+  <li><code>Vec[P]</code></li>
+  <li><code>Dict[P]</code></li>
+  <li><code>Option[P]</code></li>
+  <li>structs whose fields are all <code>P</code></li>
+  <li>variants whose every payload type is <code>P</code></li>
+</ul>
+<p>Here <code>P</code> means <code>int</code>, <code>double</code>, <code>bool</code>, <code>char</code>, <code>String</code>, or an enum type. Strings are primitive-like for this rule, but copied strings are freshly allocated in the destination region.</p>
+<p>Top-level primitives and enums are rejected because they are not composite:</p>
+<pre><code class="language-jik">copy(12, _)       // compile error
+copy(State.ON, _) // compile error</code></pre>
+<p>Extern structs and nested composites such as <code>Vec[Vec[int]]</code> or a struct field of type <code>Vec[String]</code> are not supported.</p>
 <h3 id="8-7-summary">8.7 Summary</h3>
 <p>If you keep these rules in mind, the Jik region model is fairly straightforward:</p>
 <ol>
   <li>Composite values live in regions.</li>
   <li><code>_</code> is the current function's local region.</li>
   <li>Functions that return composite values usually take a destination <code>Region</code>.</li>
-  <li>Calls to functions whose final parameter has type <code>Region</code> may omit that argument. When omitted, the caller’s local region is passed automatically.</li>
+  <li>Calls to functions whose final parameter has type <code>Region</code> may omit that argument. When omitted, the caller's local region is passed automatically.</li>
   <li>Composite calls and stores must preserve region consistency.</li>
   <li>Use <code>foreign</code> for read-oriented inputs from other regions.</li>
 </ol>
