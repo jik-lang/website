@@ -291,6 +291,13 @@ end</code></pre>
 <p>Use the builtin <code>copy</code> to explicitly copy specific composite values into a chosen destination region:</p>
 <pre><code class="language-jik">copy(value, region) -&gt; T
 copy(value)         -&gt; T  // allocated in the local region</code></pre>
+<p>A concrete example:</p>
+<pre><code class="language-jik">func foo(v: Vec[int]):
+    x := [1, 2, 3]
+    x_new = copy(x, .v)   // copy x to the region of v
+    v_new = copy(v, _)    // copy v to the local region
+    return x_new
+end</code></pre>
 <p>Supported copyable types are:</p>
 <ul>
   <li><code>String</code></li>
