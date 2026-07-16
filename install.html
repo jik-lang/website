@@ -89,8 +89,12 @@ jik help</code></pre>
         <h2>Configure a Host C Compiler</h2>
         <p>
           <code>jik run</code> and <code>jik build</code> need a host C compiler.
-          Configure one either by using the <code>--cc</code> CLI option or (recommended) by setting the <code>JIK_CC</code> environment variable.
-          For example, on Windows: <code>set JIK_CC=clang</code>
+          Configure one either by using the <code>--cc</code> CLI option or (recommended) by setting the <code>JIK_CC</code> environment variable.</p>
+        </p>
+        <p>
+          For a simple Windows setup, install <a href="https://winlibs.com/">MinGW-w64 GCC from WinLibs</a>,
+          add its <code>bin</code> directory to <code>PATH</code>, and set
+          <code>JIK_CC=gcc</code> (for example: <code>set JIK_CC=gcc</code>).
         </p>
       </section>
 
