@@ -124,6 +124,20 @@ b2 := Buffer{}</code></pre>
 <p>Only empty construction is allowed. Extern structs are still opaque, so a fielded construction such as <code>Buffer{x = 1}</code> is invalid.</p>
 <p>Extern structs without an init function cannot be default-constructed:</p>
 <pre><code class="language-jik">f: io::File // error because io::File has no extern init function</code></pre>
+<h3 id="16-4-native-build-requirements">16.4 Native build requirements</h3>
+<p>An FFI module can declare the include paths, library paths, libraries, and runtime files needed to build programs that import it:</p>
+<pre><code class="language-jik">@includedir(&quot;../vendor/raylib/include&quot;)
+
+@platform(windows)
+@libdir(&quot;../vendor/raylib/lib/windows&quot;)
+@link(&quot;raylib&quot;, &quot;gdi32&quot;, &quot;winmm&quot;)
+@copy(&quot;../vendor/raylib/bin/windows/raylib.dll&quot;)
+
+@platform(linux)
+@libdir(&quot;../vendor/raylib/lib/linux&quot;)
+@link(&quot;raylib&quot;, &quot;m&quot;, &quot;pthread&quot;, &quot;dl&quot;)</code></pre>
+<p>Every module begins in platform <code>all</code>. A <code>@platform</code> directive selects the platform for later build directives in the same physical file; <code>@platform(all)</code> restores platform-independent behavior. Relative paths are resolved from the file containing the directive.</p>
+<p>Requirements are collected transitively from every reachable module. <code>@includedir</code> adds header search directories, <code>@libdir</code> adds library search directories, <code>@link</code> links named libraries, and <code>@copy</code> copies files beside the executable after a successful compilation. Each directive accepts one or more comma-separated string arguments.</p>
 <p>---</p>
         </article>
       </div>

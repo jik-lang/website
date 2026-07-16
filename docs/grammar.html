@@ -103,6 +103,14 @@ ml_string       ::= '&quot;&quot;&quot;' { any-char } '&quot;&quot;&quot;'</code
                 identifier newline?</code></pre>
 <p>The closing delimiter must appear alone on its line, apart from trailing whitespace.</p>
 <p>Embedded C is copied through to the generated C translation. Non-ASCII text in embedded C therefore remains dependent on the host C compiler's handling of C source encoding.</p>
+<h3 id="build-directives">Build Directives</h3>
+<pre><code class="language-ebnf">build_directive ::= platform_directive | path_directive | link_directive
+platform_directive ::= &quot;@platform&quot; &quot;(&quot; ( &quot;all&quot; | &quot;windows&quot; | &quot;linux&quot; ) &quot;)&quot; newline
+path_directive ::= ( &quot;@includedir&quot; | &quot;@libdir&quot; | &quot;@copy&quot; )
+                   &quot;(&quot; string_literal { &quot;,&quot; string_literal } &quot;)&quot; newline
+link_directive ::= &quot;@link&quot; &quot;(&quot; string_literal { &quot;,&quot; string_literal } &quot;)&quot; newline</code></pre>
+<p>Build directives are top-level declarations. Each physical module starts with platform <code>all</code>. <code>@platform(windows)</code> or <code>@platform(linux)</code> selects the platform for subsequent build directives in that module, while <code>@platform(all)</code> returns to platform-independent requirements. Platform state does not cross module boundaries and does not conditionally compile Jik declarations or embedded C.</p>
+<p>Relative include directories, library directories, and copied files are resolved from the source file containing the directive. Directives from all reachable modules are applied by <code>build</code>, <code>run</code>, and <code>memchk</code>.</p>
 <h2 id="types">Types</h2>
 <pre><code class="language-ebnf">type_desc ::= named_type [ alloc_suffix ]
             | &quot;Vec&quot; &quot;[&quot; type_desc &quot;]&quot; [ alloc_suffix ]
@@ -134,7 +142,7 @@ None[r]</code></pre>
 <p>Allocation suffix syntax takes precedence immediately after composite literals. As a result, forms like <code>[1, 2][0]</code> are not parsed as direct subscripting of a literal. In the current language, composite temporaries must first be bound to a name before subscripting, member access, mutation, or iteration.</p>
 <h2 id="program-structure">Program Structure</h2>
 <pre><code class="language-ebnf">program ::= { newline | use_decl | global_decl | top_decl | variant_decl
-            | enum_decl | embed_block }</code></pre>
+            | enum_decl | embed_block | build_directive }</code></pre>
 <h3 id="imports">Imports</h3>
 <pre><code class="language-ebnf">use_decl ::= &quot;use&quot; string_literal [ &quot;as&quot; identifier ]</code></pre>
 <h3 id="globals">Globals</h3>

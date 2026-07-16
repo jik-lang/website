@@ -56,6 +56,54 @@
 <h2 id="types">Types</h2>
 <p>_None._</p>
 <h2 id="functions">Functions</h2>
+<h3 id="from-int-value-int-region-region-string"><code>from_int(value: int, region: Region) -&gt; String</code></h3>
+<p>Convert an integer to a string.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>value: int</code> - Integer value.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A newly allocated decimal string.</li>
+</ul>
+<p>---</p>
+<h3 id="from-double-value-double-region-region-string"><code>from_double(value: double, region: Region) -&gt; String</code></h3>
+<p>Convert a double to a string.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>value: double</code> - Double value.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A newly allocated string representation of the double.</li>
+</ul>
+<p>---</p>
+<h3 id="from-bool-value-bool-region-region-string"><code>from_bool(value: bool, region: Region) -&gt; String</code></h3>
+<p>Convert a boolean to a string.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>value: bool</code> - Boolean value.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>&quot;true&quot;</code> or <code>&quot;false&quot;</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="from-char-value-char-region-region-string"><code>from_char(value: char, region: Region) -&gt; String</code></h3>
+<p>Convert a character to a string.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>value: char</code> - Character value.</li>
+  <li><code>region: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>A newly allocated one-byte string.</li>
+</ul>
+<p>---</p>
 <h3 id="concat-foreign-left-string-foreign-right-string-region-region-string"><code>concat(foreign left: String, foreign right: String, region: Region) -&gt; String</code></h3>
 <p>Concatenate two strings.</p>
 <p><strong>Parameters</strong></p>

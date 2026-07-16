@@ -73,10 +73,12 @@
 <p>Translate a Jik source file to C and compile it to an executable.</p>
 <p>Options:</p>
 <p>default output path is <code>&lt;input_file&gt;.exe</code> on Windows and <code>&lt;input_file&gt;</code> on Linux.</p>
+<p>executable.</p>
 <ul>
   <li><code>--out &lt;filepath&gt;</code>: Write the executable to this path. When omitted, the</li>
   <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
   <li><code>--ccflags &lt;args&gt;</code>: Extra C compiler arguments.</li>
+  <li><code>--preview</code>: Print the compiler command without running it or creating an</li>
   <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
@@ -84,6 +86,9 @@
 </ul>
 <p>Example:</p>
 <pre><code class="language-sh">jik build hello.jik --release</code></pre>
+<p>To inspect the compiler command without running it:</p>
+<pre><code class="language-sh">jik build hello.jik --preview</code></pre>
+<p>Reachable modules may contain native build directives such as <code>@includedir</code>, <code>@libdir</code>, <code>@link</code>, and <code>@copy</code>. Active directives are applied transitively by <code>build</code> and <code>run</code>; copied files are placed beside the produced executable. <code>@platform(windows)</code>, <code>@platform(linux)</code>, and <code>@platform(all)</code> select the platform for subsequent build directives in the same source file.</p>
 <h3 id="jik-tran"><code>jik tran &lt;filepath&gt;</code></h3>
 <p>Translate a Jik source file to C.</p>
 <p>Options:</p>
@@ -142,10 +147,15 @@ jik help jik/io</code></pre>
 <p>If no compiler is found, <code>jik run</code>, <code>jik build</code>, and <code>jik memchk</code> fail before compilation.</p>
 <h2 id="package-imports">Package Imports</h2>
 <p>Imports under <code>pkg/...</code> are resolved from the directory configured by the <code>JIK_PKG_PATH</code> environment variable.</p>
-<p>For example:</p>
+<p>The package entry module:</p>
 <pre><code class="language-jik">use &quot;pkg/csv&quot;</code></pre>
 <p>resolves to:</p>
 <pre><code class="language-text">&lt;JIK_PKG_PATH&gt;/packages/csv/src/csv.jik</code></pre>
+<p>Package submodules resolve below the package <code>src/</code> directory:</p>
+<pre><code class="language-jik">use &quot;pkg/csv/reader&quot;
+use &quot;pkg/csv/utils/foo&quot;</code></pre>
+<pre><code class="language-text">&lt;JIK_PKG_PATH&gt;/packages/csv/src/reader.jik
+&lt;JIK_PKG_PATH&gt;/packages/csv/src/utils/foo.jik</code></pre>
 <p>Use <code>jik env</code> to check the currently resolved value. It is printed as <code>pkg_path=&lt;path&gt;</code>. If <code>JIK_PKG_PATH</code> is not set and a program imports <code>pkg/...</code>, compilation fails with a package path error.</p>
 <h2 id="common-workflows">Common Workflows</h2>
 <ul>
