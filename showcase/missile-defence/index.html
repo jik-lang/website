@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#070c1c">
+    <title>Missile Defence</title>
+    <style>
+      :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #070c1c; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: radial-gradient(circle at top, #162444, #070c1c 55%); }
+      main { width: min(96vw, 1040px); text-align: center; }
+      h1 { margin: 0.5rem 0; letter-spacing: 0.08em; font-size: clamp(1.5rem, 4vw, 2.4rem); }
+      p { color: #b7c6d8; margin: 0.5rem 0 1rem; }
+      canvas { display: block; width: 100%; aspect-ratio: 16 / 9; outline: none; background: #070c1c; cursor: crosshair; }
+      #status { min-height: 1.5rem; color: #5aebff; }
+      kbd { padding: 0.08em 0.35em; border: 1px solid #6f829b; border-radius: 0.25em; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>MISSILE DEFENCE</h1>
+      <p>Use <kbd>←</kbd>/<kbd>→</kbd> to select difficulty, <kbd>Enter</kbd> or <kbd>Space</kbd> to start, click to launch, <kbd>P</kbd> to pause, and <kbd>M</kbd> for the menu.</p>
+      <canvas id="canvas" tabindex="0" aria-label="Missile Defence game"></canvas>
+      <div id="status">Loading game…</div>
+    </main>
+    <script>
+      const status = document.getElementById('status');
+      window.Module = {
+        canvas: document.getElementById('canvas'),
+        setStatus(message) { status.textContent = message || ''; },
+        locateFile(path) { return `public/${path}`; }
+      };
+      Module.canvas.addEventListener('click', () => Module.canvas.focus());
+    </script>
+    <script>
+      if (location.protocol === 'file:') {
+        status.textContent = 'Start a local HTTP server, then open http://localhost:8000.';
+      } else {
+        const gameScript = document.createElement('script');
+        gameScript.async = true;
+        gameScript.src = 'public/missile-defence.js';
+        document.body.appendChild(gameScript);
+      }
+    </script>
+  </body>
+</html>
