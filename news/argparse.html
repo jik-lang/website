@@ -27,8 +27,8 @@
         <p class="news-date">Published <time datetime="2026-07-21">July 21, 2026</time></p>
         <h1>Argparse package now available</h1>
         <p>
-          The new <code>argparse</code> package makes it easy to build Jik
-          command-line applications. It supports positional arguments,
+          The new <code>argparse</code> package makes it easy to build 
+          command-line applications with Jik. It supports positional arguments,
           long and short options, option values, and flags.
         </p>
         <p>
@@ -45,12 +45,15 @@ func main(args):
     argparse::add_option_positional(output, "file", "Output path.")
 
     argparse::add_option(ap, "--verbose", "-v", "Show extra output.")
+    
+    args := ["in.txt", "--output", "out.txt", "-v"]
     result := must argparse::parse(ap, args, _)
 
     input := result.positionals["input"]?
     output_path := result.options["--output"]?["file"]?
     if result.options["--verbose"] is Some:
         println("Reading ", input)
+        println("Writing to ", output_path)
     end
 end</code></pre>
         <p class="links">
@@ -69,5 +72,6 @@ end</code></pre>
         </span>
       </div>
     </footer>
+    <script src="../script.js"></script>
   </body>
 </html>
