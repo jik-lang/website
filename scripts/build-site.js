@@ -2,7 +2,14 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const pages = ["index.html", "install.html", "packages.html", "news.html"];
+const pages = [
+  "index.html",
+  "install.html",
+  "packages.html",
+  "news.html",
+  "news/argparse.html",
+  "news/raylib-6.html",
+];
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8").trimEnd();
@@ -55,7 +62,7 @@ for (const pagePath of pages) {
     page,
     `${pagePath} header`,
     /    <header class="site-header">[\s\S]*?    <\/header>/,
-    header
+    localizeHeaderLinks(header, pagePath)
   );
 
   page = replaceBlock(

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Argparse package now available - Jik News</title>
+    <meta name="description" content="The argparse package is now available for Jik.">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../index.html#overview">Overview</a>
+          <a href="../news.html">News</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="container section news-post">
+        <p class="news-date">Published <time datetime="2026-07-21">July 21, 2026</time></p>
+        <h1>Argparse package now available</h1>
+        <p>
+          The new <code>argparse</code> package makes it easy to build Jik
+          command-line applications. It supports positional arguments,
+          long and short options, option values, and flags.
+        </p>
+        <p>
+          Import it with <code>use "pkg/argparse"</code>, define the
+          arguments your program accepts, and parse any argument vector.
+        </p>
+        <pre><code class="language-jik">use "pkg/argparse"
+
+func main(args):
+    ap := argparse::new(_)
+    argparse::add_positional(ap, "input", "Input file.")
+
+    output := argparse::add_option(ap, "--output", "-o", "Output file.")
+    argparse::add_option_positional(output, "file", "Output path.")
+
+    argparse::add_option(ap, "--verbose", "-v", "Show extra output.")
+    result := must argparse::parse(ap, args, _)
+
+    input := result.positionals["input"]?
+    output_path := result.options["--output"]?["file"]?
+    if result.options["--verbose"] is Some:
+        println("Reading ", input)
+    end
+end</code></pre>
+        <p class="links">
+          <span>Argparse package: <a href="https://github.com/jik-lang/jik-packages/tree/main/packages/argparse">github.com/jik-lang/jik-packages/tree/main/packages/argparse</a></span>
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>
