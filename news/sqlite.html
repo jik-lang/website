@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQLite package now available - Jik News</title>
+    <meta name="description" content="The SQLite package is now available in the Jik packages repository.">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../index.html#overview">Overview</a>
+          <a href="../news.html">News</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="container section news-post">
+        <p class="news-date">Published <time datetime="2026-07-23">July 23, 2026</time></p>
+        <h2>SQLite package now available</h2>
+        <p>
+          The <code>sqlite</code> package is now available in the Jik packages
+          repository. It provides database connections, SQL execution, prepared
+          statements, result reading, and close operations.
+        </p>
+        <p>
+          Import it with <code>use "pkg/sqlite"</code>. The package links a
+          bundled SQLite library, so programs built with it do not need a
+          separate SQLite DLL or shared library alongside the executable.
+        </p>
+        <pre><code class="language-jik">use "pkg/sqlite"
+
+func main():
+    database := must sqlite::open(":memory:", _)
+    must sqlite::exec(database, "create table item (id integer, name text)")
+
+    insert := must sqlite::prepare(database, "insert into item values (?, ?)", _)
+    must sqlite::bind_int(insert, 1, 1)
+    must sqlite::bind_text(insert, 2, "Ada")
+    must sqlite::step(insert)
+    must sqlite::finalize(insert)
+
+    query := must sqlite::prepare(database, "select name from item where id = ?", _)
+    must sqlite::bind_int(query, 1, 1)
+    if must sqlite::step(query):
+        println(must sqlite::column_text(query, 0, _))
+    end
+    must sqlite::finalize(query)
+    must sqlite::close(database)
+end</code></pre>
+        <p class="links">
+          <span>SQLite package: <a href="https://github.com/jik-lang/jik-packages/tree/main/packages/sqlite">github.com/jik-lang/jik-packages/tree/main/packages/sqlite</a></span>
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+    <script src="../script.js"></script>
+  </body>
+</html>

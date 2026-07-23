@@ -9,6 +9,7 @@ const pages = [
   "news.html",
   "news/argparse.html",
   "news/raylib-6.html",
+  "news/sqlite.html",
 ];
 
 function read(relativePath) {
