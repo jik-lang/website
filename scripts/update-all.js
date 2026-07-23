@@ -27,8 +27,10 @@ function run(label, script, args = []) {
 
 const docsSource = argValue("--docs-source");
 const releasesSource = argValue("--releases-source");
+const packagesSource = argValue("--packages-source");
 
 run("documentation", "update-docs.js", docsSource ? ["--source", docsSource] : []);
 run("releases", "update-releases.js", releasesSource ? ["--source", releasesSource] : []);
+run("packages", "update-packages.js", packagesSource ? ["--source", packagesSource] : []);
 
-console.log("\nUpdated documentation and releases");
+console.log("\nUpdated documentation, releases, and packages");

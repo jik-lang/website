@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "build": "node scripts/build-site.js",
+    "test": "node --test",
     "update": "node scripts/update-all.js",
-    "update:test": "node scripts/update-all.js --docs-source test/fixtures/docs --releases-source test/fixtures/github-releases.json"
+    "update:test": "node scripts/update-all.js --docs-source test/fixtures/docs --releases-source test/fixtures/github-releases.json --packages-source test/fixtures/jik-packages-readme.md"
   }
 }

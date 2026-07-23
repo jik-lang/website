@@ -30,15 +30,18 @@ After publishing a new Jik release, regenerate the website content:
 npm.cmd run update
 ```
 
-This updates the generated documentation pages and release cards. To test the
-flow with fixtures:
+This updates the generated documentation pages, release cards, and the package
+list on `packages.html`. The package list is read from the `## Packages`
+section of the
+[`jik-packages` README](https://github.com/jik-lang/jik-packages#packages).
+To test the flow with fixtures:
 
 ```powershell
 npm.cmd run update:test
 ```
 
-Commit `install.html` and the generated `docs/` HTML files after regenerating
-them.
+Commit `install.html`, `packages.html`, and the generated `docs/` HTML files
+after regenerating them.
 
 ## Files
 
@@ -51,4 +54,4 @@ them.
 - `assets/` - logo images
 - `src/partials/` - shared header and footer
 - `scripts/` - build and release generation scripts
-- `test/fixtures/github-releases.json` - fake release data for local testing
+- `test/fixtures/` - fake documentation, release, and package data for local testing
