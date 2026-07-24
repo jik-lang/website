@@ -9,6 +9,7 @@ const pages = [
   "news.html",
   "news/argparse.html",
   "news/raylib-6.html",
+  "news/region-safe-functions.html",
   "news/sqlite.html",
 ];
 
