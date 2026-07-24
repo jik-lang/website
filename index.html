@@ -6,7 +6,7 @@
     <title>Jik Programming Language</title>
     <meta
       name="description"
-      content="Jik is a readable systems programming language with region-based memory management that compiles to C."
+      content="Jik is a readable, statically typed language that compiles to C and manages memory with regions."
     >
     <link rel="stylesheet" href="styles.css">
   </head>
@@ -33,8 +33,8 @@
         <div class="intro-copy">
           <h1>Jik</h1>
           <p class="tagline">
-            A readable programming language with region-based memory management
-            that compiles to C.
+            A readable, statically typed language that compiles to C and
+            manages memory with regions.
           </p>
           <p class="links cta-links">
             <a class="button primary" href="install.html#latest">Download latest release</a>
@@ -78,24 +78,24 @@
           <article>
             <h3>Practical Language Features</h3>
             <p>
-              Vectors, dictionaries, options, variants, error handling, modules, and a
-              small standard library give Jik the building blocks for writing real programs.
+              Vectors, dictionaries, options, variants, error handling, a standard
+              library, and a growing package ecosystem support real programs.
             </p>
           </article>
           <article>
             <h3>Region-Based Memory</h3>
             <p>
-              Composite values are allocated into explicit regions that
-              determine lifetime, avoiding garbage collection while preventing
-              invalid cross-region use.
+              Composite values are allocated into regions that determine their
+              lifetime, while compiler checks prevent references across regions
+              with incompatible lifetimes.
             </p>
           </article>
           <article>
             <h3>Predictable C Output</h3>
             <p>
-              Jik uses a source-to-C compilation model, producing readable C
-              that can be inspected, debugged, and built with existing
-              toolchains.
+              Jik uses a source-to-C compilation model, producing predictable
+              generated C that can be inspected, debugged, and built with
+              existing toolchains.
             </p>
           </article>
         </div>
