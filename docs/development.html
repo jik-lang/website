@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jik Docs - Jik Documentation</title>
+  <title>Development notes and roadmap - Jik Documentation</title>
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
@@ -26,13 +26,13 @@
       <div class="container docs-layout">
         <aside class="docs-sidebar" aria-label="Documentation">
           <h2>Documentation</h2>
-          <a href="./index.html" aria-current="page">Jik Docs</a>
+          <a href="./index.html">Jik Docs</a>
           <a href="./cli.html">Jik CLI Reference</a>
           <a href="./grammar.html">Jik Grammar Reference</a>
           <a href="./known-issues.html">Known Issues and Current Limitations</a>
           <a href="./overview/18-standard-library.html">Jik Standard Library</a>
           <a href="./overview.html">Jik Language Overview</a>
-          <a href="./development.html">Development notes and roadmap</a>
+          <a href="./development.html" aria-current="page">Development notes and roadmap</a>
           <a href="./overview/01-introduction.html">1. Introduction</a>
           <a href="./overview/02-running-jik-code.html">2. Running Jik Code</a>
           <a href="./overview/03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
@@ -52,15 +52,34 @@
           <a href="./overview/17-builtins.html">17. Builtins</a>
         </aside>
         <article class="docs-content">
-<h1 id="jik-docs">Jik Docs</h1>
-<p>This site contains the Jik language overview, grammar reference, and standard library documentation.</p>
+<h1 id="development-notes-and-roadmap">Development notes and roadmap</h1>
+<h2 id="repository-layout">Repository layout</h2>
 <ul>
-  <li>Start with the <a href="./overview.html">language overview</a></li>
-  <li>For command-line usage, see the <a href="./cli.html">Jik CLI reference</a></li>
-  <li>For standard library (<code>jiklib</code>), see the <a href="./overview/18-standard-library.html">standard library documentation</a></li>
-  <li>For syntax definition, see the <a href="./grammar.html">grammar reference</a></li>
-  <li>For current implementation limitations, see <a href="./known-issues.html">known issues and current limitations</a></li>
-  <li>For repository layout, development, and the roadmap, see <a href="./development.html">development notes</a></li>
+  <li><code>src/</code> - compiler source</li>
+  <li><code>jiklib/</code> - Jik standard library modules</li>
+  <li><code>support/</code> - Jik support library</li>
+  <li><code>test/</code> - test suite</li>
+  <li><code>docs/</code> - language and development documentation</li>
+  <li><code>examples/</code> - example Jik programs</li>
+  <li><code>assets/</code> - repository assets</li>
+  <li><code>scripts/</code> - development scripts</li>
+  <li><code>tools/</code> - development tools, including syntax highlighting</li>
+</ul>
+<h2 id="building-and-testing">Building and testing</h2>
+<p>Build the compiler from the repository root with <code>make</code>. Run the test suite with <code>make test</code>.</p>
+<h2 id="roadmap">Roadmap</h2>
+<h3 id="0-1-x-implementation-stabilisation">0.1.x — implementation stabilisation</h3>
+<ul>
+  <li>Keep the intended language syntax stable.</li>
+  <li>Find and fix compiler and support-library issues.</li>
+  <li>Extend the standard library where needed.</li>
+  <li>Expand the test suite.</li>
+  <li>Validate the implementation by writing real Jik programs.</li>
+</ul>
+<h3 id="later">Later</h3>
+<ul>
+  <li>Bootstrap the implementation by rewriting Jik in Jik.</li>
+  <li>Add concurrency support, either in the C implementation or during bootstrapping.</li>
 </ul>
         </article>
       </div>

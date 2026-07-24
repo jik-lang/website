@@ -15,7 +15,7 @@
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-          <a href="../../docs/index.html">Docs</a>
+          <a href="../index.html">Docs</a>
           <a href="../../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -32,6 +32,7 @@
           <a href="../known-issues.html">Known Issues and Current Limitations</a>
           <a href="./18-standard-library.html">Jik Standard Library</a>
           <a href="../overview.html">Jik Language Overview</a>
+          <a href="../development.html">Development notes and roadmap</a>
           <a href="./01-introduction.html">1. Introduction</a>
           <a href="./02-running-jik-code.html">2. Running Jik Code</a>
           <a href="./03-files-modules-and-imports.html">3. Files, Modules, and Imports</a>
@@ -77,6 +78,9 @@ func main():
     label := make_label(_)   // allocate returned String in main's local region
     println(label)
 end</code></pre>
+<h4 id="8-1-1-the-global-region">8.1.1 The global region</h4>
+<p>Composite globals are allocated in the global region. The global region is created at program start and remains alive until program exit.</p>
+<p>Global values, regardless if composite or not, are immutable: their members and container elements cannot be changed. A function also cannot return a composite global directly.</p>
 <h3 id="8-2-choosing-a-non-local-allocation-target">8.2 Choosing a non-local allocation target</h3>
 <p>Composite literals can also be allocated into another region:</p>
 <pre><code class="language-jik">p2 := Point{}[.p1]  // region of p1, where p1 is some composite value
@@ -127,22 +131,27 @@ end</code></pre>
 <p>A region owns all composite values allocated into it. When a region is destroyed, all those composite values become invalid. Jik's region checks prevent a composite in one region from storing references to composite data in an incompatible region.</p>
 <p>In order for the Jik compiler to be able to check memory consistency without tracking arbitrary object graphs, it imposes certain restrictions on user code.</p>
 <h4 id="8-4-2-same-region-rule">8.4.2 Same-region rule</h4>
-<p>For function calls involving composite arguments, Jik enforces the following rule:</p>
+<p>For a call that the compiler cannot prove is <strong>region-safe</strong>, Jik enforces the following rule:</p>
 <ul>
   <li>all non-<code>foreign</code> composite arguments and all <code>Region</code> arguments in one call must be in the same region</li>
 </ul>
-<p>This rule is referred to as the <strong>same-region rule</strong>.</p>
+<p>This default requirement is referred to as the <strong>same-region rule</strong>. Calls to region-safe functions are a compiler-proven exception to the rule, and are described in <a href="#843-region-safe-functions">Region-safe functions</a>.</p>
 <p>As an example, take the following function:</p>
-<pre><code class="language-jik">func foo(v1: Vec[int], v2: Dict[bool], context: Context, r: Region):
-    // ...
+<pre><code class="language-jik">struct Context:
+    id: int
+    parent: Option[Context]
+end
+
+func foo(v1: Vec[Context], v2: Dict[bool], ctx: Context, r: Region):
+    push(v1, ctx)
 end</code></pre>
-<p>In the function above, no argument is prefixed with the <code>foreign</code> keyword so the Jik compiler enforces that each call site of that function passes only arguments to it, which are all allocated in the same region. This means that <code>v1</code>, <code>v2</code>, <code>context</code> and <code>r</code> all need to be in the same region.</p>
+<p>The function above can store <code>ctx</code> in <code>v1</code>, so it is not region-safe, since <code>v1</code> and <code>ctx</code> can in general be allocated in different regions. No argument is prefixed with <code>foreign</code>, so every call to it must pass <code>v1</code>, <code>v2</code>, <code>ctx</code>, and <code>r</code> from the same region.</p>
 <p>Note once again that this applies only to composite arguments. Primitive values do not participate in region checks and rules.</p>
 <p>On the other hand, if the function was defined with:</p>
-<pre><code class="language-jik">func foo(foreign v1: Vec[int], foreign v2: Dict[bool], context: Context, r: Region):
-    // ...
+<pre><code class="language-jik">func foo(foreign v1: Vec[int], foreign v2: Dict[bool], ctx: Context, r: Region) -&gt; Context:
+    return ctx
 end</code></pre>
-<p>the only <code>context</code> and <code>r</code> are required to be in the same region.</p>
+<p>This function is not region-safe because it returns a composite value. Since there are multiple regions involved in the function signature, without the same-region rule, the compiler could not infer to which region the returned value belongs. Its <code>foreign</code> inputs are excluded from the same-region rule, so <code>ctx</code> and <code>r</code> must be in the same region.</p>
 <p>Additionally for an argument of type <code>Region</code> &quot;to be in a region&quot; simply means that it equals that region.</p>
 <p>Examples:</p>
 <pre><code class="language-jik">struct Person:
@@ -160,22 +169,38 @@ func demo(p: Person):
     rename(p, &quot;Alice&quot;[.p])      // OK: &quot;Alice&quot; is explicitly allocated in region of &quot;p&quot;
     rename(p, &quot;Alice&quot;)          // OK: compiler automatically allocates &quot;Alice&quot; in region of &quot;p&quot;
 end</code></pre>
-<h4 id="8-4-3-more-about-foreign">8.4.3 More about <code>foreign</code></h4>
-<p>The purpose of <code>foreign</code> is to make user code more flexible - we often need to pass composite arguments which are only meant to be read from, but which do not participate in any composite store operations.</p>
-<p>However, note that this has nothing to do with mutability - as long as the contents of a <code>foreign</code> composite argument are primitive (e.g. non-composite), they can be freely mutated.</p>
+<h4 id="8-4-3-region-safe-functions">8.4.3 Region-safe functions</h4>
+<p>The compiler does not apply the same-region rule to a user-defined function it can prove is <strong>region-safe</strong>. A call to such a function may pass its composite and <code>Region</code> arguments from different regions.</p>
+<p>A function is region-safe when it cannot make one region reference a composite value from another region. In practice, this means it may inspect values, operate only on local values, or store an allocated value only into the same destination region. It must not return a composite value, store a value from one parameter region into another, store a <code>foreign</code> parameter, or call a function that is not itself region-safe.</p>
+<p>For example, this read-only helper is region-safe, so its caller may pass values allocated in different regions:</p>
+<pre><code class="language-jik">func compare(left: String, right: String):
+    println(left, right)
+end
+
+func demo(r: Region):
+    compare(&quot;local&quot;, &quot;other&quot;[r])    // OK: `compare` is region-safe
+end</code></pre>
+<p>The relaxation does not permit an unsafe store. This function is not region-safe, so its callers still use the ordinary same-region rule:</p>
+<pre><code class="language-jik">func append(dst: Vec[String], value: String):
+    push(dst, value)    // `value` may belong to a different caller region
+end</code></pre>
+<p>If a value must be stored in another region, copy it explicitly into the destination region first:</p>
+<pre><code class="language-jik">func append_copy(dst: Vec[String], value: String):
+    push(dst, copy(value, .dst))
+end</code></pre>
+<p>This is a compiler-inferred property, not a declaration or an opt-in. If the function body later gains an unsafe operation, its calls again require the same-region rule.</p>
+<h4 id="8-4-4-more-about-foreign">8.4.4 More about <code>foreign</code></h4>
+<p>A composite function argument marked as <code>foreign</code> will not be subject to the same-region rule. The reason <code>foreign</code> exists is to provide a way to relax the same-region rule for arguments which do not participate in composite stores, but only need to be read from, or have their primitive contents changed.</p>
+<p><code>foreign</code> should not be added only because a function reads an input. If the helper is already inferred as region-safe, the compiler already permits its arguments to come from different regions without <code>foreign</code>.</p>
+<p><code>foreign</code> has nothing to do with mutability. As long as the contents of a <code>foreign</code> composite argument are primitive (for example, non-composite), they can be freely mutated.</p>
 <p>Furthermore, if multiple arguments are marked as <code>foreign</code>, stores between them are not allowed, as these arguments can in general come from different regions, and this would break memory consistency.</p>
-<p>Finally, returning an argument or a value rooted in a <code>foreign</code>-marked argument from a function is not allowed. The reason for this is implied by a direct consequence of the Same-region rule: the return value of a composite function which takes composite arguments, is in the same region as the region where the arguments are allocated (since returning a local value is not allowed, this is the only possibility).</p>
+<p>Finally, returning an argument or a value rooted in a <code>foreign</code>-marked argument from a function is not allowed. For a function call subject to the same-region rule, a composite return value belongs to the same region as its non-<code>foreign</code> composite arguments and any <code>Region</code> arguments (returning a local value is not allowed). Allowing a <code>foreign</code> return would leave its region ambiguous.</p>
 <p>This allows the Jik compiler to infer in which region class a function call result is allocated - allowing <code>foreign</code> returns would make this impossible.</p>
-<h4 id="8-4-4-consequences-of-the-same-region-rule">8.4.4 Consequences of the same-region rule</h4>
-<p>The same-region rule allows Jik to treat each composite as belonging to exactly one of 3 allocation classes:</p>
-<ul>
-  <li>the local class </li>
-  <li>the argument class</li>
-  <li>the foreign class</li>
-</ul>
-<p>It also allows the compiler to safely assume that each composite return value of a function which also takes composite values as parameters, belongs to the same region as the region of the parameters.</p>
-<p>These consequences allow the compiler to check region consistency in a simpler and robust manner.</p>
-<h4 id="8-4-5-examples-of-store-operations">8.4.5 Examples of store operations</h4>
+<h4 id="8-4-5-consequences-of-the-same-region-rule">8.4.5 Consequences of the same-region rule</h4>
+<p>For a call subject to the same-region rule, the compiler can safely infer that a composite return value belongs to the shared region of the function's non-<code>foreign</code> composite parameters and any <code>Region</code> parameters. A function therefore cannot return a locally allocated value, a <code>foreign</code> input, or a composite global.</p>
+<p>The main consequence is that the return value of a function which takes composite parameters needs to be in the same region as the shared region of the function's parameters.</p>
+<p>This gives function return values a predictable lifetime without requiring the compiler to track arbitrary object graphs. To return data in a different region, copy it explicitly into a caller-provided destination region.</p>
+<h4 id="8-4-6-examples-of-store-operations">8.4.6 Examples of store operations</h4>
 <p>Some examples of good vs. bad store operations:</p>
 <pre><code class="language-jik">func bad(y: Vec[Vec[int]]):
     t := [1, 2, 3]
@@ -186,8 +211,8 @@ func good(y: Vec[Vec[int]]):
     t := [1, 2, 3][.y]
     push(y, t)      // OK, since &quot;y&quot; and &quot;t&quot; are in the same region
 end</code></pre>
-<p>No composites between different classes can be mixed through store operations, as this could cause memory corruption. In the function <code>bad</code>, we would write something stored in <code>bad</code>'s local region to a region outliving that region (e.g. the region where <code>y</code> is allocated), which would be wrong.</p>
-<p>In the examples above, the compiler distinguishes between local and argument region classes, and prevents illegal stores between them.</p>
+<p>Composite values from different regions cannot be mixed through store operations, as this could cause memory corruption. In the function <code>bad</code>, we would write something stored in <code>bad</code>'s local region to a region outliving that region (for example, the region where <code>y</code> is allocated), which would be wrong.</p>
+<p>In the examples above, the compiler prevents storing local data in the region of <code>y</code>.</p>
 <p>Further examples:</p>
 <pre><code class="language-jik">func bad_store(names: Dict[String]):
     local_name := &quot;Alice&quot;
@@ -256,7 +281,7 @@ end</code></pre>
     y := [&quot;foo&quot;, x][.v]   // compile error: x is local, but the vector is allocated in v's region
 end</code></pre>
 <h4 id="8-5-4-temporary-containers-passed-to-foreign-parameters">8.5.4 Temporary containers passed to <code>foreign</code> parameters</h4>
-<p>Another rule which makes everyday code look less awkward is as follows: if a composite argument of type <code>Vec</code> or <code>Dict</code> is passed to a function, and if its elements are also composites, then the elements need not be in the same region. For example:</p>
+<p>A temporary <code>Vec</code> or <code>Dict</code> literal passed directly to a <code>foreign</code> parameter may contain composite elements from different regions. This exception applies only in that <code>foreign</code> argument position; ordinary container literals must still be internally region-consistent. For example:</p>
 <pre><code class="language-jik">use &quot;jik/process&quot;
 
 
@@ -273,15 +298,9 @@ end</code></pre>
 <p>This works because the signature of <code>process::capture</code> is:</p>
 <pre><code class="language-jik">throws func capture(foreign program: String, foreign args: Vec[String], region: Region) -&gt; Result</code></pre>
 <p>Since <code>args</code> in <code>process::capture</code> is a <code>foreign</code> vector, at the call site the elements of the vector literal (e.g. the strings) need not be in the same region.</p>
-<h4 id="8-5-5-builtins-omitting-the-same-region-rule">8.5.5 Builtins omitting the same-region rule</h4>
-<p>Some builtins only inspect their composite arguments and do not store them anywhere. These calls do not require all composite arguments to share a writable region, and hence the Jik compiler omits the same-region rule for these.</p>
-<p>The important cases are:</p>
-<ul>
-  <li><code>print</code></li>
-  <li><code>println</code></li>
-  <li><code>concat</code></li>
-  <li><code>copy</code></li>
-</ul>
+<h4 id="8-5-5-region-safe-builtins">8.5.5 Region-safe builtins</h4>
+<p>All currently provided builtins except <code>push</code> are region-safe, so their calls do not need to satisfy the same-region rule. Some only inspect their composite arguments; others, such as <code>concat</code> and <code>copy</code>, explicitly identify the destination region for values they allocate.</p>
+<p><code>push</code> is checked as a store operation because it can retain its value argument in a vector. A <code>push</code> of a primitive value is region-safe; for a composite value, the compiler applies the usual store-safety checks.</p>
 <p><code>concat</code> is still explicit about its destination region: its last argument must be a <code>Region</code>, and the returned <code>String</code> is allocated there. <code>copy</code> is also explicit about its destination region, but unlike ordinary calls its source value may come from any region.</p>
 <pre><code class="language-jik">func show(foreign left: String, right: String, r: Region):
     println(left, right)
@@ -320,7 +339,7 @@ copy(State.ON, _) // compile error</code></pre>
   <li><code>_</code> is the current function's local region.</li>
   <li>Functions that return composite values usually take a destination <code>Region</code>.</li>
   <li>Calls to functions whose final parameter has type <code>Region</code> may omit that argument. When omitted, the caller's local region is passed automatically.</li>
-  <li>Composite calls and stores must preserve region consistency.</li>
+  <li>Composite calls and stores must preserve region consistency, except calls to compiler-proven region-safe functions.</li>
   <li>Use <code>foreign</code> for read-oriented inputs from other regions.</li>
 </ol>
         </article>
