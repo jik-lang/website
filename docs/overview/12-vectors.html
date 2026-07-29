@@ -15,7 +15,7 @@
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-          <a href="../../docs/index.html">Docs</a>
+          <a href="../index.html">Docs</a>
           <a href="../../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -76,7 +76,15 @@ numbers[1] = 3
 assert(pop(numbers) == 3)
 assert(len(numbers) == 1)</code></pre>
 <p><code>push</code>, <code>pop</code> and <code>len</code> are builtin functions which work on vectors and dictionaries.</p>
-<h3 id="12-5-iterating-over-vector-elements">12.5 Iterating over vector elements</h3>
+<h3 id="12-5-slicing-vectors">12.5 Slicing vectors</h3>
+<p>Vectors support copying slices with half-open bounds:</p>
+<pre><code class="language-jik">numbers := [10, 20, 30, 40]
+middle := numbers[1:3] // [20, 30]
+prefix := numbers[:2]  // [10, 20]
+suffix := numbers[2:]  // [30, 40]
+copy := numbers[:]</code></pre>
+<p>Slices return a new vector allocated in the source vector's region. Bounds are non-negative integers; invalid bounds abort at runtime. Slice syntax is only available for vectors and strings, and slices cannot be assigned to.</p>
+<h3 id="12-6-iterating-over-vector-elements">12.6 Iterating over vector elements</h3>
 <p>One can iterate over vector elements with a <code>for</code> loop:</p>
 <pre><code class="language-jik">chars := ['a', 'b', 'c']
 for ch in chars:

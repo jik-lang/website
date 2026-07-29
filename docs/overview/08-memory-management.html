@@ -15,7 +15,7 @@
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-          <a href="../../docs/index.html">Docs</a>
+          <a href="../index.html">Docs</a>
           <a href="../../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -80,7 +80,7 @@ func main():
 end</code></pre>
 <h4 id="8-1-1-the-global-region">8.1.1 The global region</h4>
 <p>Composite globals are allocated in the global region. The global region is created at program start and remains alive until program exit.</p>
-<p>Global values, regardless if composite or not, are immutable: their members and container elements cannot be changed. A function also cannot return a composite global directly.</p>
+<p>Global bindings are immutable, so a global name cannot be reassigned. A composite value held by a global binding is mutable: its members and container elements may be changed directly or by a function that receives it. All allocations owned by a global composite remain until program exit; in particular, clearing a global container does not reclaim its backing region storage. A function also cannot return a composite global directly.</p>
 <h3 id="8-2-choosing-a-non-local-allocation-target">8.2 Choosing a non-local allocation target</h3>
 <p>Composite literals can also be allocated into another region:</p>
 <pre><code class="language-jik">p2 := Point{}[.p1]  // region of p1, where p1 is some composite value
@@ -169,6 +169,7 @@ func demo(p: Person):
     rename(p, &quot;Alice&quot;[.p])      // OK: &quot;Alice&quot; is explicitly allocated in region of &quot;p&quot;
     rename(p, &quot;Alice&quot;)          // OK: compiler automatically allocates &quot;Alice&quot; in region of &quot;p&quot;
 end</code></pre>
+<p>Automatic literal retargeting never selects the global region. A local literal therefore cannot be silently promoted to program-lifetime storage by a call or store operation.</p>
 <h4 id="8-4-3-region-safe-functions">8.4.3 Region-safe functions</h4>
 <p>The compiler does not apply the same-region rule to a user-defined function it can prove is <strong>region-safe</strong>. A call to such a function may pass its composite and <code>Region</code> arguments from different regions.</p>
 <p>A function is region-safe when it cannot make one region reference a composite value from another region. In practice, this means it may inspect values, operate only on local values, or store an allocated value only into the same destination region. It must not return a composite value, store a value from one parameter region into another, store a <code>foreign</code> parameter, or call a function that is not itself region-safe.</p>

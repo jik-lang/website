@@ -15,7 +15,7 @@
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-          <a href="../../docs/index.html">Docs</a>
+          <a href="../index.html">Docs</a>
           <a href="../../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -211,6 +211,12 @@
 <ul>
   <li>A newly allocated substring.</li>
 </ul>
+<p>For copying slices in the source string's region, use slice syntax instead:</p>
+<pre><code class="language-jik">middle := s[1:4]
+prefix := s[:4]
+suffix := s[1:]
+copy := s[:]</code></pre>
+<p>These bounds are non-negative byte offsets and follow the same half-open range convention. The explicit <code>string::slice</code> function remains appropriate when the destination region must be selected.</p>
 <p>---</p>
 <h3 id="split-foreign-s-string-foreign-delim-string-r-region-vec-string"><code>split(foreign s: String, foreign delim: String, r: Region) -&gt; Vec[String]</code></h3>
 <p>Split a string by a delimiter.</p>

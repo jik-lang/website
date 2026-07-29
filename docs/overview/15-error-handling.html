@@ -15,7 +15,7 @@
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-          <a href="../../docs/index.html">Docs</a>
+          <a href="../index.html">Docs</a>
           <a href="../../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -90,6 +90,10 @@ end</code></pre>
 <p>When a failure does not need to be handled separately, use <code>must</code>:</p>
 <pre><code class="language-jik">x := must div_safe(10, 2)</code></pre>
 <p><code>must</code> calls a throwing function and panics if the call results in an error.</p>
+<p>The postfix form <code>call()!</code> has the same behavior and is convenient within expressions:</p>
+<pre><code class="language-jik">x := div_safe(10, 2)!
+print(div_safe(10, 2)! == 5)</code></pre>
+<p><code>!</code> applies only to function calls. Use <code>try ... except ... end</code> when failure needs local recovery.</p>
 <h3 id="15-4-inspecting-the-current-error">15.4 Inspecting the current error</h3>
 <p>Inside an <code>except</code> block, the current error can be inspected with:</p>
 <ul>
