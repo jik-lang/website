@@ -15,7 +15,7 @@
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-          <a href="../../docs/index.html">Docs</a>
+          <a href="../index.html">Docs</a>
           <a href="../../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -102,6 +102,23 @@
 <p><strong>Returns</strong></p>
 <ul>
   <li>Current working directory as string, or empty string on failure.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-executable-path-region-region-string"><code>throws executable_path(region: Region) -&gt; String</code></h3>
+<p>Return the absolute path of the running executable.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>region: Region</code> - Allocation region for the returned string.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Absolute path of the running executable.</li>
+</ul>
+<p><strong>Behavior</strong></p>
+<p>the current working directory.</p>
+<ul>
+  <li>Throws if the operating system cannot determine the executable path.</li>
+  <li>Use <code>path::dirname</code> when locating files beside the executable. This is not</li>
 </ul>
 <p>---</p>
 <h3 id="getenv-name-string-region-region-option-string"><code>getenv(name: String, region: Region) -&gt; Option[String]</code></h3>

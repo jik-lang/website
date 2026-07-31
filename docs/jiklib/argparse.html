@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>testing - Jik Documentation</title>
+  <title>argparse - Jik Documentation</title>
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body>
@@ -81,40 +81,118 @@
           </nav>
         </details>
         <article class="docs-content">
-<h1 id="testing">testing</h1>
-<p>Testing utilities.</p>
+<h1 id="argparse">argparse</h1>
+<p>Command-line argument parser.</p>
 <h2 id="types">Types</h2>
-<h3 id="testsuite"><code>TestSuite</code></h3>
-<p>Test suite state.</p>
-<p>Fields:</p>
-<ol>
-  <li><code>assertions: int</code> - Total assertion count.</li>
-  <li><code>failed: int</code> - Failed assertion count.</li>
-  <li><code>passed: int</code> - Passed assertion count.</li>
-</ol>
+<h3 id="argumentoption"><code>ArgumentOption</code></h3>
+<p>A long option, optional short alias, and its value specifications.</p>
+<p>---</p>
+<h3 id="parser"><code>Parser</code></h3>
+<p>Configured parser.</p>
+<p>---</p>
+<h3 id="parseresult"><code>ParseResult</code></h3>
+<p>Values returned by <code>parse</code>.</p>
+<p><strong>Notes</strong></p>
+<p>configured long option spelling, including its <code>--</code> prefix.</p>
+<p>value dictionary.</p>
+<ul>
+  <li><code>positionals</code> is keyed by positional name. <code>options</code> is keyed by the</li>
+  <li>Each option value is keyed by its declared name. A present flag has an empty</li>
+</ul>
 <h2 id="functions">Functions</h2>
-<h3 id="suite-new-r-region-testsuite"><code>suite_new(r: Region) -&gt; TestSuite</code></h3>
-<p>Create a new test suite.</p>
+<h3 id="add-option-parser-parser-name-string-short-name-string-help-string-argumentoption"><code>add_option(parser: Parser, name: String, short_name: String, help: String) -&gt; ArgumentOption</code></h3>
+<p>Add an option and return it.</p>
+<p><strong>Parameters</strong></p>
+<p>for a long-only option. Foreign parameter.</p>
+<ol>
+  <li><code>parser: Parser</code> - Parser to configure.</li>
+  <li><code>name: String</code> - Long option name, such as <code>--verbose</code>. Foreign parameter.</li>
+  <li><code>short_name: String</code> - Short option name, such as <code>-v</code>, or an empty string</li>
+  <li><code>help: String</code> - Help text. Foreign parameter.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Configured option handle.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<p>they must be <code>-</code> followed by one character. Duplicate option names terminate through <code>std::panic</code>.</p>
+<ul>
+  <li>An option with no declared values acts as a flag.</li>
+  <li>Long names must begin with <code>--</code>. Short names are optional; when provided,</li>
+</ul>
+<p>---</p>
+<h3 id="add-option-positional-option-argumentoption-name-string-help-string"><code>add_option_positional(option: ArgumentOption, name: String, help: String)</code></h3>
+<p>Add a positional value consumed by an option.</p>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>r: Region</code> - Allocation region for the test suite</li>
+  <li><code>option: ArgumentOption</code> - Option returned by <code>add_option</code>.</li>
+  <li><code>name: String</code> - Value name. Foreign parameter.</li>
+  <li><code>help: String</code> - Help text. Foreign parameter.</li>
+</ol>
+<p><strong>Notes</strong></p>
+<p>parse result.</p>
+<ul>
+  <li>Value names must be unique within an option because they become keys in the</li>
+</ul>
+<p>---</p>
+<h3 id="add-positional-parser-parser-name-string-help-string"><code>add_positional(parser: Parser, name: String, help: String)</code></h3>
+<p>Add a required positional argument.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>parser: Parser</code> - Parser to configure.</li>
+  <li><code>name: String</code> - Positional argument name. Foreign parameter.</li>
+  <li><code>help: String</code> - Help text. Foreign parameter.</li>
 </ol>
 <p>---</p>
-<h3 id="suite-finish-suite-testsuite-void"><code>suite_finish(suite: TestSuite) -&gt; void</code></h3>
-<p>Print suite summary and exit non-zero if any test failed.</p>
+<h3 id="format-help-parser-parser-prog-string-r-region-string"><code>format_help(parser: Parser, prog: String, r: Region) -&gt; String</code></h3>
+<p>Format generated parser help text.</p>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>suite: TestSuite</code> - Test suite</li>
+  <li><code>parser: Parser</code> - Configured parser. Foreign parameter.</li>
+  <li><code>prog: String</code> - Program name shown in the usage line. Foreign parameter.</li>
+  <li><code>r: Region</code> - Allocation region for the returned string.</li>
 </ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Help text.</li>
+</ul>
 <p>---</p>
-<h3 id="suite-assert-suite-testsuite-cond-bool-s-site-void"><code>suite_assert(suite: TestSuite, cond: bool, s: Site) -&gt; void</code></h3>
-<p>Test suite assertion function.</p>
+<h3 id="new-r-region-parser"><code>new(r: Region) -&gt; Parser</code></h3>
+<p>Create an empty argument parser.</p>
 <p><strong>Parameters</strong></p>
 <ol>
-  <li><code>suite: TestSuite</code> - Test suite to update.</li>
-  <li><code>cond: bool</code> - Assertion condition.</li>
-  <li><code>s: Site</code> - Source location captured for failure reporting.</li>
+  <li><code>r: Region</code> - Allocation region for the parser and all configured data.</li>
 </ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>Parser</code></li>
+</ul>
+<p>---</p>
+<h3 id="throws-parse-parser-parser-args-vec-string-r-region-parseresult"><code>throws parse(parser: Parser, args: Vec[String], r: Region) -&gt; ParseResult</code></h3>
+<p>Parse command-line arguments into a result.</p>
+<p><strong>Parameters</strong></p>
+<p>Foreign parameter.</p>
+<ol>
+  <li><code>parser: Parser</code> - Configured parser. Foreign parameter.</li>
+  <li><code>args: Vec[String]</code> - Command-line tokens after the executable name.</li>
+  <li><code>r: Region</code> - Allocation region for the returned result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>ParseResult</code></li>
+</ul>
+<p><strong>Notes</strong></p>
+<p>allocated in <code>r</code>. Options may be written with their long or short names.</p>
+<p>values such as <code>--output=file</code> are not supported.</p>
+<p><code>result.options[&quot;--output&quot;]?[&quot;file&quot;]?</code>.</p>
+<p>positional arguments return an <code>argparse:</code> error.</p>
+<ul>
+  <li><code>args</code> must not include the executable name. The parsed dictionaries are</li>
+  <li><code>--</code> ends option parsing. Repeating an option is a parse error.</li>
+  <li>Supported forms are <code>--long</code> and <code>-s</code>; grouped short options and inline</li>
+  <li>Option values are retrieved by name, such as</li>
+  <li>Unknown or repeated options, missing option values, and missing or extra</li>
+</ul>
         </article>
       </div>
     </main>

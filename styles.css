@@ -392,6 +392,13 @@ p {
   font-size: 2.2rem;
 }
 
+.news-post h2 {
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 2.2rem;
+}
+
 .news-post h3 {
   margin-top: 2.5rem;
   font-size: 1.6rem;
