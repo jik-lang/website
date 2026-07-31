@@ -311,7 +311,7 @@ function titleFromMarkdown(markdown, sourcePath) {
   return path.basename(sourcePath, ".md").replace(/^\d+-/, "").replace(/-/g, " ");
 }
 
-function docsNav(pages, currentOutputPath) {
+function docsNav(pages, currentOutputPath, indent = "          ") {
   const primarySourcePaths = [
     "docs/index.md",
     "docs/cli.md",
@@ -347,7 +347,7 @@ function docsNav(pages, currentOutputPath) {
   const links = [...primaryLinks, ...overviewLinks].map((page) => {
     const href = relativeOutputLink(currentOutputPath, page.outputPath);
     const current = page.outputPath === currentOutputPath ? ' aria-current="page"' : "";
-    return `          <a href="${escapeHtml(href)}"${current}>${escapeHtml(page.title)}</a>`;
+    return `${indent}<a href="${escapeHtml(href)}"${current}>${escapeHtml(page.title)}</a>`;
   });
 
   return links.join("\n");
@@ -388,6 +388,12 @@ ${localizedHeader}
           <h2>Documentation</h2>
 ${docsNav(pages, page.outputPath)}
         </aside>
+        <details class="docs-mobile-nav">
+          <summary>Browse documentation</summary>
+          <nav aria-label="Documentation">
+${docsNav(pages, page.outputPath, "            ")}
+          </nav>
+        </details>
         <article class="docs-content">
 ${page.html}
         </article>

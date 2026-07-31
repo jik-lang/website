@@ -14,7 +14,7 @@
     <header class="site-header">
       <div class="container header-inner">
         <nav aria-label="Main navigation">
-          <a href="index.html#overview">Overview</a>
+          <a href="index.html">Overview</a>
           <a href="news.html">News</a>
           <a href="install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -47,27 +47,34 @@
         </div>
       </section>
 
-      <section id="examples" class="container section">
-        <h2>Examples</h2>
-        <div class="example-panel">
-          <label class="example-picker" for="example-select">
-            <select id="example-select">
-              <option value="config">Parsing a small config</option>
-              <option value="errors">Error handling</option>
-              <option value="variants">Variants</option>
-              <option value="regions">Caller-selected region</option>
-              <option value="primes">Primes</option>
-              <option value="counts">Counts</option>
-              <option value="hello">Hello, Jik!</option>
-            </select>
-          </label>
-          <pre class="code-block"><code id="example-code" class="language-jik"></code></pre>
+      <section id="examples" class="feature-band">
+        <div class="container feature-layout">
+          <div class="feature-copy">
+            <p>
+              Build command-line tools, process structured data, connect applications to SQLite, and create 2D games with Jik.
+            </p>
+          </div>
+          <div class="example-panel">
+            <label class="example-picker" for="example-select">
+              <select id="example-select">
+                <option value="config">Parsing a small config</option>
+                <option value="errors">Error handling</option>
+                <option value="variants">Variants</option>
+                <option value="regions">Caller-selected region</option>
+                <option value="primes">Primes</option>
+                <option value="counts">Counts</option>
+                <option value="hello">Hello, Jik!</option>
+              </select>
+            </label>
+            <pre class="code-block"><code id="example-code" class="language-jik"></code></pre>
+          </div>
         </div>
       </section>
 
-      <section id="overview" class="container section">
-        <h2>What Jik Is Built For</h2>
-        <div class="principle-grid">
+      <section id="overview" class="principles-band">
+        <div class="container principles-content">
+          <h2>What Jik Is Built For</h2>
+          <div class="principle-grid">
           <article>
             <h3>Simple and Readable Code</h3>
             <p>
@@ -98,42 +105,47 @@
               existing toolchains.
             </p>
           </article>
+          </div>
         </div>
       </section>
 
-      <section id="docs" class="container section">
-        <h2>Documentation</h2>
-        <ul class="doc-list">
-          <li>
-            <a href="docs/overview.html">Language overview</a>
-            <span>Tour of syntax, types, modules, memory management, error handling, and other things.</span>
-          </li>
-          <li>
-            <a href="docs/overview/08-memory-management.html">Memory management</a>
-            <span>Region allocation, local regions, explicit allocation targets, and returning composite values.</span>
-          </li>
-          <li>
-            <a href="docs/overview/18-standard-library.html">Standard library</a>
-            <span>The Jik standard library reference.</span>
-          </li>
-          <li>
-            <a href="packages.html">Official packages</a>
-            <span>Packages for Jik, including setup instructions and import examples.</span>
-          </li>
-          <li>
-            <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-            <span>Complete example programs from the repository.</span>
-          </li>
-        </ul>
+      <section id="docs" class="documentation-band">
+        <div class="container section">
+          <h2>Documentation</h2>
+          <ul class="doc-list">
+            <li>
+              <a href="docs/overview.html">Language overview</a>
+              <span>Tour of syntax, types, modules, memory management, error handling, and other things.</span>
+            </li>
+            <li>
+              <a href="docs/overview/08-memory-management.html">Memory management</a>
+              <span>Region allocation, local regions, explicit allocation targets, and returning composite values.</span>
+            </li>
+            <li>
+              <a href="docs/overview/18-standard-library.html">Standard library</a>
+              <span>The Jik standard library reference.</span>
+            </li>
+            <li>
+              <a href="packages.html">Official packages</a>
+              <span>Packages for Jik, including setup instructions and import examples.</span>
+            </li>
+            <li>
+              <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+              <span>Complete example programs from the repository.</span>
+            </li>
+          </ul>
+        </div>
       </section>
 
-      <section class="container section">
-        <h2>Status</h2>
-        <p>
-          Jik is currently in the 0.1.x stabilization phase. The near-term work
-          is compiler correctness, support library fixes, standard library
-          growth, more tests, and real programs to validate the implementation.
-        </p>
+      <section class="status-band">
+        <div class="container section">
+          <h2>Status</h2>
+          <p>
+            Jik is currently in the 0.1.x stabilization phase. The near-term work
+            is compiler correctness, support library fixes, standard library
+            growth, more tests, and real programs to validate the implementation.
+          </p>
+        </div>
       </section>
     </main>
 
