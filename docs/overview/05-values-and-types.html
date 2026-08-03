@@ -86,15 +86,16 @@
 <p>Jik has a small core of built-in types, upon which richer data types can be built. Types in Jik are divided into two categories - Primitives and Composites. Composite types are always dynamically allocated.</p>
 <h3 id="5-1-primitive-types">5.1 Primitive types</h3>
 <ul>
-  <li><strong>Integers</strong>: <code>0</code>, <code>1</code>, <code>42</code>, <code>-7</code>
+  <li><strong>Integers</strong>: <code>0</code>, <code>1</code>, <code>42</code>, <code>-7</code>, <code>1_000_000</code>
 <ul>
   <li>type name: <code>int</code></li>
   <li>translates to C type: <code>int32_t</code></li>
 </ul></li>
-  <li><strong>Doubles</strong>: <code>3.22</code>, <code>0.5</code>, <code>3e-5</code>
+  <li><strong>Doubles</strong>: <code>3.22</code>, <code>0.5</code>, <code>3e-5</code>, <code>3.141_592</code>
 <ul>
   <li>type name: <code>double</code></li>
   <li>translates to C type: <code>double</code></li>
+  <li><code>_</code> may separate digits in integer, fractional, and exponent parts; it must appear between digits</li>
 </ul></li>
   <li><strong>Booleans</strong>: <code>true</code>, <code>false</code>
 <ul>

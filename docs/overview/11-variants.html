@@ -83,13 +83,14 @@
         <article class="docs-content">
 <p><a href="../overview.html">Back to overview</a></p>
 <h1 id="11-variants">11. Variants</h1>
-<p>Variants can be regarded as enumerations where each enumerator also carries a payload. They are essentially tagged unions with safe payload access. In the case of variants, the enumerators are called tags.</p>
+<p>Variants are tagged unions with safe payload access. Their tags may or may not carry a payload.</p>
 <h3 id="11-1-declaring-variants">11.1 Declaring variants</h3>
 <p>Examples:</p>
 <pre><code class="language-jik">variant Value:
     INT: int
     TEXT: String
     NUMS: Vec[int]
+    EOF
 end</code></pre>
 <h3 id="11-2-constructing-variants">11.2 Constructing variants</h3>
 <pre><code class="language-jik">v1 := Value.INT{7}
@@ -98,13 +99,15 @@ end</code></pre>
 v2 := Value.INT{}
 
 v3 := Value.TEXT{&quot;hello&quot;}
-v4 := Value.NUMS{[10 of 0]}</code></pre>
+v4 := Value.NUMS{[10 of 0]}
+v5 := Value.EOF</code></pre>
 <h3 id="11-3-inspecting-extracting-and-changing-tags">11.3 Inspecting, extracting and changing tags</h3>
 <p>Use <code>is</code> to check which variant tag is active. Following up on the declarations above:</p>
 <pre><code class="language-jik">assert(v1 is Value.INT)
 assert(v2 is Value.INT)
 assert(v3 is Value.TEXT)
-assert(v4 is Value.NUMS)</code></pre>
+assert(v4 is Value.NUMS)
+assert(v5 is Value.EOF)</code></pre>
 <p>Payload extraction is done with an index-like syntax:</p>
 <pre><code class="language-jik">nums := v4[Value.NUMS]
 assert(nums[0] == 0)</code></pre>
@@ -122,6 +125,8 @@ assert(v3 is Value.INT)</code></pre>
             print(&quot;TEXT: &quot;, msg)
         case Value.NUMS{vec}:
             print(&quot;NUMS: &quot;, vec)
+        case Value.EOF:
+            print(&quot;end of input&quot;)
     end
 end</code></pre>
 <p>Each <code>case</code>:</p>
@@ -129,6 +134,8 @@ end</code></pre>
   <li>Tests the tag</li>
   <li><strong>Binds</strong> the payload to a local name (<code>v</code>, <code>msg</code>, <code>vec</code>).</li>
 </ul>
+<p>Tags may omit their payload type. Construct and match those tags without braces, as with <code>Value.EOF</code>; braces always indicate a payload. If every tag has no payload, declare an <code>enum</code> instead of a <code>variant</code>.</p>
+<p>When printed, variants show their type, active tag, and payload when present: for example, <code>&lt;Value INT=7&gt;</code> and <code>&lt;Value EOF&gt;</code>.</p>
 <p>It is important to note that <code>match</code> is exhaustive, which means it requires all tags to be treated by a respective <code>case</code>, otherwise there is a compile error.</p>
 <p>Variants can be placed freely into vectors, dictionaries, and other structs, and behave as regular values.</p>
 <p>Recursive cycles involving variant payloads must also pass through <code>Option[...]</code>. Payloads such as <code>Expr</code>, <code>Vec[Expr]</code>, or <code>Dict[Expr]</code> that recurse back without <code>Option</code> are compile errors.</p>

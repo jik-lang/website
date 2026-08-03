@@ -109,10 +109,11 @@ qualified_identifier ::= identifier [ &quot;::&quot; identifier ]</code></pre>
   <li>Identifiers are currently ASCII-only.</li>
 </ul>
 <h3 id="literals">Literals</h3>
-<pre><code class="language-ebnf">integer_literal ::= digit { digit }
-float_literal   ::= digit { digit } &quot;.&quot; digit { digit }
-                  | digit { digit } [ &quot;.&quot; digit { digit } ] exponent
-exponent        ::= (&quot;e&quot; | &quot;E&quot;) [ &quot;+&quot; | &quot;-&quot; ] digit { digit }
+<pre><code class="language-ebnf">digit_sequence  ::= digit { digit | &quot;_&quot; digit }
+integer_literal ::= digit_sequence
+float_literal   ::= digit_sequence &quot;.&quot; digit_sequence
+                  | digit_sequence [ &quot;.&quot; digit_sequence ] exponent
+exponent        ::= (&quot;e&quot; | &quot;E&quot;) [ &quot;+&quot; | &quot;-&quot; ] digit_sequence
 
 char_literal    ::= &quot;'&quot; char-char &quot;'&quot;
 string_literal  ::= '&quot;' { string-char } '&quot;'
@@ -121,6 +122,7 @@ ml_string       ::= '&quot;&quot;&quot;' { any-char } '&quot;&quot;&quot;'</code
 <p>while <code>.5</code> is not.</p>
 <ul>
   <li>The current lexer requires a float to begin with a digit, so <code>0.5</code> is valid</li>
+  <li>Numeric separators (<code>_</code>) are allowed only between digits and are ignored in the value.</li>
   <li>Character escapes support <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\0</code>, <code>\xNN</code>, <code>\\</code>, <code>\'</code>, and <code>\&quot;</code>.</li>
   <li>Ordinary string literals support <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\xNN</code>, <code>\\</code>, <code>\'</code>, and <code>\&quot;</code>.</li>
   <li>Ordinary and multiline string literals may contain UTF-8 text.</li>
@@ -135,12 +137,14 @@ ml_string       ::= '&quot;&quot;&quot;' { any-char } '&quot;&quot;&quot;'</code
 <p>The closing delimiter must appear alone on its line, apart from trailing whitespace.</p>
 <p>Embedded C is copied through to the generated C translation. Non-ASCII text in embedded C therefore remains dependent on the host C compiler's handling of C source encoding.</p>
 <h3 id="build-directives">Build Directives</h3>
-<pre><code class="language-ebnf">build_directive ::= platform_directive | path_directive | link_directive
+<pre><code class="language-ebnf">build_directive ::= platform_directive | profile_directive | path_directive | link_directive
 platform_directive ::= &quot;@platform&quot; &quot;(&quot; ( &quot;all&quot; | &quot;windows&quot; | &quot;linux&quot; ) &quot;)&quot; newline
+profile_directive ::= &quot;@profile&quot; &quot;(&quot; ( &quot;all&quot; | &quot;windows-x64-mingw&quot; | &quot;linux-x64-gnu&quot; ) &quot;)&quot; newline
 path_directive ::= ( &quot;@includedir&quot; | &quot;@libdir&quot; | &quot;@copy&quot; )
                    &quot;(&quot; string_literal { &quot;,&quot; string_literal } &quot;)&quot; newline
 link_directive ::= &quot;@link&quot; &quot;(&quot; string_literal { &quot;,&quot; string_literal } &quot;)&quot; newline</code></pre>
-<p>Build directives are top-level declarations. Each physical module starts with platform <code>all</code>. <code>@platform(windows)</code> or <code>@platform(linux)</code> selects the platform for subsequent build directives in that module, while <code>@platform(all)</code> returns to platform-independent requirements. Platform state does not cross module boundaries and does not conditionally compile Jik declarations or embedded C.</p>
+<p>Build directives are top-level declarations. Each physical module starts with platform and profile <code>all</code>. <code>@platform(windows)</code> or <code>@platform(linux)</code> selects the platform for subsequent build directives in that module, while <code>@platform(all)</code> returns to platform-independent requirements. Platform state does not cross module boundaries and does not conditionally compile Jik declarations or embedded C.</p>
+<p><code>@profile(windows-x64-mingw)</code> and <code>@profile(linux-x64-gnu)</code> restrict subsequent native build directives to a compatible host C compiler target. <code>@profile(all)</code> removes that restriction. A profile-restricted directive is active only when both its platform and profile match. <code>jik build</code>, <code>jik run</code>, and <code>jik memchk</code> detect the selected compiler target before invoking the compiler and report an incompatible native module early. <code>jik check</code> and <code>jik tran</code> only parse these directives; they do not probe a compiler. MSVC is not currently a supported native build profile.</p>
 <p>Relative include directories, library directories, and copied files are resolved from the source file containing the directive. Directives from all reachable modules are applied by <code>build</code>, <code>run</code>, and <code>memchk</code>.</p>
 <h2 id="types">Types</h2>
 <pre><code class="language-ebnf">type_desc ::= named_type [ alloc_suffix ]
@@ -218,7 +222,7 @@ extern_param  ::= [ &quot;foreign&quot; ] identifier &quot;:&quot; type_desc</co
 extern_struct_decl ::= &quot;extern&quot; &quot;struct&quot; identifier &quot;as&quot; identifier</code></pre>
 <h3 id="variants">Variants</h3>
 <pre><code class="language-ebnf">variant_decl ::= &quot;variant&quot; identifier &quot;:&quot; newline
-                 { identifier &quot;:&quot; type_desc newline }
+                 { identifier [ &quot;:&quot; type_desc ] newline }
                  &quot;end&quot;</code></pre>
 <h3 id="enums">Enums</h3>
 <pre><code class="language-ebnf">enum_decl ::= &quot;enum&quot; identifier &quot;:&quot; newline
@@ -267,6 +271,7 @@ must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
 <pre><code class="language-ebnf">for_stmt ::= &quot;for&quot; identifier &quot;=&quot; expr &quot;,&quot; expr &quot;:&quot; newline block &quot;end&quot;
            | &quot;for&quot; identifier &quot;in&quot; expr &quot;:&quot; newline block &quot;end&quot;
            | &quot;for&quot; identifier &quot;,&quot; identifier &quot;in&quot; expr &quot;:&quot; newline block &quot;end&quot;</code></pre>
+<p>In the two-name form, vectors bind <code>index, value</code> and dictionaries bind <code>key, value</code>.</p>
 <h3 id="try-except">Try / Except</h3>
 <pre><code class="language-ebnf">try_stmt ::= &quot;try&quot; ( call_expr | identifier &quot;:=&quot; call_expr )
              &quot;:&quot; newline block
@@ -284,11 +289,11 @@ must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
                &quot;end&quot;
 
 case_clause ::= &quot;case&quot; variant_pattern &quot;:&quot; newline block
-variant_pattern ::= qualified_identifier &quot;.&quot; identifier &quot;{&quot; identifier &quot;}&quot;</code></pre>
+variant_pattern ::= qualified_identifier &quot;.&quot; identifier
+                  | qualified_identifier &quot;.&quot; identifier &quot;{&quot; identifier &quot;}&quot;</code></pre>
 <p>Current implementation note:</p>
 <ul>
-  <li><code>case Value.TAG{x}:</code> is the supported pattern form.</li>
-  <li>The parser expects a bound identifier payload in the case pattern.</li>
+  <li><code>case Value.TAG{x}:</code> binds a payload, while <code>case Value.TAG:</code> matches a payloadless tag.</li>
 </ul>
 <h2 id="expressions">Expressions</h2>
 <p>The parser uses the following precedence, from lowest to highest.</p>
@@ -366,13 +371,13 @@ args      ::= expr { &quot;,&quot; expr }</code></pre>
 
 struct_field ::= identifier &quot;=&quot; expr</code></pre>
 <h3 id="variant-literals">Variant Literals</h3>
-<pre><code class="language-ebnf">variant_literal ::= qualified_identifier &quot;.&quot; identifier &quot;{&quot;
-                    [ expr ]
-                    &quot;}&quot;</code></pre>
+<pre><code class="language-ebnf">variant_literal ::= qualified_identifier &quot;.&quot; identifier
+                  | qualified_identifier &quot;.&quot; identifier &quot;{&quot; [ expr ] &quot;}&quot;</code></pre>
 <p>Examples:</p>
 <pre><code class="language-jik">Value.INT{3}
 Value.TEXT{&quot;hi&quot;}[r]
-Value.INT{}</code></pre>
+Value.INT{}
+Value.EOF</code></pre>
 <h3 id="vector-literals">Vector Literals</h3>
 <pre><code class="language-ebnf">vector_literal ::= &quot;[&quot; expr &quot;of&quot; expr &quot;]&quot;
                  | &quot;[&quot; expr { &quot;,&quot; expr } &quot;]&quot;</code></pre>
@@ -389,18 +394,18 @@ dict_entry ::= expr &quot;:&quot; expr</code></pre>
 <h2 id="semantic-resolution-notes">Semantic Resolution Notes</h2>
 <p>These forms are parsed first and refined later:</p>
 <p>enum value during semantic analysis.</p>
-<p>variant tag marker during semantic analysis.</p>
+<p>analysis as either a payloadless variant value or a variant tag marker.</p>
 <p>variant payload access only after semantic resolution.</p>
 <ul>
   <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an</li>
-  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten as a</li>
+  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten during semantic</li>
   <li><code>value[VariantName.TAG]</code> is syntactically a subscript expression and becomes</li>
 </ul>
 <h2 id="current-implementation-gaps-and-constraints">Current Implementation Gaps and Constraints</h2>
-<p>are not part of the current parser.</p>
+<p>part of the current parser.</p>
 <ul>
   <li>Top-level typed globals are not currently parsed.</li>
-  <li><code>match</code> supports the current <code>case Variant.Tag{name}:</code> form; richer patterns</li>
+  <li><code>match</code> supports payload-binding and payloadless variant-tag patterns; richer patterns are not</li>
 </ul>
         </article>
       </div>

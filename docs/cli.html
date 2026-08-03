@@ -119,7 +119,7 @@
 <pre><code class="language-sh">jik build hello.jik --release</code></pre>
 <p>To inspect the compiler command without running it:</p>
 <pre><code class="language-sh">jik build hello.jik --preview</code></pre>
-<p>Reachable modules may contain native build directives such as <code>@includedir</code>, <code>@libdir</code>, <code>@link</code>, and <code>@copy</code>. Active directives are applied transitively by <code>build</code> and <code>run</code>; copied files are placed beside the produced executable. <code>@platform(windows)</code>, <code>@platform(linux)</code>, and <code>@platform(all)</code> select the platform for subsequent build directives in the same source file.</p>
+<p>Reachable modules may contain native build directives such as <code>@includedir</code>, <code>@libdir</code>, <code>@link</code>, and <code>@copy</code>. Active directives are applied transitively by <code>build</code> and <code>run</code>; copied files are placed beside the produced executable. <code>@platform(windows)</code>, <code>@platform(linux)</code>, and <code>@platform(all)</code> select the platform for subsequent build directives in the same source file. <code>@profile(windows-x64-mingw)</code> and <code>@profile(linux-x64-gnu)</code> additionally restrict subsequent native directives to a compatible compiler target; <code>@profile(all)</code> removes that restriction. Profile matching is checked before the host compiler is invoked. MSVC is not currently a supported native build profile.</p>
 <h3 id="jik-tran"><code>jik tran &lt;filepath&gt;</code></h3>
 <p>Translate a Jik source file to C.</p>
 <p>Options:</p>
@@ -152,7 +152,7 @@
 <p>Example:</p>
 <pre><code class="language-sh">jik memchk hello.jik --cc gcc</code></pre>
 <h3 id="jik-env"><code>jik env</code></h3>
-<p>Print resolved Jik configuration values as <code>key=value</code> lines, including the Jik version, platform, root directory, <code>jiklib</code> path, package path, support include path, and selected C compiler.</p>
+<p>Print resolved Jik configuration values as <code>key=value</code> lines, including the Jik version, platform, root directory, <code>jiklib</code> path, package path, support include path, selected C compiler, its reported target, and Jik's normalized compiler profile.</p>
 <p>Example:</p>
 <pre><code class="language-sh">jik env</code></pre>
 <h3 id="jik-version"><code>jik version</code></h3>
