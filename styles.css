@@ -322,6 +322,30 @@ p {
   max-width: 48rem;
 }
 
+.community-band {
+  background: #eef4fb;
+}
+
+.community-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.community-content h2 {
+  margin-bottom: 0.65rem;
+}
+
+.community-content p {
+  max-width: 42rem;
+  margin-bottom: 0;
+}
+
+.community-content .button {
+  flex: 0 0 auto;
+}
+
 .principles-content {
   padding-block: 5.5rem 6rem;
 }
@@ -848,6 +872,12 @@ p {
   .principles-content,
   .section {
     padding-block: 3.75rem;
+  }
+
+  .community-content {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.25rem;
   }
 
   .release-head {

@@ -31,7 +31,6 @@ const footer = read("src/partials/footer.html");
 
 function localizeHeaderLinks(shell, pagePath) {
   const fromDirectory = path.dirname(pagePath);
-  const toRoot = path.relative(fromDirectory, ".").replaceAll(path.sep, "/") || ".";
 
   return shell.replace(/\shref="([^"]+)"/g, (match, url) => {
     if (/^(https?:|mailto:|tel:)/i.test(url) || url.startsWith("#") || url.startsWith("/")) {
@@ -41,7 +40,8 @@ function localizeHeaderLinks(shell, pagePath) {
     const hashIndex = url.indexOf("#");
     const urlPath = hashIndex === -1 ? url : url.slice(0, hashIndex);
     const hash = hashIndex === -1 ? "" : url.slice(hashIndex);
-    return ` href="${path.posix.join(toRoot, urlPath)}${hash}"`;
+    const relativeUrlPath = path.posix.relative(fromDirectory.replaceAll(path.sep, "/"), urlPath) || ".";
+    return ` href="${relativeUrlPath}${hash}"`;
   });
 }
 
@@ -88,6 +88,13 @@ for (const pagePath of htmlFilesIn("docs")) {
     `${pagePath} header`,
     /    <header class="site-header">[\s\S]*?    <\/header>/,
     localizeHeaderLinks(header, pagePath)
+  );
+
+  page = replaceBlock(
+    page,
+    `${pagePath} footer`,
+    /    <footer class="site-footer">[\s\S]*?    <\/footer>/,
+    footer
   );
 
   fs.writeFileSync(absolutePath, page);
