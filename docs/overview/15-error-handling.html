@@ -115,7 +115,14 @@ end</code></pre>
 except:
     print(&quot;err&quot;)
 end</code></pre>
-<h3 id="15-3-requiring-success-with-must">15.3 Requiring success with <code>must</code></h3>
+<h3 id="15-3-propagating-failures">15.3 Propagating failures</h3>
+<p>Within a <code>throws func</code>, <code>try</code> can be used in a declaration to pass a failure to the caller instead of handling it locally:</p>
+<pre><code class="language-jik">throws func half_of_safe_value():
+    x := try div_safe(10, 2)
+    return x / 2
+end</code></pre>
+<p>The value declared by <code>x := try ...</code> is in the enclosing scope. If the call fails, the function returns through its error path before any following statement runs.</p>
+<h3 id="15-4-requiring-success-with-must">15.4 Requiring success with <code>must</code></h3>
 <p>When a failure does not need to be handled separately, use <code>must</code>:</p>
 <pre><code class="language-jik">x := must div_safe(10, 2)</code></pre>
 <p><code>must</code> calls a throwing function and panics if the call results in an error.</p>
@@ -123,7 +130,7 @@ end</code></pre>
 <pre><code class="language-jik">x := div_safe(10, 2)!
 print(div_safe(10, 2)! == 5)</code></pre>
 <p><code>!</code> applies only to function calls. Use <code>try ... except ... end</code> when failure needs local recovery.</p>
-<h3 id="15-4-inspecting-the-current-error">15.4 Inspecting the current error</h3>
+<h3 id="15-5-inspecting-the-current-error">15.5 Inspecting the current error</h3>
 <p>Inside an <code>except</code> block, the current error can be inspected with:</p>
 <ul>
   <li><code>error_msg([Region]) -&gt; String</code></li>
@@ -137,7 +144,7 @@ except:
     println(&quot;failed: &quot;, error_msg())
     println(&quot;code = &quot;, error_code())
 end</code></pre>
-<h3 id="15-5-example">15.5 Example</h3>
+<h3 id="15-6-example">15.6 Example</h3>
 <pre><code class="language-jik">throws func div_safe(x, y):
     if y == 0:
         fail(&quot;division by 0&quot;)

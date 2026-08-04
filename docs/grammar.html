@@ -249,6 +249,7 @@ break_stmt     ::= &quot;break&quot;
 continue_stmt  ::= &quot;continue&quot;
 
 decl_stmt      ::= identifier &quot;:=&quot; expr
+                 | identifier &quot;:=&quot; &quot;try&quot; call_expr
                  | identifier &quot;:&quot; type_desc
 
 assign_stmt    ::= lvalue assign_op expr
@@ -277,6 +278,7 @@ must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
              &quot;:&quot; newline block
              &quot;except&quot; &quot;:&quot; newline block
              &quot;end&quot;</code></pre>
+<p><code>x := try f(...)</code> propagates a failure from <code>f</code> to the enclosing <code>throws func</code>. Unlike a <code>try ... except ... end</code> declaration, <code>x</code> belongs to the enclosing scope because execution can continue past the declaration only when <code>f</code> succeeds.</p>
 <p>The parser currently permits only:</p>
 <ul>
   <li>a direct call, or</li>
