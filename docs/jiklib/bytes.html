@@ -85,14 +85,12 @@
 <p>Binary-safe byte sequences and growable byte buffers.</p>
 <p><code>Bytes</code> stores immutable raw byte data. <code>ByteBuf</code> is a mutable growable byte buffer for constructing binary data. Neither type is NUL-terminated by contract, and both can contain byte value <code>0</code>.</p>
 <p>Notes:</p>
-<p>into binary storage.</p>
-<p><code>bytes::ByteBuf{}</code>, and typed declarations such as <code>b: bytes::Bytes</code> create empty values in the local region.</p>
 <ul>
-  <li><code>String</code> is text. Use <code>from_string</code> or <code>buf_append_string</code> to copy text bytes</li>
+  <li><code>String</code> is text. Use <code>from_string</code> or <code>buf_append_string</code> to copy text bytes into binary storage.</li>
   <li>Use <code>to_hex</code> for binary display.</li>
   <li>Use <code>to_string_ascii</code> only when the bytes are known ASCII text.</li>
   <li>All allocations are performed in the provided <code>Region</code>.</li>
-  <li><code>Bytes</code> and <code>ByteBuf</code> have default initializers. <code>bytes::Bytes{}</code>,</li>
+  <li><code>Bytes</code> and <code>ByteBuf</code> have default initializers. <code>bytes::Bytes{}</code>, <code>bytes::ByteBuf{}</code>, and typed declarations such as <code>b: bytes::Bytes</code> create empty values in the local region.</li>
 </ul>
 <h2 id="types">Types</h2>
 <h3 id="bytebuf"><code>ByteBuf</code></h3>

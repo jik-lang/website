@@ -86,13 +86,11 @@
 <h2 id="current-status">Current status</h2>
 <p>Jik is currently in alpha. The language is stabilizing, but some implementation details are still being refined, and some portability work remains to be completed.</p>
 <h2 id="known-limitations">Known limitations</h2>
-<p>repeat-initializers of the form <code>[n of expr]</code>.</p>
-<p>execution. This is a known robustness and portability limitation, especially for unusual paths, quoting edge cases, or host tool configurations.</p>
 <ul>
   <li>Generated C is currently intended for <code>clang</code> and <code>gcc</code>. MSVC is not part of the default supported path.</li>
-  <li>Some generated code currently relies on GNU-compatible C extensions, especially for vector</li>
+  <li>Some generated code currently relies on GNU-compatible C extensions, especially for vector repeat-initializers of the form <code>[n of expr]</code>.</li>
   <li>Portability work for strict non-GNU C toolchains is not complete.</li>
-  <li>Some compiler command paths still construct shell command strings for host compiler and tool</li>
+  <li>Some compiler command paths still construct shell command strings for host compiler and tool execution. This is a known robustness and portability limitation, especially for unusual paths, quoting edge cases, or host tool configurations.</li>
 </ul>
 <h2 id="known-runtime-issues-under-review">Known runtime issues under review</h2>
 <ul>

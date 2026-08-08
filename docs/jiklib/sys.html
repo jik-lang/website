@@ -115,10 +115,9 @@
   <li>Absolute path of the running executable.</li>
 </ul>
 <p><strong>Behavior</strong></p>
-<p>the current working directory.</p>
 <ul>
   <li>Throws if the operating system cannot determine the executable path.</li>
-  <li>Use <code>path::dirname</code> when locating files beside the executable. This is not</li>
+  <li>Use <code>path::dirname</code> when locating files beside the executable. This is not the current working directory.</li>
 </ul>
 <p>---</p>
 <h3 id="getenv-name-string-region-region-option-string"><code>getenv(name: String, region: Region) -&gt; Option[String]</code></h3>

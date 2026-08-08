@@ -93,21 +93,18 @@
 <h3 id="parseresult"><code>ParseResult</code></h3>
 <p>Values returned by <code>parse</code>.</p>
 <p><strong>Notes</strong></p>
-<p>configured long option spelling, including its <code>--</code> prefix.</p>
-<p>value dictionary.</p>
 <ul>
-  <li><code>positionals</code> is keyed by positional name. <code>options</code> is keyed by the</li>
-  <li>Each option value is keyed by its declared name. A present flag has an empty</li>
+  <li><code>positionals</code> is keyed by positional name. <code>options</code> is keyed by the configured long option spelling, including its <code>--</code> prefix.</li>
+  <li>Each option value is keyed by its declared name. A present flag has an empty value dictionary.</li>
 </ul>
 <h2 id="functions">Functions</h2>
 <h3 id="add-option-parser-parser-name-string-short-name-string-help-string-argumentoption"><code>add_option(parser: Parser, name: String, short_name: String, help: String) -&gt; ArgumentOption</code></h3>
 <p>Add an option and return it.</p>
 <p><strong>Parameters</strong></p>
-<p>for a long-only option. Foreign parameter.</p>
 <ol>
   <li><code>parser: Parser</code> - Parser to configure.</li>
   <li><code>name: String</code> - Long option name, such as <code>--verbose</code>. Foreign parameter.</li>
-  <li><code>short_name: String</code> - Short option name, such as <code>-v</code>, or an empty string</li>
+  <li><code>short_name: String</code> - Short option name, such as <code>-v</code>, or an empty string for a long-only option. Foreign parameter.</li>
   <li><code>help: String</code> - Help text. Foreign parameter.</li>
 </ol>
 <p><strong>Returns</strong></p>
@@ -115,10 +112,9 @@
   <li>Configured option handle.</li>
 </ul>
 <p><strong>Notes</strong></p>
-<p>they must be <code>-</code> followed by one character. Duplicate option names terminate through <code>std::panic</code>.</p>
 <ul>
   <li>An option with no declared values acts as a flag.</li>
-  <li>Long names must begin with <code>--</code>. Short names are optional; when provided,</li>
+  <li>Long names must begin with <code>--</code>. Short names are optional; when provided, they must be <code>-</code> followed by one character. Duplicate option names terminate through <code>std::panic</code>.</li>
 </ul>
 <p>---</p>
 <h3 id="add-option-positional-option-argumentoption-name-string-help-string"><code>add_option_positional(option: ArgumentOption, name: String, help: String)</code></h3>
@@ -130,9 +126,8 @@
   <li><code>help: String</code> - Help text. Foreign parameter.</li>
 </ol>
 <p><strong>Notes</strong></p>
-<p>parse result.</p>
 <ul>
-  <li>Value names must be unique within an option because they become keys in the</li>
+  <li>Value names must be unique within an option because they become keys in the parse result.</li>
 </ul>
 <p>---</p>
 <h3 id="add-positional-parser-parser-name-string-help-string"><code>add_positional(parser: Parser, name: String, help: String)</code></h3>
@@ -171,10 +166,9 @@
 <h3 id="throws-parse-parser-parser-args-vec-string-r-region-parseresult"><code>throws parse(parser: Parser, args: Vec[String], r: Region) -&gt; ParseResult</code></h3>
 <p>Parse command-line arguments into a result.</p>
 <p><strong>Parameters</strong></p>
-<p>Foreign parameter.</p>
 <ol>
   <li><code>parser: Parser</code> - Configured parser. Foreign parameter.</li>
-  <li><code>args: Vec[String]</code> - Command-line tokens after the executable name.</li>
+  <li><code>args: Vec[String]</code> - Command-line tokens after the executable name. Foreign parameter.</li>
   <li><code>r: Region</code> - Allocation region for the returned result.</li>
 </ol>
 <p><strong>Returns</strong></p>
@@ -182,16 +176,12 @@
   <li><code>ParseResult</code></li>
 </ul>
 <p><strong>Notes</strong></p>
-<p>allocated in <code>r</code>. Options may be written with their long or short names.</p>
-<p>values such as <code>--output=file</code> are not supported.</p>
-<p><code>result.options[&quot;--output&quot;]?[&quot;file&quot;]?</code>.</p>
-<p>positional arguments return an <code>argparse:</code> error.</p>
 <ul>
-  <li><code>args</code> must not include the executable name. The parsed dictionaries are</li>
+  <li><code>args</code> must not include the executable name. The parsed dictionaries are allocated in <code>r</code>. Options may be written with their long or short names.</li>
   <li><code>--</code> ends option parsing. Repeating an option is a parse error.</li>
-  <li>Supported forms are <code>--long</code> and <code>-s</code>; grouped short options and inline</li>
-  <li>Option values are retrieved by name, such as</li>
-  <li>Unknown or repeated options, missing option values, and missing or extra</li>
+  <li>Supported forms are <code>--long</code> and <code>-s</code>; grouped short options and inline values such as <code>--output=file</code> are not supported.</li>
+  <li>Option values are retrieved by name, such as <code>result.options[&quot;--output&quot;]?[&quot;file&quot;]?</code>.</li>
+  <li>Unknown or repeated options, missing option values, and missing or extra positional arguments return an <code>argparse:</code> error.</li>
 </ul>
         </article>
       </div>

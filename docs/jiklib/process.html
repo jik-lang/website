@@ -119,9 +119,8 @@
 <h3 id="throws-capture-foreign-program-string-foreign-args-vec-string-region-region-result"><code>throws capture(foreign program: String, foreign args: Vec[String], region: Region) -&gt; Result</code></h3>
 <p>Run a child process, capture stdout and stderr, and wait for it.</p>
 <p><strong>Behavior</strong></p>
-<p>fails, or pipe reads fail.</p>
 <ul>
-  <li>Throws if pipes cannot be created, the child cannot be started, waiting</li>
+  <li>Throws if pipes cannot be created, the child cannot be started, waiting fails, or pipe reads fail.</li>
   <li>A nonzero child exit code is returned in <code>Result.code</code>, not thrown.</li>
   <li>No shell is invoked.</li>
   <li>Stdout and stderr are captured separately as raw bytes.</li>
@@ -138,10 +137,9 @@
   <li><code>Result</code> containing the child exit code, stdout bytes, and stderr bytes.</li>
 </ul>
 <p><strong>Notes</strong></p>
-<p>inspecting it.</p>
 <ul>
   <li><code>args</code> contains only child arguments, not <code>argv[0]</code>.</li>
-  <li>Captured output may not be valid text. Use <code>bytes</code> helpers when decoding or</li>
+  <li>Captured output may not be valid text. Use <code>bytes</code> helpers when decoding or inspecting it.</li>
 </ul>
         </article>
       </div>

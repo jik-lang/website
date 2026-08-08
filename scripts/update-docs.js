@@ -290,6 +290,13 @@ function renderMarkdown(markdown, currentSourcePath, currentOutputPath, knownDoc
       continue;
     }
 
+    const listContinuationMatch = line.match(/^\s{2,}(.+)$/);
+    if (listContinuationMatch && list.length > 0) {
+      list[list.length - 1].text += ` ${listContinuationMatch[1].trim()}`;
+      continue;
+    }
+
+    flushList();
     paragraph.push(line.trim());
   }
 
@@ -508,7 +515,11 @@ async function main() {
   console.log(`Updated ${pages.length} documentation pages`);
 }
 
-main().catch((error) => {
-  console.error(error.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { renderMarkdown };

@@ -85,14 +85,13 @@
 <p>This document is an implementation-derived grammar reference for Jik. It is based on the current lexer and parser in <code>src/jik/lexer.c</code> and <code>src/jik/parser.c</code>.</p>
 <p>It is intended to describe the accepted surface syntax of the language. It is not yet a complete formal language specification, because some forms are resolved later during semantic analysis.</p>
 <h2 id="scope">Scope</h2>
-<p>semantically restricted.</p>
 <ul>
   <li>This grammar describes syntax, not full typing or region semantics.</li>
   <li>Some constructs are context-sensitive. In particular:
 <ul>
   <li><code>Type.Member</code> may denote enum values or variant tags.</li>
   <li><code>x[Tag]</code> may denote variant payload access only after semantic resolution.</li>
-  <li>allocation suffixes such as <code>[r]</code> and <code>[.x]</code> are syntactically regular, but</li>
+  <li>allocation suffixes such as <code>[r]</code> and <code>[.x]</code> are syntactically regular, but semantically restricted.</li>
 </ul></li>
   <li>Newlines are significant between statements and after block headers.</li>
 </ul>
@@ -119,9 +118,8 @@ char_literal    ::= &quot;'&quot; char-char &quot;'&quot;
 string_literal  ::= '&quot;' { string-char } '&quot;'
 ml_string       ::= '&quot;&quot;&quot;' { any-char } '&quot;&quot;&quot;'</code></pre>
 <p>Notes:</p>
-<p>while <code>.5</code> is not.</p>
 <ul>
-  <li>The current lexer requires a float to begin with a digit, so <code>0.5</code> is valid</li>
+  <li>The current lexer requires a float to begin with a digit, so <code>0.5</code> is valid while <code>.5</code> is not.</li>
   <li>Numeric separators (<code>_</code>) are allowed only between digits and are ignored in the value.</li>
   <li>Character escapes support <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\0</code>, <code>\xNN</code>, <code>\\</code>, <code>\'</code>, and <code>\&quot;</code>.</li>
   <li>Ordinary string literals support <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\xNN</code>, <code>\\</code>, <code>\'</code>, and <code>\&quot;</code>.</li>
@@ -187,10 +185,9 @@ None[r]</code></pre>
 <pre><code class="language-ebnf">top_decl ::= decl_prefix ( func_decl | struct_decl )
 decl_prefix ::= { &quot;extern&quot; | &quot;throws&quot; | &quot;init&quot; }</code></pre>
 <p>Current parser restrictions:</p>
-<p>struct return type.</p>
 <ul>
   <li><code>extern</code> and <code>throws</code> may prefix <code>func</code>.</li>
-  <li><code>extern init func ...</code> declares the default initializer for an opaque extern</li>
+  <li><code>extern init func ...</code> declares the default initializer for an opaque extern struct return type.</li>
   <li><code>init</code> is valid only with <code>extern func</code>.</li>
   <li><code>extern</code> may prefix <code>struct</code>.</li>
   <li><code>throws struct ...</code> is rejected.</li>
@@ -392,19 +389,15 @@ dict_entry ::= expr &quot;:&quot; expr</code></pre>
 <p>Keys are checked semantically and must be of type <code>String</code>.</p>
 <h2 id="semantic-resolution-notes">Semantic Resolution Notes</h2>
 <p>These forms are parsed first and refined later:</p>
-<p>enum value during semantic analysis.</p>
-<p>analysis as either a payloadless variant value or a variant tag marker.</p>
-<p>variant payload access only after semantic resolution.</p>
 <ul>
-  <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an</li>
-  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten during semantic</li>
-  <li><code>value[VariantName.TAG]</code> is syntactically a subscript expression and becomes</li>
+  <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an enum value during semantic analysis.</li>
+  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten during semantic analysis as either a payloadless variant value or a variant tag marker.</li>
+  <li><code>value[VariantName.TAG]</code> is syntactically a subscript expression and becomes variant payload access only after semantic resolution.</li>
 </ul>
 <h2 id="current-implementation-gaps-and-constraints">Current Implementation Gaps and Constraints</h2>
-<p>part of the current parser.</p>
 <ul>
   <li>Top-level typed globals are not currently parsed.</li>
-  <li><code>match</code> supports payload-binding and payloadless variant-tag patterns; richer patterns are not</li>
+  <li><code>match</code> supports payload-binding and payloadless variant-tag patterns; richer patterns are not part of the current parser.</li>
 </ul>
         </article>
       </div>

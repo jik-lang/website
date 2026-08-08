@@ -103,13 +103,11 @@
 <h3 id="jik-build"><code>jik build &lt;filepath&gt;</code></h3>
 <p>Translate a Jik source file to C and compile it to an executable.</p>
 <p>Options:</p>
-<p>default output path is <code>&lt;input_file&gt;.exe</code> on Windows and <code>&lt;input_file&gt;</code> on Linux.</p>
-<p>executable.</p>
 <ul>
-  <li><code>--out &lt;filepath&gt;</code>: Write the executable to this path. When omitted, the</li>
+  <li><code>--out &lt;filepath&gt;</code>: Write the executable to this path. When omitted, the default output path is <code>&lt;input_file&gt;.exe</code> on Windows and <code>&lt;input_file&gt;</code> on Linux.</li>
   <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
   <li><code>--ccflags &lt;args&gt;</code>: Extra C compiler arguments.</li>
-  <li><code>--preview</code>: Print the compiler command without running it or creating an</li>
+  <li><code>--preview</code>: Print the compiler command without running it or creating an executable.</li>
   <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
@@ -123,9 +121,8 @@
 <h3 id="jik-tran"><code>jik tran &lt;filepath&gt;</code></h3>
 <p>Translate a Jik source file to C.</p>
 <p>Options:</p>
-<p>default output path is <code>&lt;input-basename&gt;.c</code>.</p>
 <ul>
-  <li><code>--out &lt;filepath&gt;</code>: Write the generated C to this path. When omitted, the</li>
+  <li><code>--out &lt;filepath&gt;</code>: Write the generated C to this path. When omitted, the default output path is <code>&lt;input-basename&gt;.c</code>.</li>
   <li><code>--embed-core</code>: Embed the Jik support library into the generated translation.</li>
   <li><code>--format-c</code>: Format the generated C file in place with <code>clang-format</code>.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
