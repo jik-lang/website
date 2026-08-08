@@ -108,6 +108,11 @@
   <li>translates to C type: <code>unsigned char</code></li>
   <li><code>char</code> is a single-byte value; it is not a Unicode code-point type</li>
 </ul></li>
+  <li><strong>Enumerations</strong>: <code>State.ON</code>, <code>State.OFF</code>
+<ul>
+  <li>type name: the declared enum name, such as <code>State</code></li>
+  <li>translates to a C <code>enum</code></li>
+</ul></li>
 </ul>
 <h3 id="5-2-composite-types">5.2 Composite types</h3>
 <p>Composite types are specific because they are allocated in dynamic memory. Jik handles memory management with regions, where these types are allocated. More on that topic in the next section.</p>

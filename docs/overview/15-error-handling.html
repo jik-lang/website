@@ -116,12 +116,15 @@ except:
     print(&quot;err&quot;)
 end</code></pre>
 <h3 id="15-3-propagating-failures">15.3 Propagating failures</h3>
-<p>Within a <code>throws func</code>, <code>try</code> can be used in a declaration to pass a failure to the caller instead of handling it locally:</p>
+<p>Within a <code>throws func</code>, <code>try</code> can pass a failure to the caller instead of handling it locally. It can be used with either a declaration or a call that does not return a value:</p>
 <pre><code class="language-jik">throws func half_of_safe_value():
     x := try div_safe(10, 2)
     return x / 2
 end</code></pre>
-<p>The value declared by <code>x := try ...</code> is in the enclosing scope. If the call fails, the function returns through its error path before any following statement runs.</p>
+<pre><code class="language-jik">throws func save_record(record):
+    try write_record(record)
+end</code></pre>
+<p>The value declared by <code>x := try ...</code> is in the enclosing scope. In either form, if the call fails, the function returns through its error path before any following statement runs. The propagation form has no trailing colon; a colon starts a local <code>try ... except ... end</code> handler.</p>
 <h3 id="15-4-requiring-success-with-must">15.4 Requiring success with <code>must</code></h3>
 <p>When a failure does not need to be handled separately, use <code>must</code>:</p>
 <pre><code class="language-jik">x := must div_safe(10, 2)</code></pre>

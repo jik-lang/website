@@ -101,6 +101,14 @@ c2 := Config{host = &quot;localhost&quot;, verbose = true}        // override so
 c1.port = 3
 c1.host = &quot;foo&quot;</code></pre>
 <p>Struct values can be read and updated through their fields using the usual <code>.</code> syntax.</p>
+<h3 id="7-3-uniform-function-calls">7.3 Uniform function calls</h3>
+<p>A function in the same module as a struct may be called through a struct value when its first parameter has an explicit annotation for that struct type:</p>
+<pre><code class="language-jik">func set_port(c: Config, port: int):
+    c.port = port
+end
+
+c1.set_port(8080) // shorthand for set_port(c1, 8080)</code></pre>
+<p>For an imported struct, the function is resolved in the module that defines the struct. This is just method-like syntactic sugar for an ordinary function call.</p>
 <p>Recursive struct cycles must pass through <code>Option[...]</code>. For example, <code>next: Option[Node]</code> is valid, while <code>next: Node</code> and <code>items: Vec[Node]</code> are compile errors.</p>
 <p>---</p>
         </article>

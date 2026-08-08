@@ -274,17 +274,13 @@ must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
            | &quot;for&quot; identifier &quot;,&quot; identifier &quot;in&quot; expr &quot;:&quot; newline block &quot;end&quot;</code></pre>
 <p>In the two-name form, vectors bind <code>index, value</code> and dictionaries bind <code>key, value</code>.</p>
 <h3 id="try-except">Try / Except</h3>
-<pre><code class="language-ebnf">try_stmt ::= &quot;try&quot; ( call_expr | identifier &quot;:=&quot; call_expr )
+<pre><code class="language-ebnf">try_stmt ::= &quot;try&quot; call_expr
+           | &quot;try&quot; ( call_expr | identifier &quot;:=&quot; call_expr )
              &quot;:&quot; newline block
              &quot;except&quot; &quot;:&quot; newline block
              &quot;end&quot;</code></pre>
-<p><code>x := try f(...)</code> propagates a failure from <code>f</code> to the enclosing <code>throws func</code>. Unlike a <code>try ... except ... end</code> declaration, <code>x</code> belongs to the enclosing scope because execution can continue past the declaration only when <code>f</code> succeeds.</p>
-<p>The parser currently permits only:</p>
-<ul>
-  <li>a direct call, or</li>
-  <li>a declaration initialized by a direct call</li>
-</ul>
-<p>after <code>try</code>.</p>
+<p><code>try f(...)</code> and <code>x := try f(...)</code> propagate a failure from <code>f</code> to the enclosing <code>throws func</code>. Unlike a <code>try ... except ... end</code> declaration, <code>x</code> belongs to the enclosing scope because execution can continue past the declaration only when <code>f</code> succeeds.</p>
+<p>The call-only propagation form has no trailing colon. A colon starts the local <code>try ... except ... end</code> form.</p>
 <h3 id="match">Match</h3>
 <pre><code class="language-ebnf">match_stmt ::= &quot;match&quot; expr &quot;:&quot; newline
                { case_clause }
@@ -325,7 +321,7 @@ unary      ::= ( &quot;not&quot; | &quot;-&quot; | &quot;must&quot; ) unary | pr
 <h3 id="primary-expressions">Primary Expressions</h3>
 <pre><code class="language-ebnf">primary ::= atom { postfix }
 
-postfix ::= &quot;.&quot; identifier
+postfix ::= &quot;.&quot; identifier [ &quot;(&quot; [ args ] &quot;)&quot; ]
           | &quot;[&quot; expr &quot;]&quot;
           | &quot;[&quot; [ expr ] &quot;:&quot; [ expr ] &quot;]&quot;
           | &quot;?&quot;
@@ -362,6 +358,7 @@ v[Value.INT]</code></pre>
 <h3 id="calls">Calls</h3>
 <pre><code class="language-ebnf">call_expr ::= qualified_identifier &quot;(&quot; [ args ] &quot;)&quot;
 args      ::= expr { &quot;,&quot; expr }</code></pre>
+<p><code>receiver.name(args)</code> is a uniform function call. It is valid when <code>receiver</code> has a struct type and <code>name</code> is an ordinary function in that struct's defining module whose first parameter has an explicit annotation for the receiver's type. It is shorthand for a normal call with <code>receiver</code> as the first argument.</p>
 <p>Special implementation rule:</p>
 <ul>
   <li><code>unwrap(x)</code> is parsed specially and treated as equivalent to <code>x?</code>.</li>

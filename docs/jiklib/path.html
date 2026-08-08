@@ -102,6 +102,24 @@
   <li>Empty segments are ignored.</li>
 </ul>
 <p>---</p>
+<h3 id="normalize-foreign-path-string-r-region-string"><code>normalize(foreign path: String, r: Region) -&gt; String</code></h3>
+<p>Normalize a path lexically.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>path: String</code> - Input path.</li>
+  <li><code>r: Region</code> - Allocation region for the result.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Lexically normalized path.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Repeated separators and <code>.</code> components are removed.</li>
+  <li><code>..</code> components remove the preceding normal component when possible. Unresolved <code>..</code> components are preserved in relative paths and discarded at an absolute root.</li>
+  <li>This function does not access the filesystem, resolve symlinks, expand home or environment references, or support Windows UNC and device paths.</li>
+</ul>
+<p>---</p>
 <h3 id="basename-foreign-path-string-r-region-string"><code>basename(foreign path: String, r: Region) -&gt; String</code></h3>
 <p>Return the last path component.</p>
 <p><strong>Parameters</strong></p>

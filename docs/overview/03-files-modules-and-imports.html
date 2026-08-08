@@ -89,12 +89,14 @@
 <pre><code class="language-jik">use &quot;jik/testing&quot; as test
 use &quot;app/utils&quot;
 use &quot;pkg/csv&quot;</code></pre>
+<p>refer to the same file using different aliases; those aliases still refer to the same module symbols and types.</p>
 <ul>
   <li>The string is a <strong>module path</strong> which points to a <code>.jik</code> file with the same name</li>
   <li>Module paths always use <code>/</code> as the separator, on all platforms.</li>
   <li><code>as</code> gives the module a short alias (<code>test</code> in this example).</li>
   <li>If you omit <code>as</code>, the module is referred to by its basename (<code>utils</code> in the example above).</li>
   <li>Import aliases must be unique within a module. This applies to both explicit <code>as</code> aliases and implicit basename aliases.</li>
+  <li>Import aliases are local to the module containing the <code>use</code> declaration. Different modules may</li>
 </ul>
 <p>The <code>use</code> syntax is the same for all module imports. The module path determines which resolver is used.</p>
 <h4 id="3-1-1-local-module-imports">3.1.1 Local module imports</h4>
