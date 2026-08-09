@@ -139,6 +139,15 @@ end</code></pre>
 <p>It is important to note that <code>match</code> is exhaustive, which means it requires all tags to be treated by a respective <code>case</code>, otherwise there is a compile error.</p>
 <p>Variants can be placed freely into vectors, dictionaries, and other structs, and behave as regular values.</p>
 <p>Recursive cycles involving variant payloads must also pass through <code>Option[...]</code>. Payloads such as <code>Expr</code>, <code>Vec[Expr]</code>, or <code>Dict[Expr]</code> that recurse back without <code>Option</code> are compile errors.</p>
+<h3 id="11-5-uniform-function-calls">11.5 Uniform function calls</h3>
+<p>A function in the same module as a variant may be called through a value of that variant when its first parameter has an explicit annotation for the variant type:</p>
+<pre><code class="language-jik">func is_text(value: Value) -&gt; bool:
+    return value is Value.TEXT
+end
+
+v := Value.TEXT{&quot;hello&quot;}
+assert(v.is_text()) // shorthand for is_text(v)</code></pre>
+<p>For an imported variant, the function is resolved in the module that defines the variant, just as it is for an imported struct.</p>
 <p>---</p>
         </article>
       </div>

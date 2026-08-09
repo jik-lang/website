@@ -144,8 +144,12 @@ m = len(s)</code></pre>
 <p><strong>Example</strong></p>
 <pre><code class="language-jik">d := {&quot;foo&quot;: 12, &quot;bar&quot;: 13}
 clear(d)</code></pre>
+<p>The container builtins in this section also support uniform function-call syntax: <code>v.push(value)</code>, <code>v.pop()</code>, <code>v.len()</code>, and <code>v.clear()</code> are equivalent to calls with <code>v</code> as their first argument.</p>
+<p>---</p>
+<h3 id="17-3-miscellaneous-builtins">17.3 Miscellaneous builtins</h3>
 <h4 id="copy-t-region-t"><code>copy(T[, Region]) -&gt; T</code></h4>
 <p>Copies a composite value into the destination region. If the final <code>Region</code> argument is omitted, the copy is allocated in the caller's local region.</p>
+<p><code>copy</code> also supports uniform function-call syntax: <code>value.copy()</code> and <code>value.copy(out_region)</code> are equivalent to calls with <code>value</code> as their first argument.</p>
 <p>Supported source types:</p>
 <ul>
   <li><code>String</code></li>
@@ -160,7 +164,7 @@ clear(d)</code></pre>
 <pre><code class="language-jik">names2 := copy(names, out_region)
 label2 := copy(label)</code></pre>
 <p>---</p>
-<h3 id="17-3-debugging">17.3 Debugging</h3>
+<h3 id="17-4-debugging">17.4 Debugging</h3>
 <p>Debugging builtins return information about a call site. Basic debugging information is obtained through the opaque type <code>Site</code>.</p>
 <h4 id="site-site"><code>site() -&gt; Site</code></h4>
 <p>Returns an opaque structured representation of the current site information.</p>

@@ -139,12 +139,11 @@
   <li><code>help: String</code> - Help text. Foreign parameter.</li>
 </ol>
 <p>---</p>
-<h3 id="format-help-parser-parser-prog-string-r-region-string"><code>format_help(parser: Parser, prog: String, r: Region) -&gt; String</code></h3>
+<h3 id="format-help-parser-parser-r-region-string"><code>format_help(parser: Parser, r: Region) -&gt; String</code></h3>
 <p>Format generated parser help text.</p>
 <p><strong>Parameters</strong></p>
 <ol>
   <li><code>parser: Parser</code> - Configured parser. Foreign parameter.</li>
-  <li><code>prog: String</code> - Program name shown in the usage line. Foreign parameter.</li>
   <li><code>r: Region</code> - Allocation region for the returned string.</li>
 </ol>
 <p><strong>Returns</strong></p>
@@ -152,10 +151,11 @@
   <li>Help text.</li>
 </ul>
 <p>---</p>
-<h3 id="new-r-region-parser"><code>new(r: Region) -&gt; Parser</code></h3>
-<p>Create an empty argument parser.</p>
+<h3 id="new-name-string-r-region-parser"><code>new(name: String, r: Region) -&gt; Parser</code></h3>
+<p>Create an empty argument parser with a program name for generated help.</p>
 <p><strong>Parameters</strong></p>
 <ol>
+  <li><code>name: String</code> - Program name shown in the usage line. Foreign parameter.</li>
   <li><code>r: Region</code> - Allocation region for the parser and all configured data.</li>
 </ol>
 <p><strong>Returns</strong></p>

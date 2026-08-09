@@ -250,7 +250,7 @@ decl_stmt      ::= identifier &quot;:=&quot; expr
                  | identifier &quot;:&quot; type_desc
 
 assign_stmt    ::= lvalue assign_op expr
-assign_op      ::= &quot;=&quot; | &quot;+=&quot; | &quot;-=&quot; | &quot;*=&quot; | &quot;/=&quot;
+assign_op      ::= &quot;=&quot; | &quot;+=&quot; | &quot;-=&quot; | &quot;*=&quot; | &quot;/=&quot; | &quot;%=&quot;
 
 call_stmt      ::= call_expr
 must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
@@ -355,7 +355,7 @@ v[Value.INT]</code></pre>
 <h3 id="calls">Calls</h3>
 <pre><code class="language-ebnf">call_expr ::= qualified_identifier &quot;(&quot; [ args ] &quot;)&quot;
 args      ::= expr { &quot;,&quot; expr }</code></pre>
-<p><code>receiver.name(args)</code> is a uniform function call. It is valid when <code>receiver</code> has a struct type and <code>name</code> is an ordinary function in that struct's defining module whose first parameter has an explicit annotation for the receiver's type. It is shorthand for a normal call with <code>receiver</code> as the first argument.</p>
+<p><code>receiver.name(args)</code> is a uniform function call. <code>push</code>, <code>pop</code>, <code>len</code>, <code>clear</code>, and <code>copy</code> support this form for any receiver type accepted by the corresponding builtin. Otherwise, <code>receiver</code> must have a struct or variant type and <code>name</code> must be an ordinary function in that type's defining module whose first parameter has an explicit annotation for the receiver's type. It is shorthand for a normal call with <code>receiver</code> as the first argument.</p>
 <p>Special implementation rule:</p>
 <ul>
   <li><code>unwrap(x)</code> is parsed specially and treated as equivalent to <code>x?</code>.</li>
