@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jik v0.1.0-alpha.19: UFCS for variants and more - Jik News</title>
+    <meta name="description" content="Jik v0.1.0-alpha.19 extends uniform function-call syntax to variants, common builtins, and external structs.">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <nav aria-label="Main navigation">
+          <a href="../index.html">Overview</a>
+          <a href="../news.html">News</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="container section news-post">
+        <p class="news-date">Published <time datetime="2026-08-09">August 9, 2026</time></p>
+        <h2>Jik v0.1.0-alpha.19</h2>
+        <p>
+          Jik v0.1.0-alpha.19 is now available. Its headline change is a broader uniform function-call syntax (UFCS): more values can lead a call, so code can follow the value being worked on instead of repeatedly naming a module or free function.
+        </p>
+
+        <h3>Variants support UFCS</h3>
+        <p>
+          Functions declared next to a variant can be called through a value of that variant, just like struct-related functions. The receiver is passed as the first argument, and returned values can be chained. This is particularly practical for values that move through a few small transformations.
+        </p>
+        <pre><code class="language-jik">variant Reading:
+    VALUE: int
+    MISSING
+end
+
+func increase(reading: Reading, amount: int) -&gt; Reading:
+    if reading is Reading.VALUE:
+        reading[Reading.VALUE] += amount
+    end
+    return reading
+end
+
+func reading_value(reading: Reading) -&gt; int:
+    return reading[Reading.VALUE]
+end
+
+func main():
+    reading := Reading.VALUE{4}
+    println(reading.increase(3).reading_value()) // 7
+end
+</code></pre>
+        <p>
+          The last line is shorthand for <code>reading_value(increase(reading, 3))</code>, but reads from left to right as a small pipeline.
+        </p>
+
+        <h3>Common operations stay with their values</h3>
+        <p>
+          The built-in <code>push</code>, <code>pop</code>, <code>len</code>, <code>clear</code>, and <code>copy</code> functions now accept the same syntax. The normal calls remain valid.
+        </p>
+        <pre><code class="language-jik">
+func main():
+    entries := ["draft", "review"]
+    entries.push("published")
+
+    println(entries.len()) // 3
+
+    last := entries.pop()
+    snapshot := entries.copy()
+    entries.clear()
+end
+</code></pre>
+
+        <h3>External handles work the same way</h3>
+        <p>
+          UFCS also works with external structs, including standard-library handles:
+        </p>
+        <pre><code class="language-jik">use "jik/io" as io
+
+func main():
+    file := must io::open("notes.txt", "r", _)
+    contents := must file.read(_)
+    must file.close()
+end
+</code></pre>
+
+        <p class="links links-stacked">
+          <span>Release: <a href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.19">Jik v0.1.0-alpha.19</a></span>
+          <span>Docs: <a href="../docs/overview/11-variants.html#11-5-uniform-function-calls">Uniform function calls for variants</a></span>
+          <span>Docs: <a href="../docs/overview/17-builtins.html#17-2-container-builtins">Container builtins</a></span>
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://discord.gg/cnA8X5yKeA">Discord</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+    <script src="../script.js"></script>
+  </body>
+</html>

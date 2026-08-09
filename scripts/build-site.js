@@ -7,6 +7,7 @@ const pages = [
   "install.html",
   "packages.html",
   "news.html",
+  "news/alpha-19.html",
   "news/alpha-14.html",
   "news/argparse.html",
   "news/raylib-6.html",
