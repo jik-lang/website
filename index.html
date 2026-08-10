@@ -66,7 +66,16 @@
                 <option value="hello">Hello, Jik!</option>
               </select>
             </label>
-            <pre class="code-block"><code id="example-code" class="language-jik"></code></pre>
+            <span id="copy-feedback" class="screen-reader-text" aria-live="polite"></span>
+            <div class="example-code-area">
+              <button id="copy-example" class="copy-example" type="button" aria-label="Copy current example" aria-describedby="copy-feedback" title="Copy current example">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <rect x="9" y="9" width="10" height="10" rx="1"></rect>
+                  <path d="M15 9V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"></path>
+                </svg>
+              </button>
+              <pre class="code-block"><code id="example-code" class="language-jik"></code></pre>
+            </div>
           </div>
         </div>
       </section>
@@ -145,6 +154,22 @@
             is compiler correctness, support library fixes, standard library
             growth, more tests, and real programs to validate the implementation.
           </p>
+        </div>
+      </section>
+
+      <section class="news-band">
+        <div class="container section">
+          <div class="home-news-heading">
+            <h2>News</h2>
+            <a href="news.html">View all news <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <article class="home-news-item">
+            <p class="news-date">Published <time datetime="2026-08-09">August 9, 2026</time></p>
+            <h3><a href="news/alpha-19.html">Jik v0.1.0-alpha.19: UFCS for variants and more</a></h3>
+            <p>
+              Uniform function-call syntax now works with variants, common collection builtins, and external structs such as file handles.
+            </p>
+          </article>
         </div>
       </section>
 

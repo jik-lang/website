@@ -284,6 +284,9 @@ function highlightJik(source) {
 
 const select = document.querySelector("#example-select");
 const code = document.querySelector("#example-code");
+const copyExample = document.querySelector("#copy-example");
+const copyFeedback = document.querySelector("#copy-feedback");
+let copyResetTimer;
 
 function renderExample(name) {
   code.innerHTML = highlightJik(examples[name]);
@@ -292,6 +295,48 @@ function renderExample(name) {
 if (select && code) {
   select.addEventListener("change", () => renderExample(select.value));
   renderExample(select.value);
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.setAttribute("readonly", "");
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    document.body.append(textArea);
+    textArea.select();
+    try {
+      return document.execCommand("copy");
+    } catch {
+      return false;
+    } finally {
+      textArea.remove();
+    }
+  }
+}
+
+function showCopyResult(feedback, copied) {
+  copyExample.setAttribute("aria-label", copied ? "Example copied" : "Could not copy example");
+  copyFeedback.textContent = feedback;
+  clearTimeout(copyResetTimer);
+  copyResetTimer = setTimeout(() => {
+    copyExample.setAttribute("aria-label", "Copy current example");
+    copyFeedback.textContent = "";
+  }, 2000);
+}
+
+if (select && copyExample && copyFeedback) {
+  copyExample.addEventListener("click", async () => {
+    const copied = await copyToClipboard(examples[select.value]);
+    showCopyResult(
+      copied ? "Example copied to the clipboard." : "Could not copy the example to the clipboard.",
+      copied
+    );
+  });
 }
 
 document.querySelectorAll("code.language-jik").forEach((block) => {
