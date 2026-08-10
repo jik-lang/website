@@ -76,6 +76,9 @@ pre code {
 }
 
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   background: var(--header-bg);
   border-bottom: 1px solid var(--line);
 }
@@ -920,6 +923,10 @@ p {
 }
 
 @media (max-width: 760px) {
+  .site-header {
+    position: static;
+  }
+
   .container {
     width: min(100% - 32px, 1120px);
   }
