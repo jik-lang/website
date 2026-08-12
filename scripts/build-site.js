@@ -2,19 +2,6 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const pages = [
-  "index.html",
-  "install.html",
-  "packages.html",
-  "news.html",
-  "news/alpha-19.html",
-  "news/alpha-14.html",
-  "news/argparse.html",
-  "news/raylib-6.html",
-  "news/region-safe-functions.html",
-  "news/sqlite.html",
-];
-
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8").trimEnd();
 }
@@ -30,10 +17,10 @@ function replaceBlock(page, name, pattern, replacement) {
 const header = read("src/partials/header.html");
 const footer = read("src/partials/footer.html");
 
-function localizeHeaderLinks(shell, pagePath) {
+function localizeHeaderPaths(shell, pagePath) {
   const fromDirectory = path.dirname(pagePath);
 
-  return shell.replace(/\shref="([^"]+)"/g, (match, url) => {
+  return shell.replace(/\s(href|src)="([^"]+)"/g, (match, attribute, url) => {
     if (/^(https?:|mailto:|tel:)/i.test(url) || url.startsWith("#") || url.startsWith("/")) {
       return match;
     }
@@ -42,7 +29,7 @@ function localizeHeaderLinks(shell, pagePath) {
     const urlPath = hashIndex === -1 ? url : url.slice(0, hashIndex);
     const hash = hashIndex === -1 ? "" : url.slice(hashIndex);
     const relativeUrlPath = path.posix.relative(fromDirectory.replaceAll(path.sep, "/"), urlPath) || ".";
-    return ` href="${relativeUrlPath}${hash}"`;
+    return ` ${attribute}="${relativeUrlPath}${hash}"`;
   });
 }
 
@@ -58,6 +45,13 @@ function htmlFilesIn(directory) {
   });
 }
 
+const pages = [
+  ...fs.readdirSync(root, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".html"))
+    .map((entry) => entry.name),
+  ...htmlFilesIn("news"),
+];
+
 for (const pagePath of pages) {
   const absolutePath = path.join(root, pagePath);
   let page = fs.readFileSync(absolutePath, "utf8");
@@ -66,7 +60,7 @@ for (const pagePath of pages) {
     page,
     `${pagePath} header`,
     /    <header class="site-header">[\s\S]*?    <\/header>/,
-    localizeHeaderLinks(header, pagePath)
+    localizeHeaderPaths(header, pagePath)
   );
 
   page = replaceBlock(
@@ -88,7 +82,7 @@ for (const pagePath of htmlFilesIn("docs")) {
     page,
     `${pagePath} header`,
     /    <header class="site-header">[\s\S]*?    <\/header>/,
-    localizeHeaderLinks(header, pagePath)
+    localizeHeaderPaths(header, pagePath)
   );
 
   page = replaceBlock(

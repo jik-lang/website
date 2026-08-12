@@ -13,8 +13,11 @@
   <body>
     <header class="site-header">
       <div class="container header-inner">
+        <a class="header-logo" href="index.html" aria-label="Jik home">
+          <img src="assets/jik-logo-mark.png" alt="">
+        </a>
         <nav aria-label="Main navigation">
-          <a href="index.html">Overview</a>
+          <a href="index.html">Home</a>
           <a href="news.html">News</a>
           <a href="install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -26,16 +29,19 @@
     </header>
 
     <main class="packages-page">
-      <section class="container page-title">
-        <h1>Jik Packages</h1>
-        <p>
-          Official Jik packages can be found in the
-          <a href="https://github.com/jik-lang/jik-packages">jik-packages repository</a>.
-          Clone the repository, point Jik at it, and import packages from your programs.
-        </p>
+      <section class="page-title-band">
+        <div class="container page-title">
+          <h1>Jik Packages</h1>
+          <p>
+            Official Jik packages can be found in the
+            <a href="https://github.com/jik-lang/jik-packages">jik-packages repository</a>.
+            Clone the repository, point Jik at it, and import packages from your programs.
+          </p>
+        </div>
       </section>
 
-      <section class="container section">
+      <section class="packages-catalog-band">
+        <div class="container section">
         <h2>Available packages</h2>
         <ul class="doc-list">
           <!-- PACKAGE_LIST_START -->
@@ -57,6 +63,7 @@
           </li>
           <!-- PACKAGE_LIST_END -->
         </ul>
+        </div>
       </section>
 
       <section class="container section">
@@ -83,6 +90,7 @@ jik env</code></pre>
         </p>
       </section>
 
+      <div class="packages-workflow-band">
       <section class="container section">
         <h2>Import a Package</h2>
         <p>
@@ -113,6 +121,7 @@ git pull</code></pre>
           <code>$HOME/.local/share/jik-packages</code>.
         </p>
       </section>
+      </div>
 
       <section class="container section">
         <h2>Use a Specific Package Repository Version</h2>

@@ -10,8 +10,11 @@
   <div class="page">
     <header class="site-header">
       <div class="container header-inner">
+        <a class="header-logo" href="../../index.html" aria-label="Jik home">
+          <img src="../../assets/jik-logo-mark.png" alt="">
+        </a>
         <nav aria-label="Main navigation">
-          <a href="../../index.html">Overview</a>
+          <a href="../../index.html">Home</a>
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -85,17 +88,17 @@
 <p>Command-line argument parser.</p>
 <h2 id="types">Types</h2>
 <h3 id="argumentoption"><code>ArgumentOption</code></h3>
-<p>A long option, optional short alias, and its value specifications.</p>
+<p>Configured option handle.</p>
 <p>---</p>
 <h3 id="parser"><code>Parser</code></h3>
 <p>Configured parser.</p>
 <p>---</p>
 <h3 id="parseresult"><code>ParseResult</code></h3>
 <p>Values returned by <code>parse</code>.</p>
-<p><strong>Notes</strong></p>
+<p><strong>Fields</strong></p>
 <ul>
-  <li><code>positionals</code> is keyed by positional name. <code>options</code> is keyed by the configured long option spelling, including its <code>--</code> prefix.</li>
-  <li>Each option value is keyed by its declared name. A present flag has an empty value dictionary.</li>
+  <li><code>positionals: Dict[String]</code> - Values of configured positional arguments, keyed by positional name.</li>
+  <li><code>options: Dict[Dict[String]]</code> - Present options, keyed by configured long option spelling (including <code>--</code>). Each value dictionary is keyed by its declared value name; a flag has an empty dictionary.</li>
 </ul>
 <h2 id="functions">Functions</h2>
 <h3 id="add-option-parser-parser-name-string-short-name-string-help-string-argumentoption"><code>add_option(parser: Parser, name: String, short_name: String, help: String) -&gt; ArgumentOption</code></h3>

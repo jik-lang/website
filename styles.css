@@ -91,6 +91,34 @@ pre code {
   gap: 1.5rem;
 }
 
+.header-logo {
+  display: inline-flex;
+  grid-column: 1;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+
+.header-logo img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  mix-blend-mode: multiply;
+}
+
+.home-page .header-logo {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-page.header-logo-visible .header-logo {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .brand {
   display: inline-flex;
   grid-column: 1;
@@ -258,10 +286,64 @@ p {
   min-width: 0;
 }
 
-.feature-copy > p:first-child {
+.example-eyebrow {
+  margin-bottom: 0.6rem;
+  color: #8db4e5;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.feature-copy h2 {
+  color: #fff;
+  font-size: clamp(1.45rem, 1.85vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.example-description {
   color: #c8d7e9;
-  font-size: 1.25rem;
-  line-height: 1.5;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+.example-benefits {
+  display: grid;
+  gap: 0.45rem;
+  margin: 1.4rem 0;
+  padding: 0;
+  color: #dce7f5;
+  list-style: none;
+}
+
+.example-benefits li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+}
+
+.example-benefits li::before {
+  color: #8fd694;
+  content: "✓";
+  font-weight: 700;
+}
+
+.example-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.65rem 1.2rem;
+}
+
+.example-docs-link {
+  color: #c8d7e9;
+  text-underline-offset: 0.18em;
+  font-weight: 700;
+}
+
+.example-docs-link:hover {
+  color: #fff;
 }
 
 .feature-links {
@@ -296,6 +378,20 @@ p {
   border-color: #394d69;
   border-radius: 8px;
   box-shadow: 0 1.5rem 3.5rem rgb(4 13 28 / 25%);
+}
+
+.feature-band .example-picker-label {
+  position: absolute;
+  top: -0.45rem;
+  left: 0.1rem;
+  color: #aebfd2;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transform: translateY(-100%);
+}
+
+.feature-band .example-showcase {
+  position: relative;
 }
 
 .feature-band .example-picker {
@@ -400,6 +496,15 @@ p {
   border-bottom: 1px solid var(--line);
 }
 
+.page-title-band {
+  background: #fff;
+}
+
+.page-title-band .page-title {
+  padding-block: 3rem 2.5rem;
+  border-bottom: 0;
+}
+
 .page-title h1 {
   margin-bottom: 0.75rem;
   font-size: 2.4rem;
@@ -438,6 +543,114 @@ p {
 
 .news-item h2 a:hover {
   color: var(--link-hover);
+}
+
+.section-eyebrow {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.install-latest-band {
+  color: #eef4fb;
+  background: #142237;
+}
+
+.install-latest-band h2 {
+  color: #fff;
+}
+
+.install-latest-band .section-eyebrow {
+  color: #8db4e5;
+}
+
+.install-latest-band .release-card {
+  background: #1a2b43;
+  border-color: #49617f;
+}
+
+.install-latest-band .release-head p {
+  color: #c8d7e9;
+}
+
+.install-latest-band .release-link {
+  color: #c8d7e9;
+}
+
+.install-latest-band .release-link:hover {
+  color: #fff;
+}
+
+.install-latest-band .download-grid a {
+  color: #eaf2fc;
+  background: #223650;
+  border-color: #49617f;
+}
+
+.install-latest-band .download-grid a:hover {
+  color: #fff;
+  background: #2b4667;
+  border-color: #8db4e5;
+}
+
+.install-setup-band,
+.install-releases-band,
+.news-archive-band,
+.packages-catalog-band,
+.packages-workflow-band {
+  background: #f2f5f8;
+}
+
+.install-setup-band .section + .section {
+  border-top: 1px solid var(--line);
+}
+
+.packages-catalog-band .doc-list {
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.packages-catalog-band .doc-list li {
+  padding-inline: 1rem;
+}
+
+.packages-workflow-band .section + .section {
+  border-top: 1px solid var(--line);
+}
+
+.news-latest-item {
+  max-width: 46rem;
+  padding: 0;
+  color: var(--text);
+  border: 0;
+  border-left: 3px solid var(--link);
+  padding-left: 1.25rem;
+}
+
+.news-latest-item h2 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.75rem, 2.5vw, 2.1rem);
+}
+
+.news-latest-item h2 a {
+  color: var(--link);
+}
+
+.news-latest-item h2 a:hover {
+  color: var(--link-hover);
+}
+
+.news-latest-item .news-date {
+  color: var(--muted);
+}
+
+.news-archive-heading {
+  margin-bottom: 1.25rem;
 }
 
 .news-date {

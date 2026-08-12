@@ -13,8 +13,11 @@
   <body>
     <header class="site-header">
       <div class="container header-inner">
+        <a class="header-logo" href="index.html" aria-label="Jik home">
+          <img src="assets/jik-logo-mark.png" alt="">
+        </a>
         <nav aria-label="Main navigation">
-          <a href="index.html">Overview</a>
+          <a href="index.html">Home</a>
           <a href="news.html">News</a>
           <a href="install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -26,32 +29,37 @@
     </header>
 
     <main class="install-page">
-      <section class="container page-title">
-        <h1>Install Jik</h1>
-        <p>
-          Download a release archive for your platform, extract it, and run
-          <code>jik</code>. Releases are listed newest first.
-        </p>
+      <section class="page-title-band">
+        <div class="container page-title">
+          <h1>Install Jik</h1>
+          <p>
+            Download a release archive for your platform, extract it, and run
+            <code>jik</code>. Releases are listed newest first.
+          </p>
+        </div>
       </section>
 
-      <section id="latest" class="container section">
+      <section id="latest" class="install-latest-band">
+        <div class="container section">
+        <p class="section-eyebrow">Start here</p>
         <h2>Latest Release</h2>
         <!-- RELEASE_LATEST_START -->
         <article class="release-card latest-release">
           <div class="release-head">
             <div>
-              <h3>v0.1.0-alpha.19</h3>
-              <p>Published August 9, 2026</p>
+              <h3>v0.1.0-alpha.20</h3>
+              <p>Published August 12, 2026</p>
             </div>
-            <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.19">Release notes</a>
+            <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.20">Release notes</a>
           </div>
           <div class="download-grid">
-            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.19/jik-v0.1.0-alpha.19-windows-x64.zip">Windows x64 ZIP</a>
-            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.19/jik-v0.1.0-alpha.19-linux-x64.tar.gz">Linux x64 tar.gz</a>
-            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.19/jik-language-tools-v0.1.0-alpha.19.vsix">VS Code extension VSIX</a>
+            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.20/jik-v0.1.0-alpha.20-windows-x64.zip">Windows x64 ZIP</a>
+            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.20/jik-v0.1.0-alpha.20-linux-x64.tar.gz">Linux x64 tar.gz</a>
+            <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.20/jik-language-tools-v0.1.0-alpha.20.vsix">VS Code extension VSIX</a>
           </div>
         </article>
         <!-- RELEASE_LATEST_END -->
+        </div>
       </section>
 
       <section class="container section">
@@ -74,7 +82,7 @@
         </ol>
         <pre><code>mkdir -p "$HOME/.local/share/jik"
 curl -L -o /tmp/jik-linux-x64.tar.gz \
-  https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.19/jik-v0.1.0-alpha.19-linux-x64.tar.gz
+  https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.20/jik-v0.1.0-alpha.20-linux-x64.tar.gz
 tar -xzf /tmp/jik-linux-x64.tar.gz -C "$HOME/.local/share/jik" --strip-components=1
 export PATH="$HOME/.local/share/jik:$PATH"
 jik help</code></pre>
@@ -86,6 +94,7 @@ jik help</code></pre>
 
       </section>
 
+      <div class="install-setup-band">
       <section class="container section">
         <h2>Configure a Host C Compiler</h2>
         <p>
@@ -112,6 +121,7 @@ end</code></pre>
           <code>JIK_CC</code>, run it with <code>jik run hello.jik --cc clang</code>.
         </p>
       </section>
+      </div>
 
       <section class="container section">
         <h2>Use Packages</h2>
@@ -131,10 +141,26 @@ end</code></pre>
         <pre><code>code --install-extension jik-language-tools-*.vsix</code></pre>
       </section>
 
-      <section class="container section">
+      <section class="install-releases-band">
+        <div class="container section">
         <h2>All Releases</h2>
         <div class="release-list">
           <!-- RELEASE_LIST_START -->
+          <article class="release-card">
+            <div class="release-head">
+              <div>
+                <h3>v0.1.0-alpha.20</h3>
+                <p>Published August 12, 2026</p>
+              </div>
+              <a class="release-link" href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.20">Release notes</a>
+            </div>
+            <div class="download-grid">
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.20/jik-v0.1.0-alpha.20-windows-x64.zip">Windows x64 ZIP</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.20/jik-v0.1.0-alpha.20-linux-x64.tar.gz">Linux x64 tar.gz</a>
+              <a href="https://github.com/jik-lang/jik/releases/download/v0.1.0-alpha.20/jik-language-tools-v0.1.0-alpha.20.vsix">VS Code extension VSIX</a>
+            </div>
+          </article>
+
           <article class="release-card">
             <div class="release-head">
               <div>
@@ -435,6 +461,7 @@ end</code></pre>
             </div>
           </article>
           <!-- RELEASE_LIST_END -->
+        </div>
         </div>
       </section>
     </main>

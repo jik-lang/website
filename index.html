@@ -10,11 +10,14 @@
     >
     <link rel="stylesheet" href="styles.css">
   </head>
-  <body>
+  <body class="home-page">
     <header class="site-header">
       <div class="container header-inner">
+        <a class="header-logo" href="index.html" aria-label="Jik home">
+          <img src="assets/jik-logo-mark.png" alt="">
+        </a>
         <nav aria-label="Main navigation">
-          <a href="index.html">Overview</a>
+          <a href="index.html">Home</a>
           <a href="news.html">News</a>
           <a href="install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -33,8 +36,7 @@
         <div class="intro-copy">
           <h1>Jik</h1>
           <p class="tagline">
-            A readable, statically typed language that compiles to C and
-            manages memory with regions.
+            Clear, concise code for efficient native programs.
           </p>
           <p class="links cta-links">
             <a class="button primary" href="install.html#latest">Download latest release</a>
@@ -50,31 +52,42 @@
       <section id="examples" class="feature-band">
         <div class="container feature-layout">
           <div class="feature-copy">
-            <p>
-              Build command-line tools, process structured data, connect applications to SQLite, and create 2D games with Jik.
+            <p id="example-eyebrow" class="example-eyebrow">Region-based memory</p>
+            <h2 id="example-title">Control lifetimes without managing every allocation</h2>
+            <p id="example-description" class="example-description">
+              Functions can place returned data directly in a caller-selected region. Temporary strings and collections are freed together when the function returns, and compiler checks prevent references from outliving their data.
             </p>
+            <ul id="example-benefits" class="example-benefits">
+              <li>Caller-controlled result lifetimes</li>
+              <li>Bulk reclamation without garbage collection</li>
+              <li>Compiler-checked references between regions</li>
+            </ul>
+            <div class="example-links">
+              <a id="example-docs-link" class="example-docs-link" href="docs/overview/08-memory-management.html">How regions work <span aria-hidden="true">&rarr;</span></a>
+            </div>
           </div>
-          <div class="example-panel">
-            <label class="example-picker" for="example-select">
+          <div class="example-showcase">
+            <label class="example-picker-label" for="example-select">Choose an example</label>
+            <div class="example-panel">
+              <div class="example-picker">
               <select id="example-select">
-                <option value="config">Parsing a small config</option>
+                <option value="regions">Caller-owned results</option>
+                <option value="inference">Type inference</option>
+                <option value="cli">Standard library</option>
+                <option value="variants">Variants and match</option>
                 <option value="errors">Error handling</option>
-                <option value="variants">Variants</option>
-                <option value="regions">Caller-selected region</option>
-                <option value="primes">Primes</option>
-                <option value="counts">Counts</option>
-                <option value="hello">Hello, Jik!</option>
               </select>
-            </label>
-            <span id="copy-feedback" class="screen-reader-text" aria-live="polite"></span>
-            <div class="example-code-area">
-              <button id="copy-example" class="copy-example" type="button" aria-label="Copy current example" aria-describedby="copy-feedback" title="Copy current example">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <rect x="9" y="9" width="10" height="10" rx="1"></rect>
-                  <path d="M15 9V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"></path>
-                </svg>
-              </button>
-              <pre class="code-block"><code id="example-code" class="language-jik"></code></pre>
+              </div>
+              <span id="copy-feedback" class="screen-reader-text" aria-live="polite"></span>
+              <div class="example-code-area">
+                <button id="copy-example" class="copy-example" type="button" aria-label="Copy current example" aria-describedby="copy-feedback" title="Copy current example">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect x="9" y="9" width="10" height="10" rx="1"></rect>
+                    <path d="M15 9V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"></path>
+                  </svg>
+                </button>
+                <pre class="code-block"><code id="example-code" class="language-jik"></code></pre>
+              </div>
             </div>
           </div>
         </div>
@@ -150,9 +163,9 @@
         <div class="container section">
           <h2>Status</h2>
           <p>
-            Jik is currently in the 0.1.x stabilization phase. The near-term work
-            is compiler correctness, support library fixes, standard library
-            growth, more tests, and real programs to validate the implementation.
+              Jik is actively developed and is available as a series of 0.1.0 alpha releases.
+              Some language and library interfaces may still change. Current development 
+              focuses on compiler correctness, language ergonomics, and standard library growth.
           </p>
         </div>
       </section>
@@ -161,7 +174,6 @@
         <div class="container section">
           <div class="home-news-heading">
             <h2>News</h2>
-            <a href="news.html">View all news <span aria-hidden="true">&rarr;</span></a>
           </div>
           <article class="home-news-item">
             <p class="news-date">Published <time datetime="2026-08-09">August 9, 2026</time></p>

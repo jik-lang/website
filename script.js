@@ -1,176 +1,174 @@
-const examples = {
-  hello: `func main():
-    println("Hello, Jik!")
-end`,
+const homepageExamples = {
+  cli: {
+    selectLabel: "Standard library",
+    eyebrow: "Practical standard library",
+    title: "Useful building blocks come included",
+    description: "Jik's standard library provides practical building blocks for everyday programs.",
+    benefits: [
+      "Strings, bytes, files, and paths",
+      "Processes, argument parsing, and system utilities",
+      "Math, randomness, and testing"
+    ],
+    docsHref: "docs/overview/18-standard-library.html",
+    docsLabel: "Explore standard library",
+    code: `use "jik/argparse"
 
-  config: `use "jik/string"
+func main(args: Vec[String]):
+    parser := argparse::new("greet")
+    parser.add_positional("name", "Person to greet.")
+    parser.add_option("--formal", "-f", "Use a formal greeting.")
 
-func main():
-    text := "host = localhost\\nport = 8080\\nmode = dev\\n"
-    settings: Dict[String]
-
-    for line in string::split(text, "\\n"):
-        if line == "":
-            continue
+    try parsed := parser.parse(args[1:]):
+        name := parsed.positionals["name"]?
+        formal := parsed.options["--formal"] is Some
+        if formal:
+            println("Good day, ", name, ".")
+        else:
+            println("Hello, ", name, "!")
         end
-        parts := string::split(line, "=")
-        if len(parts) == 2:
-            key := string::trim(parts[0])
-            value := string::trim(parts[1])
-            settings[key] = value
-        end
-    end
-    
-    host := settings["host"]
-    port := settings["port"]
-    if host is Some and port is Some:
-        println("connecting to ", host?, ":", must string::to_int(port?))
-    end
-end`,
-
-  errors: `throws func safe_div(x, y):
-    if y == 0.0:
-        fail("division by zero")
-    end
-    return x / y
-end
-
-func show_div(x, y):
-    try value := safe_div(x, y):
-        println(x, " / ", y, " = ", value)
     except:
-        println("cannot divide ", x, " by ", y, ": ", error_msg())
-    end
-end
-
-func main():
-    show_div(3, 2)
-    show_div(2, 0)
-end`,
-
-  variants: `variant Packet:
-    ID: int
-    TEXT: String
-    NUMS: Vec[int]
-end
-
-func inspect(pkt):
-    match pkt:
-        case Packet.ID{id}:
-            println("id packet: ", id)
-        case Packet.TEXT{text}:
-            println("text packet: ", text)
-        case Packet.NUMS{nums}:
-            println("nums packet, len = ", len(nums), ", first = ", nums[0])
-    end
-end
-
-func main():
-    pkt := Packet.ID{41}
-    println("raw id: ", pkt[Packet.ID])
-    inspect(pkt)
-
-    inspect(Packet.TEXT{"hello"})
-    inspect(Packet.NUMS{[10, 20, 30]})
-end`,
-
-  regions: `struct Person:
-    name: String
-    age: int
-end
-
-func make_person(name, age, r: Region):
-    p := Person{name = name, age = age}[r]
-    return p
-end
-
-func main():
-    p := make_person("Methusalem", 100, _)
-    println(p)
-end`,
-
-  primes: `// Sieve of Eratosthenes
-func sieve(n, r):
-    is_prime := [n + 1 of true][r]
-    is_prime[0] = false
-    is_prime[1] = false
-    p := 2
-    while p * p <= n:
-        if is_prime[p]:
-            i := p * p
-            while i <= n:
-                is_prime[i] = false
-                i = i + p
-            end
-        end
-        p = p + 1
-    end
-    return is_prime
-end
-
-func main():
-    n := 100
-    res := sieve(n, _)
-    println("Primes up to ", n, ":")
-    for i = 2, n:
-        if res[i]:
-            print(i, ", ")
-        end
-    end
-end`,
-
-  counts: `// Count lines, words, and bytes in a text file.
-use "jik/io"
-use "jik/char"
-
-
-struct Counts:
-    lines: int
-    words: int
-    bytes: int
-end
-
-func count_text(s: String, r: Region) -> Counts:
-    lines := 0
-    words := 0
-    bytes := len(s)
-    in_word := false
-
-    for i = 0, len(s):
-        c := s[i]
-        if c == '\\n':
-            lines = lines + 1
-        end
-        if char::isspace(c):
-            in_word = false
-        elif not in_word:
-            words = words + 1
-            in_word = true
-        end
-    end
-
-    return Counts{
-        lines = lines,
-        words = words,
-        bytes = bytes
-    }[r]
-end
-
-func main(args):
-    if len(args) < 2:
-        println("usage: word_count <file>")
-    else:
-        path := args[1]
-        text := must io::read_file(path, _)
-        counts := count_text(text, _)
-
-        println("file:  ", path)
-        println("lines: ", counts.lines)
-        println("words: ", counts.words)
-        println("bytes: ", counts.bytes)
+        println(error_msg())
+        println(parser.format_help())
     end
 end`
+  },
+
+  errors: {
+    selectLabel: "Error handling",
+    eyebrow: "Explicit failure control",
+    title: "Make failure paths explicit",
+    description: "Throwing functions distinguish expected failure from successful results. Callers can propagate errors, require success, or recover locally.",
+    benefits: [
+      "Failure is part of a function's contract",
+      "Propagate with try or require success with must",
+      "Handle failures where you can decide what happens next"
+    ],
+    docsHref: "docs/overview/15-error-handling.html",
+    docsLabel: "Explore error handling",
+    code: `use "jik/io"
+use "jik/string"
+
+throws func parse_port(text):
+    port := try string::to_int(text)
+    if port < 1 or port > 65535:
+        fail("port must be between 1 and 65535")
+    end
+    return port
+end
+
+throws func load_port(path):
+    text := try io::read_file(path)
+    port := try parse_port(string::trim(text))
+    return port
+end
+
+func main():
+    fallback := must parse_port("8080")
+
+    try port := load_port("server.port"):
+        println("listening on ", port)
+    except:
+        println(error_msg(), "; using port ", fallback)
+    end
+end`
+  },
+
+  variants: {
+    selectLabel: "Variants and match",
+    eyebrow: "Exhaustive state handling",
+    title: "Model states without invalid combinations",
+    description: "Variants keep each case together with exactly the payload it permits. Exhaustive matching handles every case and binds its payload to the correct concrete type, while tag checks and tag extraction support targeted handling.",
+    benefits: [
+      "Exhaustive handling enforced by the compiler",
+      "Each case binds its concrete payload type",
+      "Direct tag checks when full dispatch is unnecessary"
+    ],
+    docsHref: "docs/overview/11-variants.html",
+    docsLabel: "Explore variants",
+    code: `variant Message:
+    TEXT: String
+    DATA: Vec[int]
+    CLOSED
+end
+
+func handle(message: Message):
+    match message:
+        case Message.TEXT{text}:
+            println("text: ", text)
+        case Message.DATA{values}:
+            println(values.len(), " values")
+        case Message.CLOSED:
+            println("connection closed")
+    end
+end
+
+func main():
+    message := Message.DATA{[10, 20, 30]}
+    handle(message)
+
+    if message is Message.DATA:
+        values := message[Message.DATA]
+        println("first value: ", values[0])
+    end
+end`
+  },
+
+  regions: {
+    selectLabel: "Caller-owned results",
+    eyebrow: "Region-based memory",
+    title: "Control lifetimes without managing every allocation",
+    description: "Functions can place returned data directly in a caller-selected region. Temporary values are freed together when the function returns, and compiler checks prevent references from outliving their data.",
+    benefits: [
+      "Caller-controlled result lifetimes",
+      "Bulk reclamation without garbage collection",
+      "Compiler-checked references between regions"
+    ],
+    docsHref: "docs/overview/08-memory-management.html",
+    docsLabel: "How regions work",
+    code: `use "jik/string"
+
+func hyphenate(text: String, r: Region) -> String:
+    // r is selected by the caller
+    words := string::split(text, " ", _)
+    return string::join(words, "-", r)
+end
+
+func main():
+    // _ is this function's local region: created on entry
+    // and destroyed when main returns.
+    label := hyphenate("region based memory", _)
+    println(label)
+end`
+  },
+
+  inference: {
+    selectLabel: "Type inference",
+    eyebrow: "Static types without repetition",
+    title: "Static types without repetitive annotations",
+    description: "Type annotations on ordinary function parameters and return values are optional. Jik can infer concrete types from literals, operations, and call sites while still checking every value at compile time.",
+    benefits: [
+      "Omit function annotations when the compiler has enough context",
+      "Add annotations at library boundaries or when no call site is available",
+      "Specify element types for empty collections"
+    ],
+    docsHref: "docs/overview/04-basic-syntax-and-structure.html#4-1-functions",
+    docsLabel: "More on defining functions",
+    code: `func fahrenheit(celsius, r):
+    result: Vec[double][r]
+    for value in celsius:
+        result.push(value * 1.8 + 32.0)
+    end
+    return result
+end
+
+func main():
+    values := fahrenheit([0.0, 20.0, 37.0], _)
+    println(values)
+end`
+  }
 };
+
+const homepageExampleOrder = ["regions", "inference", "cli", "variants", "errors"];
 
 const tokenPatterns = [
   ["tok-annotation", /^@[A-Za-z_][A-Za-z0-9_]*(\{[A-Za-z_][A-Za-z0-9_]*\})?/],
@@ -240,6 +238,14 @@ function highlightLine(line) {
       continue;
     }
 
+    const memberCallMatch = rest.match(/^(\.)([A-Za-z_][A-Za-z0-9_]*)(?=\s*\()/);
+    if (memberCallMatch) {
+      html += span("tok-accessor", memberCallMatch[1]);
+      html += span("tok-function", memberCallMatch[2]);
+      index += memberCallMatch[0].length;
+      continue;
+    }
+
     const functionDef = rest.match(/^func\s+([A-Za-z_][A-Za-z0-9_]*)/);
     if (functionDef) {
       html += span("tok-keyword", "func");
@@ -269,10 +275,19 @@ function highlightLine(line) {
       }
     }
 
-    if (!matched) {
-      html += escapeHtml(rest[0]);
-      index += 1;
+    if (matched) {
+      continue;
     }
+
+    const identifier = rest.match(/^[A-Za-z_][A-Za-z0-9_]*/);
+    if (identifier) {
+      html += escapeHtml(identifier[0]);
+      index += identifier[0].length;
+      continue;
+    }
+
+    html += escapeHtml(rest[0]);
+    index += 1;
   }
 
   return html;
@@ -284,16 +299,62 @@ function highlightJik(source) {
 
 const select = document.querySelector("#example-select");
 const code = document.querySelector("#example-code");
+const exampleEyebrow = document.querySelector("#example-eyebrow");
+const exampleTitle = document.querySelector("#example-title");
+const exampleDescription = document.querySelector("#example-description");
+const exampleBenefits = document.querySelector("#example-benefits");
+const exampleDocsLink = document.querySelector("#example-docs-link");
 const copyExample = document.querySelector("#copy-example");
 const copyFeedback = document.querySelector("#copy-feedback");
 let copyResetTimer;
 
-function renderExample(name) {
-  code.innerHTML = highlightJik(examples[name]);
+function populateExampleSelect() {
+  select.replaceChildren(
+    ...homepageExampleOrder.map((name) => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = homepageExamples[name].selectLabel;
+      return option;
+    })
+  );
 }
 
-if (select && code) {
-  select.addEventListener("change", () => renderExample(select.value));
+function renderExample(name) {
+  const example = homepageExamples[name];
+
+  if (!example) {
+    return;
+  }
+
+  code.innerHTML = highlightJik(example.code);
+  exampleEyebrow.textContent = example.eyebrow;
+  exampleTitle.textContent = example.title;
+  exampleDescription.textContent = example.description;
+  exampleBenefits.replaceChildren(
+    ...example.benefits.map((benefit) => {
+      const item = document.createElement("li");
+      item.textContent = benefit;
+      return item;
+    })
+  );
+  exampleDocsLink.href = example.docsHref;
+  exampleDocsLink.innerHTML = `${example.docsLabel} <span aria-hidden="true">&rarr;</span>`;
+}
+
+function resetCopyFeedback() {
+  clearTimeout(copyResetTimer);
+  copyExample.setAttribute("aria-label", "Copy current example");
+  copyFeedback.textContent = "";
+}
+
+if (select && code && exampleEyebrow && exampleTitle && exampleDescription && exampleBenefits && exampleDocsLink) {
+  populateExampleSelect();
+  select.addEventListener("change", () => {
+    if (copyExample && copyFeedback) {
+      resetCopyFeedback();
+    }
+    renderExample(select.value);
+  });
   renderExample(select.value);
 }
 
@@ -324,14 +385,18 @@ function showCopyResult(feedback, copied) {
   copyFeedback.textContent = feedback;
   clearTimeout(copyResetTimer);
   copyResetTimer = setTimeout(() => {
-    copyExample.setAttribute("aria-label", "Copy current example");
-    copyFeedback.textContent = "";
+    resetCopyFeedback();
   }, 2000);
 }
 
 if (select && copyExample && copyFeedback) {
   copyExample.addEventListener("click", async () => {
-    const copied = await copyToClipboard(examples[select.value]);
+    const example = homepageExamples[select.value];
+    if (!example) {
+      return;
+    }
+
+    const copied = await copyToClipboard(example.code);
     showCopyResult(
       copied ? "Example copied to the clipboard." : "Could not copy the example to the clipboard.",
       copied
@@ -344,3 +409,13 @@ document.querySelectorAll("code.language-jik").forEach((block) => {
     block.innerHTML = highlightJik(block.textContent);
   }
 });
+
+const introLogo = document.querySelector(".home-page .intro-logo");
+
+if (introLogo) {
+  const observer = new IntersectionObserver(([entry]) => {
+    document.body.classList.toggle("header-logo-visible", !entry.isIntersecting);
+  });
+
+  observer.observe(introLogo);
+}

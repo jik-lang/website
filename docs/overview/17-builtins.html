@@ -10,8 +10,11 @@
   <div class="page">
     <header class="site-header">
       <div class="container header-inner">
+        <a class="header-logo" href="../../index.html" aria-label="Jik home">
+          <img src="../../assets/jik-logo-mark.png" alt="">
+        </a>
         <nav aria-label="Main navigation">
-          <a href="../../index.html">Overview</a>
+          <a href="../../index.html">Home</a>
           <a href="../../news.html">News</a>
           <a href="../../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -94,10 +97,11 @@ println(None[String])</code></pre>
 <h4 id="println-void"><code>println(...) -&gt; void</code></h4>
 <p>Same as <code>print</code>, and additionally writes a newline after the arguments.</p>
 <h4 id="concat-string-region-string"><code>concat(...String, Region) -&gt; String</code></h4>
-<p>Concatenates one or more strings and allocates the result in the final <code>Region</code> argument.</p>
-<p>All arguments except the last must be of type <code>String</code>. The last argument must be a <code>Region</code>.</p>
+<p>Concatenates one or more strings and allocates the result in the final <code>Region</code> argument. The region may be omitted, in which case Jik uses the local region <code>_</code>.</p>
+<p>All string arguments must have type <code>String</code>. When supplied, the final argument must be a <code>Region</code>.</p>
 <p><strong>Example</strong></p>
-<pre><code class="language-jik">msg := concat(&quot;hello&quot;, &quot;, &quot;, name, &quot;!&quot;, _)</code></pre>
+<pre><code class="language-jik">msg := concat(&quot;hello&quot;, &quot;, &quot;, name, &quot;!&quot;)
+same := concat(&quot;hello&quot;, &quot;, &quot;, name, &quot;!&quot;, _)</code></pre>
 <p>---</p>
 <h3 id="17-2-container-builtins">17.2 Container builtins</h3>
 <h4 id="push-vec-t-t-void"><code>push(Vec[T], T) -&gt; void</code></h4>

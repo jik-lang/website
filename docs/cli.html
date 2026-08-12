@@ -10,8 +10,11 @@
   <div class="page">
     <header class="site-header">
       <div class="container header-inner">
+        <a class="header-logo" href="../index.html" aria-label="Jik home">
+          <img src="../assets/jik-logo-mark.png" alt="">
+        </a>
         <nav aria-label="Main navigation">
-          <a href="../index.html">Overview</a>
+          <a href="../index.html">Home</a>
           <a href="../news.html">News</a>
           <a href="../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -124,6 +127,7 @@
 <ul>
   <li><code>--out &lt;filepath&gt;</code>: Write the generated C to this path. When omitted, the default output path is <code>&lt;input-basename&gt;.c</code>.</li>
   <li><code>--embed-core</code>: Embed the Jik support library into the generated translation.</li>
+  <li><code>--emit-source-loc</code>: Emit <code>// source: path:line:column</code> comments before generated declarations that correspond to Jik source declarations.</li>
   <li><code>--format-c</code>: Format the generated C file in place with <code>clang-format</code>.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>

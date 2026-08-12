@@ -13,8 +13,11 @@
   <body>
     <header class="site-header">
       <div class="container header-inner">
+        <a class="header-logo" href="index.html" aria-label="Jik home">
+          <img src="assets/jik-logo-mark.png" alt="">
+        </a>
         <nav aria-label="Main navigation">
-          <a href="index.html">Overview</a>
+          <a href="index.html">Home</a>
           <a href="news.html">News</a>
           <a href="install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
@@ -26,20 +29,30 @@
     </header>
 
     <main>
-      <section class="container page-title">
-        <h1>News</h1>
-        <p>Updates, demos, and milestones from the Jik project.</p>
+      <section class="page-title-band">
+        <div class="container page-title">
+          <h1>News</h1>
+          <p>Updates, demos, and milestones from the Jik project.</p>
+        </div>
       </section>
 
-      <section class="container section">
-        <div class="news-list news-index">
-          <article class="news-item">
+      <section class="news-latest-band">
+        <div class="container section">
+          <p class="section-eyebrow">Latest update</p>
+          <article class="news-item news-latest-item">
             <p class="news-date">Published <time datetime="2026-08-09">August 9, 2026</time></p>
             <h2><a href="news/alpha-19.html">Jik v0.1.0-alpha.19: UFCS for variants and more</a></h2>
             <p>
               Uniform function-call syntax now works with variants, common collection builtins, and external structs such as file handles.
             </p>
           </article>
+        </div>
+      </section>
+
+      <section class="news-archive-band">
+        <div class="container section">
+          <h2 class="section-eyebrow news-archive-heading">Earlier updates</h2>
+          <div class="news-list news-index">
           <article class="news-item">
             <p class="news-date">Published <time datetime="2026-08-08">August 8, 2026</time></p>
             <h2><a href="news/alpha-18.html">Jik v0.1.0-alpha.18 released</a></h2>
@@ -107,6 +120,7 @@
               Jik now wraps Raylib 6.0.
             </p>
           </article>
+        </div>
         </div>
       </section>
     </main>
