@@ -30,7 +30,7 @@ After publishing a new Jik release, regenerate the website content:
 npm.cmd run update
 ```
 
-This updates the generated documentation pages, release cards, and the package
+This updates the generated documentation pages, latest release card, and the package
 list on `packages.html`. The package list is read from the `## Packages`
 section of the
 [`jik-packages` README](https://github.com/jik-lang/jik-packages#packages).
@@ -46,7 +46,7 @@ after regenerating them.
 ## Files
 
 - `index.html` - homepage
-- `install.html` - install instructions and generated release list
+- `install.html` - install instructions and generated latest release card
 - `packages.html` - official package setup and usage instructions
 - `docs/` - generated documentation pages
 - `styles.css` - site styling

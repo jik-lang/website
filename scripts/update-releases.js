@@ -99,9 +99,8 @@ function downloadLink(asset, label, indent) {
   return `${indent}<a href="${escapeHtml(asset.browser_download_url)}">${label}</a>`;
 }
 
-function releaseCard(release, options = {}) {
+function latestReleaseCard(release, options = {}) {
   const indent = " ".repeat(options.indent || 10);
-  const cardClass = options.latest ? "release-card latest-release" : "release-card";
   const links = [
     downloadLink(release.assets.windows, "Windows x64 ZIP", `${indent}    `),
     downloadLink(release.assets.linux, "Linux x64 tar.gz", `${indent}    `),
@@ -118,7 +117,7 @@ function releaseCard(release, options = {}) {
       : [`${indent}  <p>No matching release assets found.</p>`];
 
   return [
-    `${indent}<article class="${cardClass}">`,
+    `${indent}<article class="release-card latest-release">`,
     `${indent}  <div class="release-head">`,
     `${indent}    <div>`,
     `${indent}      <h3>${escapeHtml(release.tag)}</h3>`,
@@ -167,18 +166,11 @@ async function main() {
     installPage,
     "<!-- RELEASE_LATEST_START -->",
     "<!-- RELEASE_LATEST_END -->",
-    releaseCard(releases[0], { latest: true, indent: 8 })
-  );
-
-  installPage = replaceGeneratedBlock(
-    installPage,
-    "<!-- RELEASE_LIST_START -->",
-    "<!-- RELEASE_LIST_END -->",
-    releases.map((release) => releaseCard(release)).join("\n\n")
+    latestReleaseCard(releases[0], { indent: 8 })
   );
 
   fs.writeFileSync(installPath, installPage);
-  console.log(`Updated install.html with ${releases.length} releases`);
+  console.log(`Updated install.html with latest release ${releases[0].tag}`);
 }
 
 main().catch((error) => {
