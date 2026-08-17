@@ -147,8 +147,8 @@ end`
     title: "Static types without repetitive annotations",
     description: "Type annotations on ordinary function parameters and return values are optional. Jik can infer concrete types from literals, operations, and call sites while still checking every value at compile time.",
     benefits: [
-      "Omit function annotations when the compiler has enough context",
-      "Add annotations at library boundaries or when no call site is available",
+      "Infer function types when context is sufficient",
+      "Add annotations at library boundaries",
       "Specify element types for empty collections"
     ],
     docsHref: "docs/overview/04-basic-syntax-and-structure.html#4-1-functions",
