@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exhaustive enum matches in Jik v0.1.0-alpha.21 - Jik News</title>
+    <meta name="description" content="Jik v0.1.0-alpha.21 adds match support for enums, with exhaustive checking, alongside error-handling, parser, diagnostic, and standard-library improvements.">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="header-logo" href="../index.html" aria-label="Jik home">
+          <img src="../assets/jik-logo-mark.png" alt="">
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../news.html">News</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="container section news-post">
+        <p class="news-date">Published <time datetime="2026-08-18">August 18, 2026</time></p>
+        <h2>Exhaustive enum matches in Jik v0.1.0-alpha.21</h2>
+        <p>
+          Jik v0.1.0-alpha.21 is now available. Its main addition is <code>match</code> support for enums. Enum matches are exhaustive, so every member must be handled exactly once.
+        </p>
+
+        <h3>Match every enum member</h3>
+        <p>
+          <code>match</code> previously worked only with variants. It can now be used with enums as well. Every possible enum value must be covered. If a case is missing, or a member is handled more than once, the compiler reports an error. This makes changes to an enum safer: adding a member points directly to every match that needs updating.
+        </p>
+        <pre><code class="language-jik">enum State:
+    STARTING
+    RUNNING
+    STOPPED
+end
+
+func label(state: State) -&gt; String:
+    match state:
+        case State.STARTING:
+            return "starting"
+        case State.RUNNING:
+            return "running"
+        case State.STOPPED:
+            return "stopped"
+    end
+end
+</code></pre>
+        <p>
+          Like variant matches, enum cases are qualified with their enum type, such as <code>State.RUNNING</code>.
+        </p>
+
+        <h3>Other improvements</h3>
+        <ul>
+          <li>Error propagation now works correctly for calls used in assignments.</li>
+          <li><code>argparse</code> parsers can now include a description.</li>
+          <li>Vector literals accept a missing newline correctly, and binary-operation type errors are clearer.</li>
+          <li>The standard library has more robust exception handling, including fixes to <code>io.read_file</code> and <code>io.write_file</code>.</li>
+        </ul>
+
+        <p class="links links-stacked">
+          <span>Release: <a href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.21">Jik v0.1.0-alpha.21</a></span>
+          <span>Docs: <a href="../docs/overview/09-enumerations.html">Enumerations</a></span>
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://discord.gg/cnA8X5yKeA">Discord</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+    <script src="../script.js"></script>
+  </body>
+</html>
