@@ -523,6 +523,11 @@ for (const input of docsSearchInputs) {
   input.addEventListener("input", () => {
     renderDocsSearch(input, docsSearchIndex);
   });
+
+  input.closest("form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    renderDocsSearch(input, docsSearchIndex);
+  });
 }
 
 document.addEventListener("keydown", (event) => {
