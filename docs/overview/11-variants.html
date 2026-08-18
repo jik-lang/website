@@ -29,6 +29,10 @@
       <div class="container docs-layout">
         <aside class="docs-sidebar" aria-label="Documentation">
           <h2>Documentation</h2>
+          <form class="docs-search" role="search">
+            <input class="docs-search-input" type="search" aria-label="Search documentation" placeholder="Search docs" autocomplete="off" data-docs-index="../search-index.js">
+            <div class="docs-search-results" aria-live="polite"></div>
+          </form>
           <a href="../index.html">Jik Docs</a>
           <a href="../cli.html">Jik CLI Reference</a>
           <a href="../grammar.html">Jik Grammar Reference</a>
@@ -57,6 +61,10 @@
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
           <nav aria-label="Documentation">
+          <form class="docs-search" role="search">
+            <input class="docs-search-input" type="search" aria-label="Search documentation" placeholder="Search docs" autocomplete="off" data-docs-index="../search-index.js">
+            <div class="docs-search-results" aria-live="polite"></div>
+          </form>
             <a href="../index.html">Jik Docs</a>
             <a href="../cli.html">Jik CLI Reference</a>
             <a href="../grammar.html">Jik Grammar Reference</a>
@@ -119,7 +127,7 @@ assert(nums[0] == 0)</code></pre>
 <pre><code class="language-jik">v3 = Value.INT{2}
 assert(v3 is Value.INT)</code></pre>
 <h3 id="11-4-pattern-matching-on-variants">11.4 Pattern matching on variants</h3>
-<p>Jik also supports <code>match</code> for more concise variant handling:</p>
+<p>Jik supports <code>match</code> for more concise handling of variants and enums. A variant match uses tag patterns and can bind payloads:</p>
 <pre><code class="language-jik">func handle(val):
     match val:
         case Value.INT{v}:
@@ -139,7 +147,7 @@ end</code></pre>
 </ul>
 <p>Tags may omit their payload type. Construct and match those tags without braces, as with <code>Value.EOF</code>; braces always indicate a payload. If every tag has no payload, declare an <code>enum</code> instead of a <code>variant</code>.</p>
 <p>When printed, variants show their type, active tag, and payload when present: for example, <code>&lt;Value INT=7&gt;</code> and <code>&lt;Value EOF&gt;</code>.</p>
-<p>It is important to note that <code>match</code> is exhaustive, which means it requires all tags to be treated by a respective <code>case</code>, otherwise there is a compile error.</p>
+<p>It is important to note that <code>match</code> is exhaustive, which means it requires every variant tag or enum member to be handled by a respective <code>case</code>, otherwise there is a compile error.</p>
 <p>Variants can be placed freely into vectors, dictionaries, and other structs, and behave as regular values.</p>
 <p>Recursive cycles involving variant payloads must also pass through <code>Option[...]</code>. Payloads such as <code>Expr</code>, <code>Vec[Expr]</code>, or <code>Dict[Expr]</code> that recurse back without <code>Option</code> are compile errors.</p>
 <h3 id="11-5-uniform-function-calls">11.5 Uniform function calls</h3>
@@ -169,6 +177,7 @@ assert(v.is_text()) // shorthand for is_text(v)</code></pre>
       </div>
     </footer>
   </div>
+  <script src="../search-index.js"></script>
   <script src="../../script.js"></script>
 </body>
 </html>

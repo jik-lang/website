@@ -360,6 +360,49 @@ function docsNav(pages, currentOutputPath, indent = "          ") {
   return links.join("\n");
 }
 
+function docsSearch(indexPath) {
+  return `          <form class="docs-search" role="search">
+            <input class="docs-search-input" type="search" aria-label="Search documentation" placeholder="Search docs" autocomplete="off" data-docs-index="${escapeHtml(indexPath)}">
+            <div class="docs-search-results" aria-live="polite"></div>
+          </form>`;
+}
+
+function plainText(html) {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function searchSections(page) {
+  const headings = [...page.html.matchAll(/<h([1-4]) id="([^"]+)">([\s\S]*?)<\/h\1>/g)].map((match) => ({
+    level: Number(match[1]),
+    id: match[2],
+    html: match[3],
+    start: match.index
+  }));
+  const candidates = headings.some((heading) => heading.level > 1)
+    ? headings.filter((heading) => heading.level > 1)
+    : headings;
+
+  return candidates.map((heading) => {
+    const nextSection = headings.slice(headings.indexOf(heading) + 1).find((next) => next.level <= heading.level);
+    const end = nextSection ? nextSection.start : page.html.length;
+    const headingText = plainText(heading.html);
+    const sectionHtml = page.html.slice(heading.start, end);
+    return {
+      title: headingText === page.title ? page.title : `${page.title}: ${headingText}`,
+      heading: headingText,
+      url: `${page.outputPath.replace(/^docs\//, "")}#${heading.id}`,
+      text: plainText(sectionHtml)
+    };
+  });
+}
+
 function localizeShellLinks(html, currentOutputPath) {
   return html.replace(/\s(href|src)="([^"]+)"/g, (match, attribute, url) => {
     if (/^(https?:|mailto:|tel:)/i.test(url) || url.startsWith("#") || url.startsWith("/")) {
@@ -393,11 +436,13 @@ ${localizedHeader}
       <div class="container docs-layout">
         <aside class="docs-sidebar" aria-label="Documentation">
           <h2>Documentation</h2>
+${docsSearch(relativeOutputLink(page.outputPath, "docs/search-index.js"))}
 ${docsNav(pages, page.outputPath)}
         </aside>
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
           <nav aria-label="Documentation">
+${docsSearch(relativeOutputLink(page.outputPath, "docs/search-index.js"))}
 ${docsNav(pages, page.outputPath, "            ")}
           </nav>
         </details>
@@ -409,6 +454,7 @@ ${page.html}
 
 ${localizedFooter}
   </div>
+  <script src="${escapeHtml(relativeOutputLink(page.outputPath, "docs/search-index.js"))}"></script>
   <script src="${escapeHtml(relativeOutputLink(page.outputPath, "script.js"))}"></script>
 </body>
 </html>
@@ -506,6 +552,16 @@ async function main() {
 
   cleanGeneratedDocs(path.join(root, "docs"));
 
+  const searchIndex = pages.flatMap(searchSections);
+  const legacySearchIndex = path.join(root, "docs", "search-index.json");
+  if (fs.existsSync(legacySearchIndex)) {
+    fs.unlinkSync(legacySearchIndex);
+  }
+  fs.writeFileSync(
+    path.join(root, "docs", "search-index.js"),
+    `window.jikDocsSearchIndex = ${JSON.stringify(searchIndex)};\n`
+  );
+
   for (const page of pages) {
     const absoluteOutputPath = path.join(root, page.outputPath);
     fs.mkdirSync(path.dirname(absoluteOutputPath), { recursive: true });
@@ -522,4 +578,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { renderMarkdown };
+module.exports = { plainText, renderMarkdown, searchSections };

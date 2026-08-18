@@ -419,3 +419,164 @@ if (introLogo) {
 
   observer.observe(introLogo);
 }
+
+const docsSearchInputs = document.querySelectorAll(".docs-search-input");
+const docsSearchIndex = window.jikDocsSearchIndex || [];
+
+function docsSearchExcerpt(text, terms) {
+  const lowerText = text.toLowerCase();
+  const matchIndex = Math.max(...terms.map((term) => lowerText.indexOf(term)));
+  const start = Math.max(0, matchIndex - 58);
+  const end = Math.min(text.length, matchIndex + 142);
+  return `${start ? "…" : ""}${text.slice(start, end).trim()}${end < text.length ? "…" : ""}`;
+}
+
+function appendDocsSearchHighlight(element, text, terms, className = "") {
+  const pattern = new RegExp(
+    terms
+      .slice()
+      .sort((left, right) => right.length - left.length)
+      .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|"),
+    "gi"
+  );
+  let cursor = 0;
+  let match;
+
+  while ((match = pattern.exec(text))) {
+    element.append(document.createTextNode(text.slice(cursor, match.index)));
+    const highlight = document.createElement("mark");
+    highlight.className = className;
+    highlight.textContent = match[0];
+    element.append(highlight);
+    cursor = match.index + match[0].length;
+  }
+
+  element.append(document.createTextNode(text.slice(cursor)));
+}
+
+function docsSearchTermCount(text, term) {
+  let count = 0;
+  let index = text.indexOf(term);
+  while (index !== -1) {
+    count += 1;
+    index = text.indexOf(term, index + term.length);
+  }
+  return count;
+}
+
+function docsSearchScore(page, terms) {
+  const heading = (page.heading || "").toLowerCase();
+  const text = page.text.toLowerCase();
+
+  return terms.reduce((score, term) => {
+    return score +
+      (heading.includes(term) ? 100 : 0) +
+      docsSearchTermCount(text, term);
+  }, 0);
+}
+
+function renderDocsSearch(input, pages) {
+  const results = input.parentElement.querySelector(".docs-search-results");
+  const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  results.replaceChildren();
+
+  if (!terms.length) {
+    return;
+  }
+
+  const matches = pages
+    .filter((page) => {
+      const haystack = `${page.title} ${page.heading || ""} ${page.text}`.toLowerCase();
+      return terms.every((term) => haystack.includes(term));
+    })
+    .sort((left, right) => docsSearchScore(right, terms) - docsSearchScore(left, terms) || left.title.localeCompare(right.title))
+    .slice(0, 8);
+
+  if (!matches.length) {
+    const empty = document.createElement("span");
+    empty.className = "docs-search-empty";
+    empty.textContent = "No documentation found.";
+    results.append(empty);
+    return;
+  }
+
+  for (const page of matches) {
+    const result = document.createElement("a");
+    result.className = "docs-search-result";
+    const resultUrl = new URL(page.url, new URL(input.dataset.docsIndex, document.baseURI));
+    resultUrl.searchParams.set("search", input.value.trim());
+    result.href = resultUrl.href;
+
+    const title = document.createElement("span");
+    title.className = "docs-search-result-title";
+    appendDocsSearchHighlight(title, page.title, terms);
+    const excerpt = document.createElement("span");
+    excerpt.className = "docs-search-result-excerpt";
+    appendDocsSearchHighlight(excerpt, docsSearchExcerpt(page.text, terms), terms);
+    result.append(title, excerpt);
+    results.append(result);
+  }
+}
+
+for (const input of docsSearchInputs) {
+  input.addEventListener("input", () => {
+    renderDocsSearch(input, docsSearchIndex);
+  });
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey && document.activeElement === document.body && docsSearchInputs.length) {
+    event.preventDefault();
+    docsSearchInputs[0].focus();
+  }
+});
+
+function highlightDocsSearchElement(element, terms) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      return node.parentElement.closest("mark, script, style")
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const textNodes = [];
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode);
+  }
+
+  for (const textNode of textNodes) {
+    const replacement = document.createDocumentFragment();
+    appendDocsSearchHighlight(replacement, textNode.textContent, terms, "docs-search-page-highlight");
+    textNode.replaceWith(replacement);
+  }
+}
+
+function clearDocsSearchHighlights() {
+  document.querySelectorAll(".docs-search-page-highlight").forEach((highlight) => {
+    highlight.replaceWith(document.createTextNode(highlight.textContent));
+  });
+}
+
+const docsSearchQuery = new URLSearchParams(window.location.search).get("search");
+const docsSearchTarget = window.location.hash ? document.getElementById(decodeURIComponent(window.location.hash.slice(1))) : null;
+
+if (docsSearchQuery && docsSearchTarget && docsSearchTarget.matches("h1, h2, h3, h4")) {
+  const terms = docsSearchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const headingLevel = Number(docsSearchTarget.tagName.slice(1));
+  const elements = [docsSearchTarget];
+  let element = docsSearchTarget.nextElementSibling;
+
+  while (element) {
+    if (element.matches("h1, h2, h3, h4") && Number(element.tagName.slice(1)) <= headingLevel) {
+      break;
+    }
+    elements.push(element);
+    element = element.nextElementSibling;
+  }
+
+  elements.forEach((sectionElement) => highlightDocsSearchElement(sectionElement, terms));
+  ["pointerdown", "wheel", "keydown"].forEach((eventName) => {
+    document.addEventListener(eventName, clearDocsSearchHighlights, { once: true, capture: true });
+  });
+}

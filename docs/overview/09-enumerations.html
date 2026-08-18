@@ -29,6 +29,10 @@
       <div class="container docs-layout">
         <aside class="docs-sidebar" aria-label="Documentation">
           <h2>Documentation</h2>
+          <form class="docs-search" role="search">
+            <input class="docs-search-input" type="search" aria-label="Search documentation" placeholder="Search docs" autocomplete="off" data-docs-index="../search-index.js">
+            <div class="docs-search-results" aria-live="polite"></div>
+          </form>
           <a href="../index.html">Jik Docs</a>
           <a href="../cli.html">Jik CLI Reference</a>
           <a href="../grammar.html">Jik Grammar Reference</a>
@@ -57,6 +61,10 @@
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
           <nav aria-label="Documentation">
+          <form class="docs-search" role="search">
+            <input class="docs-search-input" type="search" aria-label="Search documentation" placeholder="Search docs" autocomplete="off" data-docs-index="../search-index.js">
+            <div class="docs-search-results" aria-live="polite"></div>
+          </form>
             <a href="../index.html">Jik Docs</a>
             <a href="../cli.html">Jik CLI Reference</a>
             <a href="../grammar.html">Jik Grammar Reference</a>
@@ -105,6 +113,16 @@ assert(s1 == State.ON)</code></pre>
     end
     return false
 end</code></pre>
+<p>When code needs to handle every possible enum value, use an exhaustive <code>match</code>. Every enum member must be handled exactly once, so adding a new member makes affected matches fail at compile time until they are updated.</p>
+<pre><code class="language-jik">func signal_name(s: State, r: Region) -&gt; String:
+    match s:
+        case State.ON:
+            return &quot;on&quot;[r]
+        case State.OFF:
+            return &quot;off&quot;[r]
+    end
+end</code></pre>
+<p>Enum cases must be qualified, including for imported enums. <code>case State.ON:</code> is valid; bare <code>case ON:</code> is not.</p>
 <p>Use enums when the possible values are known in advance and do not need to carry additional data. If each case needs associated values, variants are the more general construct.</p>
 <p>---</p>
         </article>
@@ -124,6 +142,7 @@ end</code></pre>
       </div>
     </footer>
   </div>
+  <script src="../search-index.js"></script>
   <script src="../../script.js"></script>
 </body>
 </html>

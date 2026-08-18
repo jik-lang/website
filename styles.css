@@ -977,9 +977,9 @@ p {
 
 .docs-sidebar {
   position: sticky;
-  top: 1rem;
+  top: calc(64px + 1rem);
   align-self: start;
-  max-height: calc(100vh - 2rem);
+  max-height: calc(100vh - 64px - 2rem);
   overflow: auto;
   padding-right: 0.75rem;
   border-right: 1px solid var(--line);
@@ -989,6 +989,90 @@ p {
   margin-bottom: 0.65rem;
   padding-bottom: 0.35rem;
   font-size: 1rem;
+}
+
+.docs-search {
+  margin-bottom: 0.8rem;
+}
+
+.docs-search-input {
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font: inherit;
+}
+
+.docs-search-input:focus {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.docs-search-results:empty {
+  display: none;
+}
+
+.docs-search-results {
+  max-height: 18rem;
+  margin-top: 0.45rem;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.docs-search-result {
+  display: block;
+  padding: 0.5rem 0.55rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.docs-search-result + .docs-search-result {
+  border-top: 1px solid var(--line);
+}
+
+.docs-search-result:hover {
+  background: var(--code-bg);
+}
+
+.docs-search-result-title,
+.docs-search-result-excerpt {
+  display: block;
+}
+
+.docs-search-result-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.docs-search-result-excerpt,
+.docs-search-empty {
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.docs-search-result mark {
+  padding: 0;
+  color: inherit;
+  background: color-mix(in srgb, var(--link) 32%, transparent);
+  border-radius: 2px;
+}
+
+.docs-search-page-highlight {
+  padding: 0 0.08em;
+  color: inherit;
+  background: color-mix(in srgb, var(--link) 38%, transparent);
+  border-radius: 2px;
+}
+
+.docs-search-empty {
+  display: block;
+  padding: 0.5rem 0.55rem;
 }
 
 .docs-sidebar a {
@@ -1262,6 +1346,10 @@ p {
     max-height: min(60vh, 24rem);
     overflow: auto;
     padding: 0.35rem 0.8rem 0.65rem;
+  }
+
+  .docs-mobile-nav .docs-search {
+    margin: 0.35rem 0.8rem 0.65rem;
   }
 
   .docs-mobile-nav a {
