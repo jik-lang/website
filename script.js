@@ -410,6 +410,43 @@ document.querySelectorAll("code.language-jik").forEach((block) => {
   }
 });
 
+const menuToggle = document.querySelector(".menu-toggle");
+const siteNavigation = document.querySelector(".site-nav");
+
+function closeMenu() {
+  if (!menuToggle || !siteNavigation) {
+    return;
+  }
+
+  siteNavigation.classList.remove("is-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Open navigation menu");
+}
+
+if (menuToggle && siteNavigation) {
+  menuToggle.addEventListener("click", () => {
+    const open = siteNavigation.classList.toggle("is-open");
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+  });
+
+  siteNavigation.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!siteNavigation.contains(event.target) && !menuToggle.contains(event.target)) {
+      closeMenu();
+    }
+  });
+}
+
 const introLogo = document.querySelector(".home-page .intro-logo");
 
 if (introLogo) {
