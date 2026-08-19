@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exhaustive lookup tables in Jik v0.1.0-alpha.22 - Jik News</title>
+    <meta name="description" content="Jik v0.1.0-alpha.22 adds immutable, exhaustive lookup tables for enums and variant tags.">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="header-logo" href="../index.html" aria-label="Jik home">
+          <img src="../assets/jik-logo-mark.png" alt="">
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../news.html">News</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="container section news-post">
+        <p class="news-date">Published <time datetime="2026-08-19">August 19, 2026</time></p>
+        <h2>Exhaustive lookup tables in Jik v0.1.0-alpha.22</h2>
+        <p>
+          Jik v0.1.0-alpha.22 is now available. This release adds tables: fixed,
+          module-level lookups that associate every enum member, or every variant tag,
+          with a value of one declared type.
+        </p>
+
+        <h3>Make complete mappings explicit</h3>
+        <p>
+          A table is checked for completeness at compile time. Each key must appear exactly
+          once, so missing, unknown, and duplicate entries are errors. There is no default
+          entry: when an enum grows, the compiler points to every table that needs updating.
+        </p>
+        <pre><code class="language-jik">
+enum Signal:
+    RED
+    GREEN
+    YELLOW
+end
+
+table SignalNames[Signal] -> String:
+    RED: "red"
+    GREEN: "green"
+    YELLOW: "yellow"
+end
+
+table Durations[Signal] -> int:
+    RED: 30
+    GREEN: 25
+    YELLOW: 5
+end
+
+table NextSignal[Signal] -> Signal:
+    RED: Signal.GREEN
+    GREEN: Signal.YELLOW
+    YELLOW: Signal.RED
+end
+
+func main():
+    signal := Signal.RED
+
+    for cycle = 0, 6:
+        println(SignalNames[signal], " for ", Durations[signal], " seconds")
+        signal = NextSignal[signal]
+    end
+end          
+        </code></pre>
+
+        <p>
+          Tables are initialized once and their entries cannot be replaced. Use them when you need
+          to associate a value with an enum or variant tag.
+          
+        </p>
+
+        <p class="links links-stacked">
+          <span>Release: <a href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.22">Jik v0.1.0-alpha.22</a></span>
+          <span>Docs: <a href="../docs/overview/14-tables.html">Tables</a></span>
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://discord.gg/cnA8X5yKeA">Discord</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+    <script src="../script.js"></script>
+  </body>
+</html>
