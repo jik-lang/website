@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>16. Foreign Function Interface (C interop) - Jik Documentation</title>
+  <title>17. Foreign Function Interface (C interop) - Jik Documentation</title>
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body>
@@ -37,7 +37,6 @@
           <a href="../cli.html">Jik CLI Reference</a>
           <a href="../grammar.html">Jik Grammar Reference</a>
           <a href="../known-issues.html">Known Issues and Current Limitations</a>
-          <a href="./18-standard-library.html">Jik Standard Library</a>
           <a href="../overview.html">Jik Language Overview</a>
           <a href="../development.html">Development notes and roadmap</a>
           <a href="./01-introduction.html">1. Introduction</a>
@@ -53,10 +52,12 @@
           <a href="./11-variants.html">11. Variants</a>
           <a href="./12-vectors.html">12. Vectors</a>
           <a href="./13-dictionaries.html">13. Dictionaries</a>
-          <a href="./14-control-flow.html">14. Control Flow</a>
-          <a href="./15-error-handling.html">15. Error handling</a>
-          <a href="./16-ffi-c-interop.html" aria-current="page">16. Foreign Function Interface (C interop)</a>
-          <a href="./17-builtins.html">17. Builtins</a>
+          <a href="./14-tables.html">14. Tables</a>
+          <a href="./15-control-flow.html">15. Control Flow</a>
+          <a href="./16-error-handling.html">16. Error handling</a>
+          <a href="./17-ffi-c-interop.html" aria-current="page">17. Foreign Function Interface (C interop)</a>
+          <a href="./18-builtins.html">18. Builtins</a>
+          <a href="./19-standard-library.html">19. Standard library</a>
         </aside>
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
@@ -69,7 +70,6 @@
             <a href="../cli.html">Jik CLI Reference</a>
             <a href="../grammar.html">Jik Grammar Reference</a>
             <a href="../known-issues.html">Known Issues and Current Limitations</a>
-            <a href="./18-standard-library.html">Jik Standard Library</a>
             <a href="../overview.html">Jik Language Overview</a>
             <a href="../development.html">Development notes and roadmap</a>
             <a href="./01-introduction.html">1. Introduction</a>
@@ -85,17 +85,19 @@
             <a href="./11-variants.html">11. Variants</a>
             <a href="./12-vectors.html">12. Vectors</a>
             <a href="./13-dictionaries.html">13. Dictionaries</a>
-            <a href="./14-control-flow.html">14. Control Flow</a>
-            <a href="./15-error-handling.html">15. Error handling</a>
-            <a href="./16-ffi-c-interop.html" aria-current="page">16. Foreign Function Interface (C interop)</a>
-            <a href="./17-builtins.html">17. Builtins</a>
+            <a href="./14-tables.html">14. Tables</a>
+            <a href="./15-control-flow.html">15. Control Flow</a>
+            <a href="./16-error-handling.html">16. Error handling</a>
+            <a href="./17-ffi-c-interop.html" aria-current="page">17. Foreign Function Interface (C interop)</a>
+            <a href="./18-builtins.html">18. Builtins</a>
+            <a href="./19-standard-library.html">19. Standard library</a>
           </nav>
         </details>
         <article class="docs-content">
 <p><a href="../overview.html">Back to overview</a></p>
-<h1 id="16-foreign-function-interface-c-interop">16. Foreign Function Interface (C interop)</h1>
+<h1 id="17-foreign-function-interface-c-interop">17. Foreign Function Interface (C interop)</h1>
 <p>Within Jik, one can embed C code and expose it through a foreign function interface, using the <code>extern</code> keyword. One can expose functions and structs. Extern structs are opaque handle types. Their fields are not visible to Jik, so construction and access must go through extern functions.</p>
-<h3 id="16-1-extern-functions">16.1 Extern functions</h3>
+<h3 id="17-1-extern-functions">17.1 Extern functions</h3>
 <p>Extern functions are declared like so:</p>
 <pre><code class="language-jik">extern func impl_adder as adder(x: int, y: int) -&gt; int</code></pre>
 <p>This assumes that <code>impl_adder</code> is either available through the Jik support library (<code>core.h</code>), or that it is embedded within Jik code, like so:</p>
@@ -111,7 +113,7 @@ C_END</code></pre>
 <p>Here, <code>C_END</code> is a user-defined label which marks the end of embedded C code. The idea is that this label should not be contained in any of the C code, so it can correctly be processed by the Jik compiler.</p>
 <p>One can then use it like any other function:</p>
 <pre><code class="language-jik">assert(adder(3, 2) == 5)</code></pre>
-<h3 id="16-2-extern-structs">16.2 Extern structs</h3>
+<h3 id="17-2-extern-structs">17.2 Extern structs</h3>
 <p>Regarding structs, here is an example:</p>
 <pre><code class="language-jik">extern struct impl_Point as Point
 extern func impl_Point_new as point_new(x: double, y: double, region: Region) -&gt; Point
@@ -144,7 +146,7 @@ C_END
 </code></pre>
 <p>Typically, when creating composite objects, we need to pass a region where they should be allocated.</p>
 <p>Extern structs cannot be read or modified the same way as non-extern structs, since they are opaque. Field access and mutation must be exposed through a specifically constructed API, as demonstrated above.</p>
-<h3 id="16-3-default-initialization-for-extern-structs">16.3 Default initialization for extern structs</h3>
+<h3 id="17-3-default-initialization-for-extern-structs">17.3 Default initialization for extern structs</h3>
 <p>Some extern structs have a meaningful empty value. These can declare one extern function as the type's default initializer:</p>
 <pre><code class="language-jik">extern struct impl_Buffer as Buffer
 
@@ -166,7 +168,18 @@ b2 := Buffer{}</code></pre>
 <p>Only empty construction is allowed. Extern structs are still opaque, so a fielded construction such as <code>Buffer{x = 1}</code> is invalid.</p>
 <p>Extern structs without an init function cannot be default-constructed:</p>
 <pre><code class="language-jik">f: io::File // error because io::File has no extern init function</code></pre>
-<h3 id="16-4-native-build-requirements">16.4 Native build requirements</h3>
+<h3 id="17-4-generated-c-names-and-identifier-restrictions">17.4 Generated C names and identifier restrictions</h3>
+<p>Jik reserves identifiers beginning with <code>jik_</code>, <code>Jik</code>, and <code>JIK</code>. Do not use these prefixes for functions, types, globals, locals, fields, module aliases, or other Jik identifiers.</p>
+<p>Jik emits local variables and struct fields using their source spelling. To keep the generated C valid, names reserved by the C backend are also rejected in those positions. This includes C keywords, implementation-reserved names such as <code>__name</code> and <code>_Name</code>, and common names from the C headers included by Jik, such as <code>size_t</code>, <code>FILE</code>, <code>EOF</code>, and <code>NULL</code>.</p>
+<p>Generated C names are implementation details, not a stable C API. In particular, the compiler currently uses these namespaces:</p>
+<pre><code class="language-text">jik_src_*    symbols derived from Jik source declarations
+jik_vec_*    generated vector types and helpers
+jik_dict_*   generated dictionary types and helpers
+jik_opt_*    generated option types and helpers
+jik_*        compiler and runtime helpers
+Jik*         runtime C types</code></pre>
+<p>Embedded C is passed through unchanged and may introduce its own names or C macros. It must therefore avoid collisions with Jik-generated names and follow the normal C rules itself.</p>
+<h3 id="17-5-native-build-requirements">17.5 Native build requirements</h3>
 <p>An FFI module can declare the include paths, library paths, libraries, and runtime files needed to build programs that import it:</p>
 <pre><code class="language-jik">@includedir(&quot;../vendor/raylib/include&quot;)
 

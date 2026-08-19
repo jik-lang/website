@@ -37,7 +37,6 @@
           <a href="./cli.html">Jik CLI Reference</a>
           <a href="./grammar.html" aria-current="page">Jik Grammar Reference</a>
           <a href="./known-issues.html">Known Issues and Current Limitations</a>
-          <a href="./overview/18-standard-library.html">Jik Standard Library</a>
           <a href="./overview.html">Jik Language Overview</a>
           <a href="./development.html">Development notes and roadmap</a>
           <a href="./overview/01-introduction.html">1. Introduction</a>
@@ -53,10 +52,12 @@
           <a href="./overview/11-variants.html">11. Variants</a>
           <a href="./overview/12-vectors.html">12. Vectors</a>
           <a href="./overview/13-dictionaries.html">13. Dictionaries</a>
-          <a href="./overview/14-control-flow.html">14. Control Flow</a>
-          <a href="./overview/15-error-handling.html">15. Error handling</a>
-          <a href="./overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
-          <a href="./overview/17-builtins.html">17. Builtins</a>
+          <a href="./overview/14-tables.html">14. Tables</a>
+          <a href="./overview/15-control-flow.html">15. Control Flow</a>
+          <a href="./overview/16-error-handling.html">16. Error handling</a>
+          <a href="./overview/17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
+          <a href="./overview/18-builtins.html">18. Builtins</a>
+          <a href="./overview/19-standard-library.html">19. Standard library</a>
         </aside>
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
@@ -69,7 +70,6 @@
             <a href="./cli.html">Jik CLI Reference</a>
             <a href="./grammar.html" aria-current="page">Jik Grammar Reference</a>
             <a href="./known-issues.html">Known Issues and Current Limitations</a>
-            <a href="./overview/18-standard-library.html">Jik Standard Library</a>
             <a href="./overview.html">Jik Language Overview</a>
             <a href="./development.html">Development notes and roadmap</a>
             <a href="./overview/01-introduction.html">1. Introduction</a>
@@ -85,10 +85,12 @@
             <a href="./overview/11-variants.html">11. Variants</a>
             <a href="./overview/12-vectors.html">12. Vectors</a>
             <a href="./overview/13-dictionaries.html">13. Dictionaries</a>
-            <a href="./overview/14-control-flow.html">14. Control Flow</a>
-            <a href="./overview/15-error-handling.html">15. Error handling</a>
-            <a href="./overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
-            <a href="./overview/17-builtins.html">17. Builtins</a>
+            <a href="./overview/14-tables.html">14. Tables</a>
+            <a href="./overview/15-control-flow.html">15. Control Flow</a>
+            <a href="./overview/16-error-handling.html">16. Error handling</a>
+            <a href="./overview/17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
+            <a href="./overview/18-builtins.html">18. Builtins</a>
+            <a href="./overview/19-standard-library.html">19. Standard library</a>
           </nav>
         </details>
         <article class="docs-content">
@@ -186,7 +188,7 @@ None[r]</code></pre>
 <p>Allocation suffix syntax takes precedence immediately after composite literals. As a result, forms like <code>[1, 2][0]</code> are not parsed as direct subscripting of a literal. In the current language, composite temporaries must first be bound to a name before subscripting, member access, mutation, or iteration.</p>
 <h2 id="program-structure">Program Structure</h2>
 <pre><code class="language-ebnf">program ::= { newline | use_decl | global_decl | top_decl | variant_decl
-            | enum_decl | embed_block | build_directive }</code></pre>
+            | enum_decl | table_decl | embed_block | build_directive }</code></pre>
 <h3 id="imports">Imports</h3>
 <pre><code class="language-ebnf">use_decl ::= &quot;use&quot; string_literal [ &quot;as&quot; identifier ]</code></pre>
 <h3 id="globals">Globals</h3>
@@ -236,6 +238,13 @@ extern_struct_decl ::= &quot;extern&quot; &quot;struct&quot; identifier &quot;as
 <pre><code class="language-ebnf">enum_decl ::= &quot;enum&quot; identifier &quot;:&quot; newline
               { identifier newline }
               &quot;end&quot;</code></pre>
+<h3 id="tables">Tables</h3>
+<pre><code class="language-ebnf">table_decl ::= &quot;table&quot; identifier &quot;[&quot; type_desc &quot;]&quot;
+               &quot;-&gt;&quot; type_desc &quot;:&quot; newline
+               { table_entry }
+               &quot;end&quot;
+table_entry ::= identifier &quot;:&quot; expr newline</code></pre>
+<p>The key type must resolve to an enum or variant. Every enum member or variant tag must occur exactly once. A table lookup uses ordinary subscript syntax, such as <code>Names[key]</code>. Table entries cannot be assigned through, contain function calls (including built-ins), or read global variables.</p>
 <h2 id="blocks-and-statements">Blocks and Statements</h2>
 <pre><code class="language-ebnf">block ::= { statement newline }</code></pre>
 <p>The current parser expects at least one newline after each statement in a block.</p>

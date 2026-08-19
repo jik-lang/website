@@ -37,7 +37,6 @@
           <a href="../cli.html">Jik CLI Reference</a>
           <a href="../grammar.html">Jik Grammar Reference</a>
           <a href="../known-issues.html">Known Issues and Current Limitations</a>
-          <a href="./18-standard-library.html">Jik Standard Library</a>
           <a href="../overview.html">Jik Language Overview</a>
           <a href="../development.html">Development notes and roadmap</a>
           <a href="./01-introduction.html">1. Introduction</a>
@@ -53,10 +52,12 @@
           <a href="./11-variants.html">11. Variants</a>
           <a href="./12-vectors.html">12. Vectors</a>
           <a href="./13-dictionaries.html">13. Dictionaries</a>
-          <a href="./14-control-flow.html">14. Control Flow</a>
-          <a href="./15-error-handling.html">15. Error handling</a>
-          <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
-          <a href="./17-builtins.html">17. Builtins</a>
+          <a href="./14-tables.html">14. Tables</a>
+          <a href="./15-control-flow.html">15. Control Flow</a>
+          <a href="./16-error-handling.html">16. Error handling</a>
+          <a href="./17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
+          <a href="./18-builtins.html">18. Builtins</a>
+          <a href="./19-standard-library.html">19. Standard library</a>
         </aside>
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
@@ -69,7 +70,6 @@
             <a href="../cli.html">Jik CLI Reference</a>
             <a href="../grammar.html">Jik Grammar Reference</a>
             <a href="../known-issues.html">Known Issues and Current Limitations</a>
-            <a href="./18-standard-library.html">Jik Standard Library</a>
             <a href="../overview.html">Jik Language Overview</a>
             <a href="../development.html">Development notes and roadmap</a>
             <a href="./01-introduction.html">1. Introduction</a>
@@ -85,10 +85,12 @@
             <a href="./11-variants.html">11. Variants</a>
             <a href="./12-vectors.html">12. Vectors</a>
             <a href="./13-dictionaries.html">13. Dictionaries</a>
-            <a href="./14-control-flow.html">14. Control Flow</a>
-            <a href="./15-error-handling.html">15. Error handling</a>
-            <a href="./16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
-            <a href="./17-builtins.html">17. Builtins</a>
+            <a href="./14-tables.html">14. Tables</a>
+            <a href="./15-control-flow.html">15. Control Flow</a>
+            <a href="./16-error-handling.html">16. Error handling</a>
+            <a href="./17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
+            <a href="./18-builtins.html">18. Builtins</a>
+            <a href="./19-standard-library.html">19. Standard library</a>
           </nav>
         </details>
         <article class="docs-content">
@@ -118,7 +120,7 @@ use &quot;shapes&quot;</code></pre>
 <p>Standard library modules live in <code>jiklib</code>, use the <code>jik/</code> prefix, and are resolved relative to the <code>jik</code> installation directory.</p>
 <pre><code class="language-jik">use &quot;jik/io&quot;
 use &quot;jik/testing&quot; as test</code></pre>
-<p>These modules are documented in the <a href="./18-standard-library.html">standard library chapter</a>.</p>
+<p>These modules are documented in the <a href="./19-standard-library.html">standard library chapter</a>.</p>
 <h4 id="3-1-3-package-imports">3.1.3 Package imports</h4>
 <p>Package modules use the <code>pkg/</code> prefix and are resolved relative to the package path configured with the <code>JIK_PKG_PATH</code> environment variable.</p>
 <p>In the current package layout, <code>JIK_PKG_PATH</code> should point to a local clone of <code>https://github.com/jik-lang/jik-packages</code>, whose top-level <code>packages/</code> directory contains package source trees.</p>

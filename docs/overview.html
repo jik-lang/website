@@ -37,7 +37,6 @@
           <a href="./cli.html">Jik CLI Reference</a>
           <a href="./grammar.html">Jik Grammar Reference</a>
           <a href="./known-issues.html">Known Issues and Current Limitations</a>
-          <a href="./overview/18-standard-library.html">Jik Standard Library</a>
           <a href="./overview.html" aria-current="page">Jik Language Overview</a>
           <a href="./development.html">Development notes and roadmap</a>
           <a href="./overview/01-introduction.html">1. Introduction</a>
@@ -53,10 +52,12 @@
           <a href="./overview/11-variants.html">11. Variants</a>
           <a href="./overview/12-vectors.html">12. Vectors</a>
           <a href="./overview/13-dictionaries.html">13. Dictionaries</a>
-          <a href="./overview/14-control-flow.html">14. Control Flow</a>
-          <a href="./overview/15-error-handling.html">15. Error handling</a>
-          <a href="./overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
-          <a href="./overview/17-builtins.html">17. Builtins</a>
+          <a href="./overview/14-tables.html">14. Tables</a>
+          <a href="./overview/15-control-flow.html">15. Control Flow</a>
+          <a href="./overview/16-error-handling.html">16. Error handling</a>
+          <a href="./overview/17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
+          <a href="./overview/18-builtins.html">18. Builtins</a>
+          <a href="./overview/19-standard-library.html">19. Standard library</a>
         </aside>
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
@@ -69,7 +70,6 @@
             <a href="./cli.html">Jik CLI Reference</a>
             <a href="./grammar.html">Jik Grammar Reference</a>
             <a href="./known-issues.html">Known Issues and Current Limitations</a>
-            <a href="./overview/18-standard-library.html">Jik Standard Library</a>
             <a href="./overview.html" aria-current="page">Jik Language Overview</a>
             <a href="./development.html">Development notes and roadmap</a>
             <a href="./overview/01-introduction.html">1. Introduction</a>
@@ -85,16 +85,18 @@
             <a href="./overview/11-variants.html">11. Variants</a>
             <a href="./overview/12-vectors.html">12. Vectors</a>
             <a href="./overview/13-dictionaries.html">13. Dictionaries</a>
-            <a href="./overview/14-control-flow.html">14. Control Flow</a>
-            <a href="./overview/15-error-handling.html">15. Error handling</a>
-            <a href="./overview/16-ffi-c-interop.html">16. Foreign Function Interface (C interop)</a>
-            <a href="./overview/17-builtins.html">17. Builtins</a>
+            <a href="./overview/14-tables.html">14. Tables</a>
+            <a href="./overview/15-control-flow.html">15. Control Flow</a>
+            <a href="./overview/16-error-handling.html">16. Error handling</a>
+            <a href="./overview/17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
+            <a href="./overview/18-builtins.html">18. Builtins</a>
+            <a href="./overview/19-standard-library.html">19. Standard library</a>
           </nav>
         </details>
         <article class="docs-content">
 <h1 id="jik-language-overview">Jik Language Overview</h1>
 <p>This document is a <strong>language tour</strong>, not a full specification. It is meant to give you a solid feel for how to write Jik code and what the core features look like.</p>
-<p>This document applies to Jik version <code>0.1.0-alpha.21</code> and may change for future versions.</p>
+<p>This document applies to Jik version <code>0.1.0-alpha.22</code> and may change for future versions.</p>
 <h2 id="chapters">Chapters</h2>
 <ol>
   <li><a href="./overview/01-introduction.html">Introduction</a></li>
@@ -110,11 +112,12 @@
   <li><a href="./overview/11-variants.html">Variants</a></li>
   <li><a href="./overview/12-vectors.html">Vectors</a></li>
   <li><a href="./overview/13-dictionaries.html">Dictionaries</a></li>
-  <li><a href="./overview/14-control-flow.html">Control Flow</a></li>
-  <li><a href="./overview/15-error-handling.html">Error Handling</a></li>
-  <li><a href="./overview/16-ffi-c-interop.html">Foreign Function Interface (C interop)</a></li>
-  <li><a href="./overview/17-builtins.html">Builtins</a></li>
-  <li><a href="./overview/18-standard-library.html">Standard Library</a></li>
+  <li><a href="./overview/14-tables.html">Tables</a></li>
+  <li><a href="./overview/15-control-flow.html">Control Flow</a></li>
+  <li><a href="./overview/16-error-handling.html">Error Handling</a></li>
+  <li><a href="./overview/17-ffi-c-interop.html">Foreign Function Interface (C interop)</a></li>
+  <li><a href="./overview/18-builtins.html">Builtins</a></li>
+  <li><a href="./overview/19-standard-library.html">Standard Library</a></li>
 </ol>
 <p>---</p>
 <h5 id="additional-references">Additional references:</h5>
