@@ -173,7 +173,7 @@ const homepageExampleOrder = ["regions", "inference", "cli", "variants", "errors
 const tokenPatterns = [
   ["tok-annotation", /^@[A-Za-z_][A-Za-z0-9_]*(\{[A-Za-z_][A-Za-z0-9_]*\})?/],
   ["tok-type", /^(void|bool|char|int|double|String|Region|Site|Vec|Dict|Option|Result)\b/],
-  ["tok-keyword", /^(func|struct|enum|variant|if|elif|else|while|for|in|end|return|of|this|break|continue|use|as|true|false|and|or|not|extern|init|hints|must|try|except|throws|foreign|is|match|case)\b/],
+  ["tok-keyword", /^(func|struct|enum|variant|table|if|elif|else|while|for|in|end|return|of|this|break|continue|use|as|true|false|and|or|not|extern|init|hints|must|try|except|throws|foreign|is|match|case)\b/],
   ["tok-builtin", /^(print|println|concat|copy|assert|push|pop|len|clear|site|site_file|site_line|site_code|fail|error_msg|error_code)\b(?=\s*\()/],
   ["tok-number", /^\d+(?:\.\d+)?\b/],
   ["tok-constant", /^[A-Z][A-Z0-9_]*\b/]
