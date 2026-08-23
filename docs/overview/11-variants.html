@@ -118,7 +118,7 @@ v2 := Value.INT{}
 
 v3 := Value.TEXT{&quot;hello&quot;}
 v4 := Value.NUMS{[10 of 0]}
-v5 := Value.EOF</code></pre>
+v5 := Value.EOF{}</code></pre>
 <h3 id="11-3-inspecting-extracting-and-changing-tags">11.3 Inspecting, extracting and changing tags</h3>
 <p>Use <code>is</code> to check which variant tag is active. Following up on the declarations above:</p>
 <pre><code class="language-jik">assert(v1 is Value.INT)
@@ -152,7 +152,7 @@ end</code></pre>
   <li>Tests the tag</li>
   <li><strong>Binds</strong> the payload to a local name (<code>v</code>, <code>msg</code>, <code>vec</code>).</li>
 </ul>
-<p>Tags may omit their payload type. Construct and match those tags without braces, as with <code>Value.EOF</code>; braces always indicate a payload. If every tag has no payload, declare an <code>enum</code> instead of a <code>variant</code>.</p>
+<p>Tags may omit their payload type. Construct those tags with empty braces, as with <code>Value.EOF{}</code>, and match them without braces, as with <code>case Value.EOF:</code>. If every tag has no payload, declare an <code>enum</code> instead of a <code>variant</code>.</p>
 <p>When printed, variants show their type, active tag, and payload when present: for example, <code>&lt;Value INT=7&gt;</code> and <code>&lt;Value EOF&gt;</code>.</p>
 <p>It is important to note that <code>match</code> is exhaustive, which means it requires every variant tag or enum member to be handled by a respective <code>case</code>, otherwise there is a compile error.</p>
 <p>Variants can be placed freely into vectors, dictionaries, and other structs, and behave as regular values.</p>

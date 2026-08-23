@@ -190,6 +190,17 @@
   <li>The file must have been opened in write or append mode.</li>
 </ul>
 <p>---</p>
+<h3 id="write-stderr-text-string-void"><code>write_stderr(text: String) -&gt; void</code></h3>
+<p>Write a string to standard error.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Write errors are ignored.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>text: String</code> - String to write.</li>
+</ol>
+<p>---</p>
 <h3 id="throws-write-file-foreign-path-string-foreign-text-string-region-region-void"><code>throws write_file(foreign path: String, foreign text: String, region: Region) -&gt; void</code></h3>
 <p>Write a string to a file by path, truncating existing contents.</p>
 <p><strong>Behavior</strong></p>

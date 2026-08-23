@@ -159,7 +159,7 @@ end</code></pre>
 end
 
 func make_point(x, y, r: Region) -&gt; Point:
-    return Point{x = x, y = y}[r]    // OK: allocated caller-provided region 
+    return Point{x = x, y = y}[r]    // OK: allocated in caller-provided region
 end
 
 func bad_point(x, y) -&gt; Point:
@@ -309,7 +309,39 @@ func main():
     push(v, [5, 6])     // [5, 6] is allocated in v's region
     v[0] = [0, 1, 2]    // [0, 1, 2] is allocated in v's region
 end</code></pre>
-<h4 id="8-5-3-nested-composite-literals">8.5.3 Nested composite literals</h4>
+<h4 id="8-5-3-returned-literal-retargeting">8.5.3 Returned literal retargeting</h4>
+<p>For a composite-returning function, the same-region rule determines a shared caller-owned result region from its non-<code>foreign</code> composite parameters and <code>Region</code> parameters. A composite literal used directly as a return expression is automatically allocated in that region:</p>
+<pre><code class="language-jik">func display_name(user: Person) -&gt; String:
+    if user.name == &quot;&quot;:
+        return &quot;Anonymous&quot;     // allocated in user's region
+    end
+    return user.name
+end
+
+func make_point(x, y, r: Region) -&gt; Point:
+    return Point{x = x, y = y}     // allocated in r
+end</code></pre>
+<p>This rule applies only to a directly returned composite literal. It does not retarget a local variable, a literal with an explicit allocation specifier, a <code>foreign</code> value, or a global value. Without an eligible parameter, returning a local literal remains an error. Explicit allocation remains valid when it improves clarity:</p>
+<pre><code class="language-jik">func make_point_explicit(x, y, r: Region) -&gt; Point:
+    return Point{x = x, y = y}[r]
+end</code></pre>
+<h4 id="8-5-4-implicit-allocation-suffix">8.5.4 Implicit allocation suffix</h4>
+<p>Postfix <code>@</code> explicitly allocates a composite in the enclosing function's implicit region without naming the parameter that supplies it. By implicit region, we are referring to the unique region of the function arguments, determined by the same-region rule.</p>
+<p>It follows that <code>@</code> is meaningful and can be used in functions which have at least one non-foreign composite or region parameter.</p>
+<p>It is useful for an intermediate value that must eventually be returned:</p>
+<pre><code class="language-jik">func values_for(owner: Person) -&gt; Vec[String]:
+    values := [&quot;primary&quot;, &quot;secondary&quot;]@
+    return values
+end
+
+func make_point(x, y, r: Region) -&gt; Point:
+    point := Point{x = x, y = y}@
+    return point
+end</code></pre>
+<p>In the first function, <code>@</code> is equivalent to <code>[.owner]</code>. In the second, it is equivalent to <code>[r]</code>. Only non-<code>foreign</code> composite parameters and <code>Region</code> parameters contribute to the implicit region. Like the equivalent named specifier, <code>@</code> allocates in the global region when that parameter denotes the global region at a call site.</p>
+<p>The suffix is valid only where <code>[r]</code> or <code>[.value]</code> would otherwise be accepted. It is not a general expression operator and cannot be attached to names, calls, or primitive values. It may also follow a local composite type description, as in <code>values: Vec[String]@</code>. It is invalid in a compiler-proven region-safe function: such functions are exempt from the same-region rule, so their signatures do not uniquely determine an allocation ragion <code>@</code>.</p>
+<p>Named allocation specifiers remain available and are required when no implicit region exists or when a region-safe function must select a particular parameter region. They may also be preferred when explicitly naming the allocation source makes the code clearer.</p>
+<h4 id="8-5-5-nested-composite-literals">8.5.5 Nested composite literals</h4>
 <p>Composite literals that contain other composite values must be internally region-consistent. The outer value and the contained composite values must belong to the same region.</p>
 <p>This applies to:</p>
 <ul>
@@ -328,7 +360,7 @@ end</code></pre>
     x := &quot;local&quot;
     y := [&quot;foo&quot;, x][.v]   // compile error: x is local, but the vector is allocated in v's region
 end</code></pre>
-<h4 id="8-5-4-temporary-containers-passed-to-foreign-parameters">8.5.4 Temporary containers passed to <code>foreign</code> parameters</h4>
+<h4 id="8-5-6-temporary-containers-passed-to-foreign-parameters">8.5.6 Temporary containers passed to <code>foreign</code> parameters</h4>
 <p>A temporary <code>Vec</code> or <code>Dict</code> literal passed directly to a <code>foreign</code> parameter may contain composite elements from different regions. This exception applies only in that <code>foreign</code> argument position; ordinary container literals must still be internally region-consistent. For example:</p>
 <pre><code class="language-jik">use &quot;jik/process&quot;
 
@@ -346,7 +378,7 @@ end</code></pre>
 <p>This works because the signature of <code>process::capture</code> is:</p>
 <pre><code class="language-jik">throws func capture(foreign program: String, foreign args: Vec[String], region: Region) -&gt; Result</code></pre>
 <p>Since <code>args</code> in <code>process::capture</code> is a <code>foreign</code> vector, at the call site the elements of the vector literal (e.g. the strings) need not be in the same region.</p>
-<h4 id="8-5-5-region-safe-builtins">8.5.5 Region-safe builtins</h4>
+<h4 id="8-5-7-region-safe-builtins">8.5.7 Region-safe builtins</h4>
 <p>All currently provided builtins except <code>push</code> are region-safe, so their calls do not need to satisfy the same-region rule. Some only inspect their composite arguments; others, such as <code>concat</code> and <code>copy</code>, explicitly identify the destination region for values they allocate.</p>
 <p><code>push</code> is checked as a store operation because it can retain its value argument in a vector. A <code>push</code> of a primitive value is region-safe; for a composite value, the compiler applies the usual store-safety checks.</p>
 <p><code>concat</code> is still explicit about its destination region: its last argument must be a <code>Region</code>, and the returned <code>String</code> is allocated there. <code>copy</code> is also explicit about its destination region, but unlike ordinary calls its source value may come from any region.</p>

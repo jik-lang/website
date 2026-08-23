@@ -23,7 +23,7 @@
           <a href="../news.html">News</a>
           <a href="../install.html">Install</a>
           <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
-          <a href="index.html">Docs</a>
+          <a href="./index.html">Docs</a>
           <a href="../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -109,7 +109,7 @@
 <ul>
   <li><code>Type.Member</code> may denote enum values or variant tags.</li>
   <li><code>x[Tag]</code> may denote variant payload access only after semantic resolution.</li>
-  <li>allocation suffixes such as <code>[r]</code> and <code>[.x]</code> are syntactically regular, but semantically restricted.</li>
+  <li>allocation suffixes such as <code>[r]</code>, <code>[.x]</code>, and <code>@</code> are syntactically regular, but semantically restricted.</li>
 </ul></li>
   <li>Newlines are significant between statements and after block headers.</li>
 </ul>
@@ -183,13 +183,16 @@ named_type ::= qualified_identifier</code></pre>
 <h2 id="allocation-suffixes">Allocation Suffixes</h2>
 <p>Composite literals and some type descriptions may be followed by an allocation suffix:</p>
 <pre><code class="language-ebnf">alloc_suffix ::= &quot;[&quot; identifier &quot;]&quot;
-               | &quot;[&quot; &quot;.&quot; identifier &quot;]&quot;</code></pre>
+               | &quot;[&quot; &quot;.&quot; identifier &quot;]&quot;
+               | &quot;@&quot;</code></pre>
 <p>Examples:</p>
 <pre><code class="language-jik">Point{}[r]
 Point{}[.p]
 Some{&quot;x&quot;}[r]
-None[r]</code></pre>
-<p>The parser also accepts the local region value <code>_</code> as an ordinary expression, but allocation suffix syntax itself expects either <code>id</code> or <code>.id</code>.</p>
+None[r]
+[1, 2, 3]@</code></pre>
+<p>The parser also accepts the local region value <code>_</code> as an ordinary expression, but bracketed allocation suffix syntax expects either <code>id</code> or <code>.id</code>.</p>
+<p>Postfix <code>@</code> selects the enclosing function's implicit region. It is available only where the same-region rule establishes one shared region from the function's non-<code>foreign</code> composite and <code>Region</code> parameters. It is invalid outside a function and in compiler-proven region-safe functions.</p>
 <p>Allocation suffix syntax takes precedence immediately after composite literals. As a result, forms like <code>[1, 2][0]</code> are not parsed as direct subscripting of a literal. In the current language, composite temporaries must first be bound to a name before subscripting, member access, mutation, or iteration.</p>
 <h2 id="program-structure">Program Structure</h2>
 <pre><code class="language-ebnf">program ::= { newline | use_decl | global_decl | top_decl | variant_decl
@@ -395,13 +398,12 @@ args      ::= expr { &quot;,&quot; expr }</code></pre>
 
 struct_field ::= identifier &quot;=&quot; expr</code></pre>
 <h3 id="variant-literals">Variant Literals</h3>
-<pre><code class="language-ebnf">variant_literal ::= qualified_identifier &quot;.&quot; identifier
-                  | qualified_identifier &quot;.&quot; identifier &quot;{&quot; [ expr ] &quot;}&quot;</code></pre>
+<pre><code class="language-ebnf">variant_literal ::= qualified_identifier &quot;.&quot; identifier &quot;{&quot; [ expr ] &quot;}&quot;</code></pre>
 <p>Examples:</p>
 <pre><code class="language-jik">Value.INT{3}
 Value.TEXT{&quot;hi&quot;}[r]
 Value.INT{}
-Value.EOF</code></pre>
+Value.EOF{}</code></pre>
 <h3 id="vector-literals">Vector Literals</h3>
 <pre><code class="language-ebnf">vector_literal ::= &quot;[&quot; expr &quot;of&quot; expr &quot;]&quot;
                  | &quot;[&quot; expr { &quot;,&quot; expr } &quot;]&quot;</code></pre>
@@ -419,7 +421,7 @@ dict_entry ::= expr &quot;:&quot; expr</code></pre>
 <p>These forms are parsed first and refined later:</p>
 <ul>
   <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an enum value during semantic analysis.</li>
-  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten during semantic analysis as either a payloadless variant value or a variant tag marker.</li>
+  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten as a variant tag marker during semantic analysis. Constructing a variant value always requires braces.</li>
   <li><code>value[VariantName.TAG]</code> is syntactically a subscript expression and becomes variant payload access only after semantic resolution.</li>
 </ul>
 <h2 id="current-implementation-gaps-and-constraints">Current Implementation Gaps and Constraints</h2>
