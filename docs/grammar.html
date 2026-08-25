@@ -193,7 +193,7 @@ None[r]
 [1, 2, 3]@</code></pre>
 <p>The parser also accepts the local region value <code>_</code> as an ordinary expression, but bracketed allocation suffix syntax expects either <code>id</code> or <code>.id</code>.</p>
 <p>Postfix <code>@</code> selects the enclosing function's implicit region. It is available only where the same-region rule establishes one shared region from the function's non-<code>foreign</code> composite and <code>Region</code> parameters. It is invalid outside a function and in compiler-proven region-safe functions.</p>
-<p>Allocation suffix syntax takes precedence immediately after composite literals. As a result, forms like <code>[1, 2][0]</code> are not parsed as direct subscripting of a literal. In the current language, composite temporaries must first be bound to a name before subscripting, member access, mutation, or iteration.</p>
+<p>Allocation suffix syntax takes precedence immediately after composite literals. As a result, forms like <code>[1, 2][0]</code> are not parsed as direct subscripting of a literal. Composite literals must first be bound to a name before subscripting, member access, mutation, or iteration.</p>
 <h2 id="program-structure">Program Structure</h2>
 <pre><code class="language-ebnf">program ::= { newline | use_decl | global_decl | top_decl | variant_decl
             | enum_decl | table_decl | embed_block | build_directive }</code></pre>

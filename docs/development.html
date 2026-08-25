@@ -103,7 +103,7 @@
 <h2 id="repository-layout">Repository layout</h2>
 <ul>
   <li><code>src/jik/</code> - C seed compiler source</li>
-  <li><code>src/bootstrap/</code> - Jik bootstrap compiler source</li>
+  <li><a href="../src/bootstrap/"><code>src/bootstrap/</code></a> - Jik bootstrap compiler source (work in progress)</li>
   <li><code>jiklib/</code> - Jik standard library modules</li>
   <li><code>support/</code> - Jik support library</li>
   <li><code>test/</code> - test suite</li>
@@ -116,18 +116,17 @@
 <h2 id="building-and-testing">Building and testing</h2>
 <p>Build the C seed compiler from the repository root with <code>make</code>. Build the Jik bootstrap compiler as <code>jik1</code> with <code>make boot</code>. Run the test suite with <code>make test</code>.</p>
 <h2 id="roadmap">Roadmap</h2>
-<h3 id="0-1-x-implementation-stabilisation">0.1.x — implementation stabilisation</h3>
+<h3 id="0-1-0-alpha-x-implementation-stabilisation-and-bootstrapping">0.1.0-alpha.x — implementation stabilisation and bootstrapping</h3>
 <ul>
   <li>Keep the intended language syntax stable.</li>
   <li>Find and fix compiler and support-library issues.</li>
   <li>Extend the standard library where needed.</li>
   <li>Expand the test suite.</li>
-  <li>Validate the implementation by writing real Jik programs.</li>
+  <li>Bootstrap the implementation by <a href="../src/bootstrap/">rewriting Jik in Jik</a></li>
 </ul>
 <h3 id="later">Later</h3>
 <ul>
-  <li>Continue bootstrapping the implementation by rewriting Jik in Jik.</li>
-  <li>Add concurrency support, either in the C implementation or during bootstrapping.</li>
+  <li>Add concurrency support</li>
 </ul>
         </article>
       </div>

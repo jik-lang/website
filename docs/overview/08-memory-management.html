@@ -139,7 +139,7 @@ p3 := Point{}[r]    // explicit region parameter r</code></pre>
 </ul>
 <p><code>[r]</code> and <code>[.x]</code> are called allocation specifiers. Allocation into a local region is only possible without a given allocation specifier, so <code>[_]</code> is invalid syntax.</p>
 <p>Allocation specifiers syntactically bind to their accompanying composite literal or type description. This means the first trailing <code>[...]</code> after a composite literal is reserved for allocation syntax such as <code>[r]</code> or <code>[.x]</code>.</p>
-<p>Because of this, composite temporaries must be bound to a name before member access, subscripting, mutation, or iteration. For example, writing <code>t := [1, 2][0]</code> is not allowed.</p>
+<p>Because of this, a composite literal must be bound to a name before member access, subscripting, mutation, or iteration. For example, writing <code>t := [1, 2][0]</code> is not allowed.</p>
 <p>Example:</p>
 <pre><code class="language-jik">struct Person:
     name: String
