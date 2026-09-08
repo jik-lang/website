@@ -1,7 +1,47 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const test = require("node:test");
 
 const { plainText, renderMarkdown, searchSections } = require("../scripts/update-docs");
+
+test("generates GitHub source links in development notes and roadmap", () => {
+  const markdown = fs.readFileSync(path.join(__dirname, "fixtures/docs/development.md"), "utf8");
+  const html = renderMarkdown(markdown, "docs/development.md", "docs/development.html", new Set());
+
+  assert.equal((html.match(/href="https:\/\/github\.com\/jik-lang\/jik\/tree\/main\/src\/bootstrap\/"/g) || []).length, 2);
+  assert.doesNotMatch(html, /href="\.\.\/src\//);
+});
+
+test("resolves repository links from nested docs and preserves anchors", () => {
+  const html = renderMarkdown(
+    "[source](../../src/bootstrap/main.jik#L1) [readme](../../README.md#quick-start)",
+    "docs/overview/guide.md",
+    "docs/overview/guide.html",
+    new Set()
+  );
+
+  assert.match(html, /href="https:\/\/github\.com\/jik-lang\/jik\/blob\/main\/src\/bootstrap\/main\.jik#L1"/);
+  assert.match(html, /href="https:\/\/github\.com\/jik-lang\/jik\/blob\/main\/README\.md#quick-start"/);
+});
+
+test("keeps documentation links local and still rejects missing docs", () => {
+  const knownDocs = new Set(["docs/overview.md"]);
+  const html = renderMarkdown(
+    "[overview](../overview.md#regions) [section](#local) [website](https://jik-lang.org/)",
+    "docs/overview/guide.md",
+    "docs/overview/guide.html",
+    knownDocs
+  );
+
+  assert.match(html, /href="\.\.\/overview\.html#regions"/);
+  assert.match(html, /href="#local"/);
+  assert.match(html, /href="https:\/\/jik-lang\.org\/"/);
+  assert.throws(
+    () => renderMarkdown("[missing](missing.md)", "docs/index.md", "docs/index.html", knownDocs),
+    /Broken docs link/
+  );
+});
 
 test("keeps indented continuation lines in their list item", () => {
   const html = renderMarkdown(

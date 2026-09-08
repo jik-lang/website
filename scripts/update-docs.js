@@ -8,6 +8,7 @@ const branch = "main";
 const treeUrl = `https://api.github.com/repos/${repo}/git/trees/${branch}?recursive=1`;
 const rawBaseUrl = `https://raw.githubusercontent.com/${repo}/${branch}/`;
 const githubBlobBaseUrl = `https://github.com/${repo}/blob/${branch}/`;
+const githubTreeBaseUrl = `https://github.com/${repo}/tree/${branch}/`;
 
 function argValue(name) {
   const index = process.argv.indexOf(name);
@@ -107,11 +108,20 @@ function rewriteHref(currentSourcePath, currentOutputPath, href, knownDocs) {
   const hrefPath = hashIndex === -1 ? href : href.slice(0, hashIndex);
   const hash = hashIndex === -1 ? "" : href.slice(hashIndex);
 
+  const targetSourcePath = sourcePathForLink(currentSourcePath, hrefPath);
+  if (
+    targetSourcePath !== "docs" && !targetSourcePath.startsWith("docs/") &&
+    targetSourcePath !== ".." && !targetSourcePath.startsWith("../")
+  ) {
+    const baseUrl = hrefPath.endsWith("/") ? githubTreeBaseUrl : githubBlobBaseUrl;
+    const encodedPath = targetSourcePath.split("/").map(encodeURIComponent).join("/");
+    return `${baseUrl}${encodedPath}${hash}`;
+  }
+
   if (!/\.md$/i.test(hrefPath)) {
     return href;
   }
 
-  const targetSourcePath = sourcePathForLink(currentSourcePath, hrefPath);
   if (!knownDocs.has(targetSourcePath)) {
     throw new Error(`Broken docs link from ${currentSourcePath} to ${href}`);
   }
