@@ -112,6 +112,13 @@ count := false</code></pre>
 s1: String
 nums: Vec[int]
 people: Dict[Vec[Person]]</code></pre>
+<p>You can combine an explicit type with an initializer when the type makes the declaration clearer or supplies context for the value:</p>
+<pre><code class="language-jik">count: int = 3
+enabled: bool = true
+missing: Option[int] = None</code></pre>
+<p>The initializer must have exactly the declared type. For composite values, an allocation suffix belongs on the initializer, not the type annotation:</p>
+<pre><code class="language-jik">name: String = &quot;Alice&quot;[r]
+maybe: Option[int] = None@</code></pre>
 <p>Defaults per type are:</p>
 <ul>
   <li><strong>Integers</strong>: <code>0</code></li>
@@ -124,7 +131,7 @@ people: Dict[Vec[Person]]</code></pre>
   <li><strong>Dictionaries</strong>: empty dict of given type</li>
   <li><strong>Variants</strong>: variant with active payload default initialized</li>
 </ul>
-<p>At top level, globals are declared with <code>:=</code>. Typed declarations such as <code>x: int</code> are for local variables inside functions.</p>
+<p>At top level, globals are declared with <code>:=</code>. Typed declarations such as <code>x: int</code> and <code>x: int = 3</code> are for local variables inside functions.</p>
 <h3 id="6-2-local-scope-and-redeclaration-rules">6.2 Local scope and redeclaration rules</h3>
 <p>Local variables live in block scopes, but Jik does not currently allow C-style shadowing.</p>
 <p>In practice:</p>

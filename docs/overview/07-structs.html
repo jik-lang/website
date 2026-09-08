@@ -118,6 +118,14 @@ c2 := Config{host = &quot;localhost&quot;, verbose = true}        // override so
 
 c1.port = 3
 c1.host = &quot;foo&quot;</code></pre>
+<p>When a visible value has the same name as a field, its field initializer may omit <code>= value</code>:</p>
+<pre><code class="language-jik">host := &quot;localhost&quot;
+port := 8080
+verbose := true
+
+c2 := Config{host, port, verbose}
+c3 := Config{host = &quot;example.com&quot;, port, verbose}</code></pre>
+<p><code>Config{host, port, verbose}</code> is exactly equivalent to <code>Config{host = host, port = port, verbose = verbose}</code>. These entries are always named, not positional: their order does not need to match the declaration order.</p>
 <p>Struct values can be read and updated through their fields using the usual <code>.</code> syntax.</p>
 <h3 id="7-3-uniform-function-calls">7.3 Uniform function calls</h3>
 <p>A function in the same module as a struct may be called through a struct value when its first parameter has an explicit annotation for that struct type:</p>

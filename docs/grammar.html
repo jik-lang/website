@@ -276,6 +276,7 @@ continue_stmt  ::= &quot;continue&quot;
 decl_stmt      ::= identifier &quot;:=&quot; expr
                  | identifier &quot;:=&quot; &quot;try&quot; call_expr
                  | identifier &quot;:&quot; type_desc
+                 | identifier &quot;:&quot; type_desc &quot;=&quot; expr
 
 assign_stmt    ::= lvalue assign_op expr
 assign_op      ::= &quot;=&quot; | &quot;+=&quot; | &quot;-=&quot; | &quot;*=&quot; | &quot;/=&quot; | &quot;%=&quot;
@@ -309,10 +310,12 @@ must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
 <h3 id="match">Match</h3>
 <pre><code class="language-ebnf">match_stmt ::= &quot;match&quot; expr &quot;:&quot; newline
                { case_clause }
+               [ other_clause ]
                &quot;end&quot;
 
 case_clause ::= &quot;case&quot; variant_pattern &quot;:&quot; newline block
               | &quot;case&quot; enum_pattern &quot;:&quot; newline block
+other_clause ::= &quot;other&quot; &quot;:&quot; newline block
 variant_pattern ::= qualified_identifier &quot;.&quot; identifier
                   | qualified_identifier &quot;.&quot; identifier &quot;{&quot; identifier &quot;}&quot;
 enum_pattern ::= qualified_identifier &quot;.&quot; identifier</code></pre>
@@ -320,6 +323,7 @@ enum_pattern ::= qualified_identifier &quot;.&quot; identifier</code></pre>
 <ul>
   <li><code>case Value.TAG{x}:</code> binds a variant payload, while <code>case Value.TAG:</code> matches a payloadless variant tag or an enum member.</li>
   <li>The matched value determines whether a qualified case denotes a variant tag or enum member. Enum matches require every member exactly once and do not permit payload bindings.</li>
+  <li><code>other:</code> is optional, may appear only once as the final match arm, and handles every tag not covered by an explicit case. A match with <code>other:</code> need not be exhaustive.</li>
 </ul>
 <h2 id="expressions">Expressions</h2>
 <p>The parser uses the following precedence, from lowest to highest.</p>

@@ -114,10 +114,14 @@
   <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
+  <li><code>--region-tree</code>: Print the runtime region lifetime hierarchy.</li>
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
 </ul>
 <p>Example:</p>
 <pre><code class="language-sh">jik run hello.jik --cc clang</code></pre>
+<p><code>--region-tree</code> draws one row per runtime region. Region IDs show creation order, and indentation shows nested lifetimes:</p>
+<pre><code class="language-text">R1 examples/hello::main.local
+  R2 src/parser::parse.local</code></pre>
 <h3 id="jik-build"><code>jik build &lt;filepath&gt;</code></h3>
 <p>Translate a Jik source file to C and compile it to an executable.</p>
 <p>Options:</p>
@@ -129,6 +133,7 @@
   <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
+  <li><code>--region-tree</code>: Print the runtime region lifetime hierarchy.</li>
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
 </ul>
 <p>Example:</p>
@@ -146,6 +151,7 @@
   <li><code>--format-c</code>: Format the generated C file in place with <code>clang-format</code>.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
+  <li><code>--region-tree</code>: Print the runtime region lifetime hierarchy.</li>
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
 </ul>
 <p>Generated C includes the Jik support header as <code>#include &quot;core.h&quot;</code>. For manual compilation, include the support include directory from <code>jik env</code>'s <code>core_include=&lt;path&gt;</code> value, or use <code>--embed-core</code> to write a self-contained C translation.</p>
