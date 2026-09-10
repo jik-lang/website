@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simpler variant syntax in Jik v0.1.0-alpha.26 - Jik News</title>
+    <meta name="description" content="Jik v0.1.0-alpha.26 adds contextual variant tags and simpler checked payload access.">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="header-logo" href="../index.html" aria-label="Jik home">
+          <img src="../assets/jik-logo-mark.png" alt="">
+        </a>
+        <button class="menu-toggle" type="button" aria-label="Open navigation menu" aria-controls="site-navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="site-navigation" class="site-nav" aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../news.html">News</a>
+          <a href="../install.html">Install</a>
+          <a href="https://github.com/jik-lang/jik/tree/main/examples">Examples</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="container section news-post">
+        <p><a href="../news.html">All news</a></p>
+        <p class="news-date">Published <time datetime="2026-09-10">September 10, 2026</time></p>
+        <h2>Simpler variant syntax in Jik v0.1.0-alpha.26</h2>
+        <p>
+          Jik v0.1.0-alpha.26 is now available. This release makes variants more
+          elegant to inspect and unpack: tag names are inferred from the value being
+          checked or matched, and payloads use checked member access.
+        </p>
+
+        <h3>Check tags without repeating the variant type</h3>
+        <p>
+          The value on the left of <code>is</code> supplies the variant type, so a tag
+          check now uses the tag name directly.
+        </p>
+        <pre><code class="language-jik">variant Value:
+    INT: int
+    TEXT: String
+    NUMS: Vec[int]
+    EOF
+end
+
+value := Value.INT{7}
+
+if value is INT:
+    println("integer")
+end</code></pre>
+
+        <h3>Access payloads as checked members</h3>
+        <p>
+          A variant payload is now accessed with <code>value.TAG</code>. The generated
+          code still checks that the named tag is active and reports a runtime error
+          otherwise. The same syntax can update an active payload.
+        </p>
+        <pre><code class="language-jik">value := Value.INT{7}
+value.INT += 1
+println(value.INT)</code></pre>
+
+        <h3>Use contextual tags in matches</h3>
+        <p>
+          Match arms also infer their variant or enum type from the matched expression.
+          Payload bindings and exhaustiveness checking work as before, with less
+          repetition in each case.
+        </p>
+        <pre><code class="language-jik">func describe(value: Value):
+    match value:
+        case INT{number}:
+            println("integer: ", number)
+        case TEXT{text}:
+            println("text: ", text)
+        case NUMS{numbers}:
+            println("numbers: ", numbers)
+        case EOF:
+            println("end of input")
+    end
+end</code></pre>
+
+        <p class="links links-stacked">
+          <span>Release: <a href="https://github.com/jik-lang/jik/releases/tag/v0.1.0-alpha.26">Jik v0.1.0-alpha.26</a></span>
+          <span>Changelog: <a href="https://github.com/jik-lang/jik/compare/v0.1.0-alpha.25...v0.1.0-alpha.26">v0.1.0-alpha.25...v0.1.0-alpha.26</a></span>
+          <span>Docs: <a href="../docs/overview/11-variants.html">Variants</a></span>
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://discord.gg/cnA8X5yKeA">Discord</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+      </div>
+    </footer>
+    <script src="../script.js"></script>
+  </body>
+</html>

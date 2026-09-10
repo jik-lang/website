@@ -93,11 +93,11 @@ end
 
 func handle(message: Message):
     match message:
-        case Message.TEXT{text}:
+        case TEXT{text}:
             println("text: ", text)
-        case Message.DATA{values}:
+        case DATA{values}:
             println(values.len(), " values")
-        case Message.CLOSED:
+        case CLOSED:
             println("connection closed")
     end
 end
@@ -106,8 +106,8 @@ func main():
     message := Message.DATA{[10, 20, 30]}
     handle(message)
 
-    if message is Message.DATA:
-        values := message[Message.DATA]
+    if message is DATA:
+        values := message.DATA
         println("first value: ", values[0])
     end
 end`
