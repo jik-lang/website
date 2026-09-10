@@ -108,7 +108,7 @@
   <li>Some constructs are context-sensitive. In particular:
 <ul>
   <li><code>Type.Member</code> may denote enum values or variant tags.</li>
-  <li><code>x[Tag]</code> may denote variant payload access only after semantic resolution.</li>
+  <li><code>value.Member</code> denotes a variant payload unwrap when <code>value</code> has a variant type.</li>
   <li>allocation suffixes such as <code>[r]</code>, <code>[.x]</code>, and <code>@</code> are syntactically regular, but semantically restricted.</li>
 </ul></li>
   <li>Newlines are significant between statements and after block headers.</li>
@@ -316,13 +316,13 @@ must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
 case_clause ::= &quot;case&quot; variant_pattern &quot;:&quot; newline block
               | &quot;case&quot; enum_pattern &quot;:&quot; newline block
 other_clause ::= &quot;other&quot; &quot;:&quot; newline block
-variant_pattern ::= qualified_identifier &quot;.&quot; identifier
-                  | qualified_identifier &quot;.&quot; identifier &quot;{&quot; identifier &quot;}&quot;
-enum_pattern ::= qualified_identifier &quot;.&quot; identifier</code></pre>
+variant_pattern ::= identifier
+                  | identifier &quot;{&quot; identifier &quot;}&quot;
+enum_pattern ::= identifier</code></pre>
 <p>Current implementation note:</p>
 <ul>
-  <li><code>case Value.TAG{x}:</code> binds a variant payload, while <code>case Value.TAG:</code> matches a payloadless variant tag or an enum member.</li>
-  <li>The matched value determines whether a qualified case denotes a variant tag or enum member. Enum matches require every member exactly once and do not permit payload bindings.</li>
+  <li><code>case TAG{x}:</code> binds a variant payload, while <code>case TAG:</code> ignores a payload or matches a payloadless variant tag or enum member.</li>
+  <li>The matched value determines the owner and whether a case denotes a variant tag or enum member. Enum matches require every member exactly once and do not permit payload bindings.</li>
   <li><code>other:</code> is optional, may appear only once as the final match arm, and handles every tag not covered by an explicit case. A match with <code>other:</code> need not be exhaustive.</li>
 </ul>
 <h2 id="expressions">Expressions</h2>
@@ -340,11 +340,12 @@ logical_and ::= is_expr { &quot;and&quot; is_expr }</code></pre>
 <pre><code class="language-ebnf">is_expr ::= comparison [ &quot;is&quot; is_target ]
 is_target ::= &quot;Some&quot;
             | &quot;None&quot;
+            | identifier
             | qualified_identifier &quot;.&quot; identifier</code></pre>
 <p>Examples:</p>
 <pre><code class="language-jik">x is Some
 x is None
-v is Value.INT</code></pre>
+v is INT</code></pre>
 <h3 id="comparison-and-arithmetic">Comparison and Arithmetic</h3>
 <pre><code class="language-ebnf">comparison ::= term { (&quot;==&quot; | &quot;!=&quot; | &quot;&lt;&quot; | &quot;&gt;&quot; | &quot;&lt;=&quot; | &quot;&gt;=&quot;) term }
 term       ::= factor { (&quot;+&quot; | &quot;-&quot;) factor }
@@ -367,7 +368,7 @@ values[1:]
 values[:]
 opt?
 load_config()!
-v[Value.INT]</code></pre>
+v.INT</code></pre>
 <h3 id="atoms">Atoms</h3>
 <pre><code class="language-ebnf">atom ::= integer_literal
        | float_literal
@@ -426,7 +427,7 @@ dict_entry ::= expr &quot;:&quot; expr</code></pre>
 <ul>
   <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an enum value during semantic analysis.</li>
   <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten as a variant tag marker during semantic analysis. Constructing a variant value always requires braces.</li>
-  <li><code>value[VariantName.TAG]</code> is syntactically a subscript expression and becomes variant payload access only after semantic resolution.</li>
+  <li><code>value.TAG</code> remains member access and is resolved as checked payload access when <code>value</code> has a variant type.</li>
 </ul>
 <h2 id="current-implementation-gaps-and-constraints">Current Implementation Gaps and Constraints</h2>
 <ul>

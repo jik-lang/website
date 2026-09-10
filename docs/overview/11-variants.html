@@ -121,29 +121,30 @@ v4 := Value.NUMS{[10 of 0]}
 v5 := Value.EOF{}</code></pre>
 <h3 id="11-3-inspecting-extracting-and-changing-tags">11.3 Inspecting, extracting and changing tags</h3>
 <p>Use <code>is</code> to check which variant tag is active. Following up on the declarations above:</p>
-<pre><code class="language-jik">assert(v1 is Value.INT)
-assert(v2 is Value.INT)
-assert(v3 is Value.TEXT)
-assert(v4 is Value.NUMS)
-assert(v5 is Value.EOF)</code></pre>
-<p>Payload extraction is done with an index-like syntax:</p>
-<pre><code class="language-jik">nums := v4[Value.NUMS]
+<pre><code class="language-jik">assert(v1 is INT)
+assert(v2 is INT)
+assert(v3 is TEXT)
+assert(v4 is NUMS)
+assert(v5 is EOF)</code></pre>
+<p>The variant type is inferred from the value on the left of <code>is</code>. Payloads use checked member access:</p>
+<pre><code class="language-jik">nums := v4.NUMS
 assert(nums[0] == 0)</code></pre>
-<p>This reads as &quot;treat this value as the <code>Value.NUMS</code> case and give me its payload&quot;. In the translated C code, it is checked if the active tag is accessed or not. In the latter case, a runtime error is thrown.</p>
+<p>This reads as &quot;give me the <code>NUMS</code> payload of this <code>Value</code>&quot;. The generated code checks that <code>NUMS</code> is active and reports a runtime error otherwise. A payload may be updated through the same checked access without changing the active tag:</p>
+<pre><code class="language-jik">v1.INT = 8</code></pre>
 <p>We can modify a variant instance by setting another tag as active:</p>
 <pre><code class="language-jik">v3 = Value.INT{2}
-assert(v3 is Value.INT)</code></pre>
+assert(v3 is INT)</code></pre>
 <h3 id="11-4-pattern-matching-on-variants">11.4 Pattern matching on variants</h3>
 <p>Jik supports <code>match</code> for more concise handling of variants and enums. A variant match uses tag patterns and can bind payloads:</p>
 <pre><code class="language-jik">func handle(val):
     match val:
-        case Value.INT{v}:
+        case INT{v}:
             print(&quot;INT: &quot;, v)
-        case Value.TEXT{msg}:
+        case TEXT{msg}:
             print(&quot;TEXT: &quot;, msg)
-        case Value.NUMS{vec}:
+        case NUMS{vec}:
             print(&quot;NUMS: &quot;, vec)
-        case Value.EOF:
+        case EOF:
             print(&quot;end of input&quot;)
     end
 end</code></pre>
@@ -152,12 +153,12 @@ end</code></pre>
   <li>Tests the tag</li>
   <li><strong>Binds</strong> the payload to a local name (<code>v</code>, <code>msg</code>, <code>vec</code>).</li>
 </ul>
-<p>Tags may omit their payload type. Construct those tags with empty braces, as with <code>Value.EOF{}</code>, and match them without braces, as with <code>case Value.EOF:</code>. If every tag has no payload, declare an <code>enum</code> instead of a <code>variant</code>.</p>
+<p>The matched expression determines the variant or enum type, so case tags do not need qualification. A payload-bearing tag may omit <code>{name}</code> when its payload is not needed. Construct payloadless tags with empty braces, as with <code>Value.EOF{}</code>, and match them without braces, as with <code>case EOF:</code>. If every tag has no payload, declare an <code>enum</code> instead of a <code>variant</code>.</p>
 <p>When printed, variants show their type, active tag, and payload when present: for example, <code>&lt;Value INT=7&gt;</code> and <code>&lt;Value EOF&gt;</code>.</p>
 <p>By default, <code>match</code> is exhaustive: every variant tag or enum member must be handled by a respective <code>case</code>, otherwise there is a compile error.</p>
 <p>A final <code>other:</code> arm handles every tag not covered by an explicit case. It cannot bind a payload. When <code>other:</code> is present, the match need not list every tag. Without it, the normal exhaustiveness requirement applies.</p>
 <pre><code class="language-jik">match val:
-    case Value.INT{v}:
+    case INT{v}:
         print(&quot;integer: &quot;, v)
     other:
         print(&quot;another value&quot;)
@@ -167,7 +168,7 @@ end</code></pre>
 <h3 id="11-5-uniform-function-calls">11.5 Uniform function calls</h3>
 <p>A function in the same module as a variant may be called through a value of that variant when its first parameter has an explicit annotation for the variant type:</p>
 <pre><code class="language-jik">func is_text(value: Value) -&gt; bool:
-    return value is Value.TEXT
+    return value is TEXT
 end
 
 v := Value.TEXT{&quot;hello&quot;}
