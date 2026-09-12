@@ -131,7 +131,7 @@ end
 
 token := Token.IDENT{&quot;name&quot;}
 name := TokenNames[token]</code></pre>
-<p>Entry expressions are evaluated once before global initialization. Composite entries therefore have global lifetime and are shared: looking up the same entry does not construct or copy it. Use <code>copy(TableName[key], region)</code> when an independent composite is required. As with globals, this is <a href="./06-variables-and-assignment.html#63-binding-immutability-and-object-mutability">binding immutability rather than deep object immutability</a>.</p>
+<p>Entry expressions are evaluated once before global initialization. Composite entries therefore have global lifetime and are shared: looking up the same entry does not construct or copy it. Use <code>copy(TableName[key], region)</code> when an independent composite is required. As with globals, this is <a href="./06-variables-and-assignment.html#6-3-binding-immutability-and-object-mutability">binding immutability rather than deep object immutability</a>.</p>
 <p>Table entries cannot call functions, including built-ins, or read global variables. They may look up an earlier table.</p>
 <p>Tables are initialized before globals, so global initializers may look up a table. A table entry cannot look up itself or a table initialized later.</p>
 <p>Imported tables use normal module qualification:</p>

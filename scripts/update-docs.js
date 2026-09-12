@@ -334,7 +334,7 @@ function docsNav(pages, currentOutputPath, indent = "          ") {
     "docs/cli.md",
     "docs/grammar.md",
     "docs/known-issues.md",
-    "docs/overview/18-standard-library.md",
+    "docs/overview/19-standard-library.md",
     "docs/overview.md"
   ];
   const primarySourcePathSet = new Set(primarySourcePaths);
@@ -344,7 +344,7 @@ function docsNav(pages, currentOutputPath, indent = "          ") {
       return false;
     }
 
-    return page.sourcePath !== "docs/overview/18-standard-library.md";
+    return page.sourcePath !== "docs/overview/19-standard-library.md";
   });
 
   const pageBySourcePath = new Map(pages.map((page) => [page.sourcePath, page]));
@@ -353,7 +353,7 @@ function docsNav(pages, currentOutputPath, indent = "          ") {
     .filter(Boolean)
     .map((page) => {
       const title =
-        page.sourcePath === "docs/overview/18-standard-library.md"
+        page.sourcePath === "docs/overview/19-standard-library.md"
           ? "Jik Standard Library"
           : page.title;
       return { ...page, title };

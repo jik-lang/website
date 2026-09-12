@@ -9,7 +9,7 @@ const homepageExamples = {
       "Processes, argument parsing, and system utilities",
       "Math, randomness, and testing"
     ],
-    docsHref: "docs/overview/18-standard-library.html",
+    docsHref: "docs/overview/19-standard-library.html",
     docsLabel: "Explore standard library",
     code: `use "jik/argparse"
 
@@ -43,7 +43,7 @@ end`
       "Propagate with try or require success with must",
       "Handle failures where you can decide what happens next"
     ],
-    docsHref: "docs/overview/15-error-handling.html",
+    docsHref: "docs/overview/16-error-handling.html",
     docsLabel: "Explore error handling",
     code: `use "jik/io"
 use "jik/string"
