@@ -601,7 +601,14 @@ function clearDocsSearchHighlights() {
 }
 
 const docsSearchQuery = new URLSearchParams(window.location.search).get("search");
-const docsSearchTarget = window.location.hash ? document.getElementById(decodeURIComponent(window.location.hash.slice(1))) : null;
+let docsSearchTarget = null;
+if (docsSearchQuery && window.location.hash) {
+  try {
+    docsSearchTarget = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+  } catch {
+    // A malformed URL fragment has no documentation search target.
+  }
+}
 
 if (docsSearchQuery && docsSearchTarget && docsSearchTarget.matches("h1, h2, h3, h4")) {
   const terms = docsSearchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);

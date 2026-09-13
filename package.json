@@ -4,6 +4,7 @@
     "build": "node scripts/build-site.js",
     "test": "node --test",
     "update": "node scripts/update-all.js",
-    "update:test": "node scripts/update-all.js --docs-source test/fixtures/docs --releases-source test/fixtures/github-releases.json --packages-source test/fixtures/jik-packages-readme.md"
+    "update:examples": "node scripts/update-examples.js",
+    "update:test": "node scripts/update-all.js --docs-source test/fixtures/docs --releases-source test/fixtures/github-releases.json --packages-source test/fixtures/jik-packages-readme.md --examples-source test/fixtures/examples"
   }
 }

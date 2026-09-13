@@ -897,6 +897,195 @@ p {
   color: #66665f;
 }
 
+.examples-browser {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  align-items: start;
+  gap: 2.5rem;
+  padding-block: 2rem 4rem;
+}
+
+.examples-github-link {
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.examples-nav {
+  grid-column: 1;
+  display: block;
+  position: sticky;
+  top: 5.5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.examples-group + .examples-group {
+  margin-top: 1.2rem;
+}
+
+.examples-group h2 {
+  margin: 0 0 0.4rem;
+  padding-inline: 0.65rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.examples-group a {
+  display: block;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.examples-group a:hover,
+.examples-group a[aria-current] {
+  color: var(--link);
+  background: var(--code-bg);
+}
+
+.examples-group a[aria-current] {
+  font-weight: 600;
+}
+
+.examples-content,
+.source-example {
+  min-width: 0;
+}
+
+.source-example {
+  margin-bottom: 2rem;
+  scroll-margin-top: 5.5rem;
+}
+
+.source-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  background: #1b2b43;
+  color: #dce7f5;
+}
+
+.source-toolbar h2 {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.source-file-select {
+  min-height: 2rem;
+  padding: 0.2rem 1.8rem 0.2rem 0.5rem;
+  color: #f4f7fc;
+  background: #223650;
+  border: 1px solid #49617f;
+  border-radius: 4px;
+  font: 0.9rem ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.source-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.source-actions a,
+.source-copy {
+  color: #c8d7e9;
+}
+
+.source-copy {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #49617f;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.source-actions a:hover,
+.source-copy:hover {
+  color: #fff;
+}
+
+.source-example .example-panel {
+  border-color: #303745;
+}
+
+.examples-page .source-example .code-block {
+  height: clamp(28rem, 65vh, 40rem);
+  min-height: 0;
+  padding: 1.25rem;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  font-size: 0.95rem;
+  tab-size: 4;
+}
+
+.source-run {
+  margin: 1rem 0 0.5rem;
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+}
+
+.source-note {
+  max-width: 42rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.examples-mobile {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .examples-browser {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    padding-top: 1.5rem;
+  }
+
+  .examples-browser.is-ready .examples-nav {
+    display: none;
+  }
+
+  .examples-nav {
+    position: static;
+    max-height: none;
+  }
+
+  .examples-browser.is-ready .examples-mobile {
+    display: block;
+  }
+
+  .examples-mobile select {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--text);
+    background: var(--panel);
+    font: inherit;
+  }
+
+  .examples-page .source-example .code-block {
+    height: auto;
+    max-height: 70vh;
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+}
+
 .columns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
