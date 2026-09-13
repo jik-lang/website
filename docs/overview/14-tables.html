@@ -42,6 +42,7 @@
           <a href="../cli.html">Jik CLI Reference</a>
           <a href="../grammar.html">Jik Grammar Reference</a>
           <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./19-standard-library.html">Jik Standard Library</a>
           <a href="../overview.html">Jik Language Overview</a>
           <a href="../development.html">Development notes and roadmap</a>
           <a href="./01-introduction.html">1. Introduction</a>
@@ -62,7 +63,6 @@
           <a href="./16-error-handling.html">16. Error handling</a>
           <a href="./17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
           <a href="./18-builtins.html">18. Builtins</a>
-          <a href="./19-standard-library.html">19. Standard library</a>
         </aside>
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
@@ -75,6 +75,7 @@
             <a href="../cli.html">Jik CLI Reference</a>
             <a href="../grammar.html">Jik Grammar Reference</a>
             <a href="../known-issues.html">Known Issues and Current Limitations</a>
+            <a href="./19-standard-library.html">Jik Standard Library</a>
             <a href="../overview.html">Jik Language Overview</a>
             <a href="../development.html">Development notes and roadmap</a>
             <a href="./01-introduction.html">1. Introduction</a>
@@ -95,7 +96,6 @@
             <a href="./16-error-handling.html">16. Error handling</a>
             <a href="./17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
             <a href="./18-builtins.html">18. Builtins</a>
-            <a href="./19-standard-library.html">19. Standard library</a>
           </nav>
         </details>
         <article class="docs-content">
@@ -131,7 +131,7 @@ end
 
 token := Token.IDENT{&quot;name&quot;}
 name := TokenNames[token]</code></pre>
-<p>Entry expressions are evaluated once before global initialization. Composite entries therefore have global lifetime and are shared: looking up the same entry does not construct or copy it. Use <code>copy(TableName[key], region)</code> when an independent composite is required. As with globals, this is <a href="./06-variables-and-assignment.html#6-3-binding-immutability-and-object-mutability">binding immutability rather than deep object immutability</a>.</p>
+<p>Entry expressions are evaluated once before global initialization. Composite entries therefore have global lifetime and are shared: looking up the same entry does not construct or copy it. Use <code>copy(TableName[key], region)</code> when an independent composite is required. As with globals, this is <a href="./06-variables-and-assignment.html#63-binding-immutability-and-object-mutability">binding immutability rather than deep object immutability</a>.</p>
 <p>Table entries cannot call functions, including built-ins, or read global variables. They may look up an earlier table.</p>
 <p>Tables are initialized before globals, so global initializers may look up a table. A table entry cannot look up itself or a table initialized later.</p>
 <p>Imported tables use normal module qualification:</p>

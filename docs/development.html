@@ -23,7 +23,7 @@
           <a href="../news.html">News</a>
           <a href="../install.html">Install</a>
           <a href="../examples.html">Examples</a>
-          <a href="index.html">Docs</a>
+          <a href="./index.html">Docs</a>
           <a href="../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -42,6 +42,7 @@
           <a href="./cli.html">Jik CLI Reference</a>
           <a href="./grammar.html">Jik Grammar Reference</a>
           <a href="./known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./overview/19-standard-library.html">Jik Standard Library</a>
           <a href="./overview.html">Jik Language Overview</a>
           <a href="./development.html" aria-current="page">Development notes and roadmap</a>
           <a href="./overview/01-introduction.html">1. Introduction</a>
@@ -62,7 +63,6 @@
           <a href="./overview/16-error-handling.html">16. Error handling</a>
           <a href="./overview/17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
           <a href="./overview/18-builtins.html">18. Builtins</a>
-          <a href="./overview/19-standard-library.html">19. Standard library</a>
         </aside>
         <details class="docs-mobile-nav">
           <summary>Browse documentation</summary>
@@ -75,6 +75,7 @@
             <a href="./cli.html">Jik CLI Reference</a>
             <a href="./grammar.html">Jik Grammar Reference</a>
             <a href="./known-issues.html">Known Issues and Current Limitations</a>
+            <a href="./overview/19-standard-library.html">Jik Standard Library</a>
             <a href="./overview.html">Jik Language Overview</a>
             <a href="./development.html" aria-current="page">Development notes and roadmap</a>
             <a href="./overview/01-introduction.html">1. Introduction</a>
@@ -95,7 +96,6 @@
             <a href="./overview/16-error-handling.html">16. Error handling</a>
             <a href="./overview/17-ffi-c-interop.html">17. Foreign Function Interface (C interop)</a>
             <a href="./overview/18-builtins.html">18. Builtins</a>
-            <a href="./overview/19-standard-library.html">19. Standard library</a>
           </nav>
         </details>
         <article class="docs-content">
@@ -115,6 +115,8 @@
 </ul>
 <h2 id="building-and-testing">Building and testing</h2>
 <p>Build the C seed compiler from the repository root with <code>make</code>. Build the Jik bootstrap compiler as <code>jik1</code> with <code>make boot</code>. Run the test suite with <code>make test</code>.</p>
+<h2 id="release-archives">Release archives</h2>
+<p>Run <code>make release-archive VERSION=&lt;version&gt;</code> to create a compiler archive in <code>artifacts/</code>. Archives include the complete <code>examples/</code> directory alongside the compiler, standard library, support files, and documentation.</p>
 <h2 id="roadmap">Roadmap</h2>
 <h3 id="0-1-0-alpha-x-implementation-stabilisation-and-bootstrapping">0.1.0-alpha.x — implementation stabilisation and bootstrapping</h3>
 <ul>
