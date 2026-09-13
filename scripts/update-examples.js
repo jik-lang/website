@@ -135,7 +135,7 @@ ${read("src/partials/header.html")}
     <main>
       <div class="container page-title">
         <h1>Examples</h1>
-        <p>Start with the first language examples and work down for a natural tour of Jik, or jump directly to a topic. For detailed explanations, see the <a href="docs/overview.html">documentation</a>.</p>
+        <p>Start with the first language examples and work down for a tour of Jik, or jump directly to a topic. For detailed explanations, see the <a href="docs/overview.html">documentation</a>.</p>
         <p class="examples-github-link"><a href="https://github.com/jik-lang/jik/tree/main/examples">View all examples on GitHub</a></p>
       </div>
       <div class="container examples-browser">
