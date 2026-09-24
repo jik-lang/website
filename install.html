@@ -107,12 +107,16 @@ jik help</code></pre>
         <h2>Configure a Host C Compiler</h2>
         <p>
           <code>jik run</code> and <code>jik build</code> need a host C compiler.
-          Configure one either by using the <code>--cc</code> CLI option or (recommended) by setting the <code>JIK_CC</code> environment variable.</p>
+          On Windows, these portable GCC toolchains are easy ways to get one:
         </p>
+        <ul>
+          <li><a href="https://winlibs.com/">WinLibs</a>: Extract a MinGW-w64 GCC build and add its <code>mingw64/bin</code> directory to <code>PATH</code>.</li>
+          <li><a href="https://github.com/skeeto/w64devkit">w64devkit</a>: Extract the kit and add its <code>bin</code> directory to <code>PATH</code>.</li>
+        </ul>
         <p>
-          For a simple Windows setup, install <a href="https://winlibs.com/">MinGW-w64 GCC from WinLibs</a>,
-          add its <code>bin</code> directory to <code>PATH</code>, and set
-          <code>JIK_CC=gcc</code> (for example: <code>set JIK_CC=gcc</code>).
+          In the terminal where you will run Jik, check <code>gcc --version</code>.
+          Set <code>JIK_CC=gcc</code> to use GCC by default. For a single command,
+          you can instead run <code>jik run hello.jik --cc gcc</code>.
         </p>
       </section>
 
@@ -125,8 +129,8 @@ jik help</code></pre>
 end</code></pre>
 
         <p>
-          Run it with <code>jik run hello.jik</code>. If you do not want to use
-          <code>JIK_CC</code>, run it with <code>jik run hello.jik --cc clang</code>.
+          Run it with <code>jik run hello.jik</code>. See the
+          <a href="docs/cli.html">CLI reference</a> for more commands.
         </p>
       </section>
       </div>
