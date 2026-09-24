@@ -8,8 +8,9 @@ const groups = {
     control_flow: "Control flow", cl_args: "Command-line arguments",
     strings: "Strings", vectors: "Vectors", structs: "Structs",
     options: "Options", dictionaries: "Dictionaries", enum_match: "Enums",
-    variants: "Variants", tables: "Tables", region_ergonomics: "Region allocation",
-    regions_copy: "Copying between regions", error_handling: "Error handling",
+    variants: "Variants", tables: "Tables", regions_basic: "Regions: basics",
+    region_ergonomics: "Regions: automatic allocation",
+    regions_copy: "Regions: copying between regions", error_handling: "Error handling",
     "modules/main": "Modules", testing_demo: "Testing", ffi_demo: "Calling C"
   },
   "Standard-library examples": {

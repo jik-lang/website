@@ -52,8 +52,9 @@
               <a href="#enum_match">Enums</a>
               <a href="#variants">Variants</a>
               <a href="#tables">Tables</a>
-              <a href="#region_ergonomics">Region allocation</a>
-              <a href="#regions_copy">Copying between regions</a>
+              <a href="#regions_basic">Regions: basics</a>
+              <a href="#region_ergonomics">Regions: automatic allocation</a>
+              <a href="#regions_copy">Regions: copying between regions</a>
               <a href="#error_handling">Error handling</a>
               <a href="#modules/main">Modules</a>
               <a href="#testing_demo">Testing</a>
@@ -81,7 +82,7 @@
         </nav>
         <div class="examples-mobile" hidden>
           <label class="screen-reader-text" for="source-select">Choose an example</label>
-          <select id="source-select"><optgroup label="Language examples"><option value="hello">Hello, world</option><option value="values">Values</option><option value="functions">Functions</option><option value="control_flow">Control flow</option><option value="cl_args">Command-line arguments</option><option value="strings">Strings</option><option value="vectors">Vectors</option><option value="structs">Structs</option><option value="options">Options</option><option value="dictionaries">Dictionaries</option><option value="enum_match">Enums</option><option value="variants">Variants</option><option value="tables">Tables</option><option value="region_ergonomics">Region allocation</option><option value="regions_copy">Copying between regions</option><option value="error_handling">Error handling</option><option value="modules/main">Modules</option><option value="testing_demo">Testing</option><option value="ffi_demo">Calling C</option></optgroup>
+          <select id="source-select"><optgroup label="Language examples"><option value="hello">Hello, world</option><option value="values">Values</option><option value="functions">Functions</option><option value="control_flow">Control flow</option><option value="cl_args">Command-line arguments</option><option value="strings">Strings</option><option value="vectors">Vectors</option><option value="structs">Structs</option><option value="options">Options</option><option value="dictionaries">Dictionaries</option><option value="enum_match">Enums</option><option value="variants">Variants</option><option value="tables">Tables</option><option value="regions_basic">Regions: basics</option><option value="region_ergonomics">Regions: automatic allocation</option><option value="regions_copy">Regions: copying between regions</option><option value="error_handling">Error handling</option><option value="modules/main">Modules</option><option value="testing_demo">Testing</option><option value="ffi_demo">Calling C</option></optgroup>
 <optgroup label="Standard-library examples"><option value="filesystem">Filesystem</option><option value="binary_data">Binary data</option><option value="strbuf_demo">String buffers</option><option value="text_processing">Text processing</option><option value="argparse_demo">Argument parsing</option><option value="process_capture">Child processes</option></optgroup>
 <optgroup label="Algorithms and larger programs"><option value="fib">Fibonacci</option><option value="primes">Prime numbers</option><option value="word_count">Word count</option><option value="newton">Newton's method</option><option value="dijkstra">Shortest paths</option><option value="game_of_life">Game of Life</option><option value="forth">Forth interpreter</option></optgroup></select>
         </div>
@@ -568,6 +569,85 @@ end
             <p class="source-run"><code>jik run examples/tables.jik</code></p>
           </article>
 
+          <article id="regions_basic" class="source-example" aria-label="regions_basic.jik">
+            <div class="example-panel">
+              <div class="source-toolbar">
+                <h2>regions_basic.jik</h2>
+                <div class="source-actions">
+                  <button type="button" class="source-copy" hidden>Copy</button>
+                </div>
+              </div>
+              <pre class="code-block source-file" data-source-file="regions_basic.jik" tabindex="0" aria-label="regions_basic.jik source"><code class="language-jik">// Basic regions: choosing where composite values live.
+
+struct Notebook:
+    notes: Vec[String]
+end
+
+
+func new_notebook(r: Region) -&gt; Notebook:
+    // Allocate in the region supplied by the caller.
+    // The nested vector and string also belong to r.
+    return Notebook{notes = [&quot;first note&quot;]}[r]
+end
+
+
+func add_notes(book: Notebook):
+    // No allocation specifier: this belongs to this function's local region.
+    scratch := [&quot;temporary&quot;]
+    println(&quot;local scratch: &quot;, scratch)
+
+    // [.book] means &quot;allocate in the region of book&quot;.
+    // This string survives this helper returning.
+    note := &quot;anchored note&quot;[.book]
+    push(book.notes, note)
+
+    // .book can also be passed as a Region argument.
+    // The new notebook shares book's region; objects do not have separate regions.
+    another := new_notebook(.book)
+    push(book.notes, another.notes[0])
+
+    // A literal stored directly is automatically allocated in book's region.
+    push(book.notes, &quot;automatic note&quot;)
+
+    // push(book.notes, scratch[0]) would fail:
+    // scratch belongs to this helper's local region.
+end
+
+
+func notes_for(book: Notebook) -&gt; Vec[String]:
+    // @ selects the region determined by this function's parameters.
+    // Here it means the same thing as [.book], not this helper's local region.
+    notes := [&quot;extra note&quot;]@
+    return notes
+end
+
+
+func main():
+    // Composite literals allocate locally by default.
+    local_notes := [&quot;local note&quot;]
+
+    // _ passes this function's local region explicitly.
+    first := new_notebook(_)
+
+    // Omitting the final Region argument also passes the local region.
+    second := new_notebook()
+
+    add_notes(first)
+
+    extras := notes_for(first)
+    push(first.notes, extras[0])
+
+    println(&quot;local: &quot;, local_notes)
+    println(&quot;first: &quot;, first.notes)
+    println(&quot;second: &quot;, second.notes)
+
+    // This function's local region is released when it returns.
+end
+</code></pre>
+            </div>
+            <p class="source-run"><code>jik run examples/regions_basic.jik</code></p>
+          </article>
+
           <article id="region_ergonomics" class="source-example" aria-label="region_ergonomics.jik">
             <div class="example-panel">
               <div class="source-toolbar">
@@ -584,12 +664,11 @@ struct User:
 end
 
 
-func new_user(foreign name: String, r: Region) -&gt; User:
+func new_user(name: String) -&gt; User:
     // The returned struct and its composite field `labels` are automatically
-    // allocated in r, since this is the only possible valid allocation destination.
-    // Since `name` is marked as a foreign parameter, we still need to copy it to `r`.
+    // allocated in name's region. The existing name is stored directly.
     return User{
-        name = copy(name, r),
+        name = name,
         labels = [&quot;new&quot;, &quot;active&quot;]
     }
 end
@@ -623,12 +702,13 @@ end
 
 
 func main():
-    // An omitted final Region argument automatically passes the current
-    // function's local region `_`.
     user := new_user(&quot;Ada&quot;)
+    anonymous := new_user(&quot;&quot;)
 
     add_default_label(user)
     println(display_name(user), &quot;: &quot;, user.labels)
+    println(display_name(anonymous), &quot;: &quot;, anonymous.labels)
+    // Omitting default_labels' final Region argument passes main's local region.
     println(&quot;default labels: &quot;, default_labels())
 end
 </code></pre>
@@ -644,7 +724,16 @@ end
                   <button type="button" class="source-copy" hidden>Copy</button>
                 </div>
               </div>
-              <pre class="code-block source-file" data-source-file="regions_copy.jik" tabindex="0" aria-label="regions_copy.jik source"><code class="language-jik">// Example: copy composite values into the caller's region before returning them.
+              <pre class="code-block source-file" data-source-file="regions_copy.jik" tabindex="0" aria-label="regions_copy.jik source"><code class="language-jik">// Example: retain selected notes after a temporary batch's region ends.
+// Prefer allocating directly in the destination region when practical.
+// Copy when existing data must be retained beyond its source region's lifetime.
+//
+// copy does not support arbitrary objects or general recursive deep copying.
+// It supports String; Vec/Dict/Option with primitive, enum, or String elements;
+// and non-extern structs/variants with only primitive, enum, or String fields/payloads.
+// Nested composites, such as Vec[Vec[int]] or structs containing vectors, are
+// unsupported. Neither Notebook in regions_basic nor User in region_ergonomics
+// can be copied. Note below can, since its fields are String and bool.
 
 struct Note:
     text: String
@@ -652,27 +741,38 @@ struct Note:
 end
 
 
-func make_note(foreign source: String, r: Region) -&gt; Note:
-    // The source may belong to another region, so make an owned copy for the
-    // returned struct. source.copy(r) is shorthand for copy(source, r).
-    // The caller chooses the destination region through r.
-    return Note{text = source.copy(r), pinned = true}[r]
+func retain_note(foreign note: Note, saved: Vec[Note]):
+    // foreign allows note to come from a different region than saved.
+    // It cannot be stored in saved directly.
+    // Copy the whole Note, including fresh storage for its text, into saved's region.
+    // note.copy(.saved) is shorthand for copy(note, .saved).
+    push(saved, note.copy(.saved))
 end
 
 
-func default_names(r: Region) -&gt; Vec[String]:
-    names := [&quot;Ada&quot;, &quot;Grace&quot;]
-    // names is local to this helper; copying makes it safe to return.
-    return names.copy(r)
+func process_batch(saved: Vec[Note]):
+    // Keep the batch temporary; only selected notes need to survive this call.
+    batch := [
+        Note{text = &quot;discard this draft&quot;, pinned = false},
+        Note{text = &quot;remember this idea&quot;, pinned = true}
+    ]
+    for note in batch:
+        if note.pinned:
+            retain_note(note, saved)
+        end
+    end
+    // The batch and its original notes are released when this function returns.
 end
 
 
 func main():
-    note := make_note(&quot;remember who owns this value&quot;, _)
-    names := default_names(_)
+    saved: Vec[Note]
+    process_batch(saved)
 
-    println(note.text, &quot; (pinned: &quot;, note.pinned, &quot;)&quot;)
-    println(&quot;names: &quot;, names)
+    // The retained copy remains valid after process_batch's local region ends.
+    for note in saved:
+        println(note.text, &quot; (pinned: &quot;, note.pinned, &quot;)&quot;)
+    end
 end
 </code></pre>
             </div>
