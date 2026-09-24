@@ -23,7 +23,7 @@
           <a href="../news.html">News</a>
           <a href="../install.html">Install</a>
           <a href="../examples.html">Examples</a>
-          <a href="index.html">Docs</a>
+          <a href="./index.html">Docs</a>
           <a href="../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -165,14 +165,6 @@
 </ul>
 <p>Example:</p>
 <pre><code class="language-sh">jik check hello.jik</code></pre>
-<h3 id="jik-memchk"><code>jik memchk &lt;filepath&gt;</code></h3>
-<p>Translate a Jik source file to C, compile it with debug flags, and run <code>valgrind</code> memcheck.</p>
-<p>Options:</p>
-<ul>
-  <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
-</ul>
-<p>Example:</p>
-<pre><code class="language-sh">jik memchk hello.jik --cc gcc</code></pre>
 <h3 id="jik-env"><code>jik env</code></h3>
 <p>Print resolved Jik configuration values as <code>key=value</code> lines, including the Jik version, platform, root directory, <code>jiklib</code> path, package path, support include path, selected C compiler, its reported target, and Jik's normalized compiler profile.</p>
 <p>Example:</p>
@@ -197,7 +189,7 @@ jik help jik/io</code></pre>
   <li>The <code>JIK_CC</code> environment variable.</li>
   <li>The host default compiler, when available.</li>
 </ol>
-<p>If no compiler is found, <code>jik run</code>, <code>jik build</code>, and <code>jik memchk</code> fail before compilation.</p>
+<p>If no compiler is found, <code>jik run</code> and <code>jik build</code> fail before compilation.</p>
 <h2 id="package-imports">Package Imports</h2>
 <p>Imports under <code>pkg/...</code> are resolved from the directory configured by the <code>JIK_PKG_PATH</code> environment variable.</p>
 <p>The package entry module:</p>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sys - Jik Documentation</title>
+  <title>time - Jik Documentation</title>
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body>
@@ -99,78 +99,21 @@
           </nav>
         </details>
         <article class="docs-content">
-<h1 id="sys">sys</h1>
-<p>System utilities.</p>
+<h1 id="time">time</h1>
+<p>Time utilities for measuring durations and recording basic log timestamps.</p>
 <h2 id="types">Types</h2>
 <p>_None._</p>
 <h2 id="functions">Functions</h2>
-<h3 id="exit-code-int-void"><code>exit(code: int) -&gt; void</code></h3>
-<p>Terminate the process with a status code.</p>
-<p><strong>Parameters</strong></p>
-<ol>
-  <li><code>code: int</code> - Exit status.</li>
-</ol>
+<h3 id="monotonic-ms-int"><code>monotonic_ms() -&gt; int</code></h3>
+<p>Return milliseconds elapsed since the first call in the current process.</p>
+<p>Use this function to measure durations. The value is process-relative and is not affected by wall-clock changes. It saturates at the largest <code>int</code> value.</p>
 <p>---</p>
-<h3 id="cwd-region-region-string"><code>cwd(region: Region) -&gt; String</code></h3>
-<p>Return the current working directory.</p>
-<p><strong>Parameters</strong></p>
-<ol>
-  <li><code>region: Region</code> - Allocation region for the returned string.</li>
-</ol>
-<p><strong>Returns</strong></p>
-<ul>
-  <li>Current working directory as string, or empty string on failure.</li>
-</ul>
+<h3 id="unix-seconds-int"><code>unix_seconds() -&gt; int</code></h3>
+<p>Return the current Unix timestamp in seconds.</p>
+<p>Use this function for basic machine-readable log timestamps. It returns <code>0</code> if the current value cannot be represented by <code>int</code>.</p>
 <p>---</p>
-<h3 id="throws-executable-path-region-region-string"><code>throws executable_path(region: Region) -&gt; String</code></h3>
-<p>Return the absolute path of the running executable.</p>
-<p><strong>Parameters</strong></p>
-<ol>
-  <li><code>region: Region</code> - Allocation region for the returned string.</li>
-</ol>
-<p><strong>Returns</strong></p>
-<ul>
-  <li>Absolute path of the running executable.</li>
-</ul>
-<p><strong>Behavior</strong></p>
-<ul>
-  <li>Throws if the operating system cannot determine the executable path.</li>
-  <li>Use <code>path::dirname</code> when locating files beside the executable. This is not the current working directory.</li>
-</ul>
-<p>---</p>
-<h3 id="getenv-name-string-region-region-option-string"><code>getenv(name: String, region: Region) -&gt; Option[String]</code></h3>
-<p>Get an environment variable value.</p>
-<p><strong>Parameters</strong></p>
-<ol>
-  <li><code>name: String</code> - Environment variable name.</li>
-  <li><code>region: Region</code></li>
-</ol>
-<p><strong>Returns</strong></p>
-<ul>
-  <li>Value as <code>Some[String]</code>, or <code>None</code> if missing.</li>
-</ul>
-<p>---</p>
-<h3 id="platform-region-region-string"><code>platform(region: Region) -&gt; String</code></h3>
-<p>Return a short platform identifier string.</p>
-<p><strong>Parameters</strong></p>
-<ol>
-  <li><code>region: Region</code> - Allocation region for the returned string.</li>
-</ol>
-<p><strong>Returns</strong></p>
-<ul>
-  <li>Platform name as string</li>
-</ul>
-<p>---</p>
-<h3 id="system-cmd-string-int"><code>system(cmd: String) -&gt; int</code></h3>
-<p>Execute a command using the host system shell.</p>
-<p><strong>Parameters</strong></p>
-<ol>
-  <li><code>cmd: String</code> - Command string.</li>
-</ol>
-<p><strong>Returns</strong></p>
-<ul>
-  <li>Command exit code (platform-dependent).</li>
-</ul>
+<h3 id="sleep-ms-int-void"><code>sleep(ms: int) -&gt; void</code></h3>
+<p>Sleep for approximately <code>ms</code> milliseconds. Non-positive durations return immediately.</p>
         </article>
       </div>
     </main>

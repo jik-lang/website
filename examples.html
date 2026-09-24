@@ -1426,6 +1426,7 @@ end
 // ANSI sequences.
 
 use &quot;jik/sys&quot; as sys
+use &quot;jik/time&quot; as time
 use &quot;jik/rand&quot; as rand
 use &quot;jik/strbuf&quot;
 
@@ -1541,7 +1542,7 @@ func main():
         curr = next
         next = tmp
 
-        sys::sleep(DELAY_MS)
+        time::sleep(DELAY_MS)
         step += 1
     end
 end
@@ -1593,7 +1594,7 @@ throws func eval_tokens(fm, tokens):
     n := len(tokens)
     ip := 0
     compile_mode := false
-    word := [0 of &quot;&quot;][.fm]
+    word: Vec[String][.fm]
     word_name := &quot;&quot;[.fm]
     while ip &lt; n:
         tok := tokens[ip]

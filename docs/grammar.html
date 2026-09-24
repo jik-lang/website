@@ -23,7 +23,7 @@
           <a href="../news.html">News</a>
           <a href="../install.html">Install</a>
           <a href="../examples.html">Examples</a>
-          <a href="index.html">Docs</a>
+          <a href="./index.html">Docs</a>
           <a href="../packages.html">Packages</a>
           <a href="https://github.com/jik-lang/jik">GitHub</a>
         </nav>
@@ -160,8 +160,8 @@ path_directive ::= ( &quot;@includedir&quot; | &quot;@libdir&quot; | &quot;@copy
                    &quot;(&quot; string_literal { &quot;,&quot; string_literal } &quot;)&quot; newline
 link_directive ::= &quot;@link&quot; &quot;(&quot; string_literal { &quot;,&quot; string_literal } &quot;)&quot; newline</code></pre>
 <p>Build directives are top-level declarations. Each physical module starts with platform and profile <code>all</code>. <code>@platform(windows)</code> or <code>@platform(linux)</code> selects the platform for subsequent build directives in that module, while <code>@platform(all)</code> returns to platform-independent requirements. Platform state does not cross module boundaries and does not conditionally compile Jik declarations or embedded C.</p>
-<p><code>@profile(windows-x64-mingw)</code> and <code>@profile(linux-x64-gnu)</code> restrict subsequent native build directives to a compatible host C compiler target. <code>@profile(all)</code> removes that restriction. A profile-restricted directive is active only when both its platform and profile match. <code>jik build</code>, <code>jik run</code>, and <code>jik memchk</code> detect the selected compiler target before invoking the compiler and report an incompatible native module early. <code>jik check</code> and <code>jik tran</code> only parse these directives; they do not probe a compiler. MSVC is not currently a supported native build profile.</p>
-<p>Relative include directories, library directories, and copied files are resolved from the source file containing the directive. Directives from all reachable modules are applied by <code>build</code>, <code>run</code>, and <code>memchk</code>.</p>
+<p><code>@profile(windows-x64-mingw)</code> and <code>@profile(linux-x64-gnu)</code> restrict subsequent native build directives to a compatible host C compiler target. <code>@profile(all)</code> removes that restriction. A profile-restricted directive is active only when both its platform and profile match. <code>jik build</code> and <code>jik run</code> detect the selected compiler target before invoking the compiler and report an incompatible native module early. <code>jik check</code> and <code>jik tran</code> only parse these directives; they do not probe a compiler. MSVC is not currently a supported native build profile.</p>
+<p>Relative include directories, library directories, and copied files are resolved from the source file containing the directive. Directives from all reachable modules are applied by <code>build</code> and <code>run</code>.</p>
 <h2 id="types">Types</h2>
 <pre><code class="language-ebnf">type_desc ::= named_type [ alloc_suffix ]
             | &quot;Vec&quot; &quot;[&quot; type_desc &quot;]&quot; [ alloc_suffix ]
@@ -298,7 +298,7 @@ must_call_stmt ::= &quot;must&quot; call_expr</code></pre>
 <pre><code class="language-ebnf">for_stmt ::= &quot;for&quot; identifier &quot;=&quot; expr &quot;,&quot; expr &quot;:&quot; newline block &quot;end&quot;
            | &quot;for&quot; identifier &quot;in&quot; expr &quot;:&quot; newline block &quot;end&quot;
            | &quot;for&quot; identifier &quot;,&quot; identifier &quot;in&quot; expr &quot;:&quot; newline block &quot;end&quot;</code></pre>
-<p>In the two-name form, vectors bind <code>index, value</code> and dictionaries bind <code>key, value</code>.</p>
+<p>In the two-name form, strings bind <code>index, ch</code>, vectors bind <code>index, value</code>, and dictionaries bind <code>key, value</code>.</p>
 <h3 id="try-except">Try / Except</h3>
 <pre><code class="language-ebnf">try_stmt ::= &quot;try&quot; call_expr
            | &quot;try&quot; ( call_expr | identifier &quot;:=&quot; call_expr )

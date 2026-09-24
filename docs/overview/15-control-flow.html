@@ -129,7 +129,7 @@ name := &quot;yes&quot;[r] if flag else &quot;no&quot;[r]</code></pre>
 end</code></pre>
 <p>The loop condition is re-evaluated on each iteration; <code>break</code> and <code>continue</code> keywords are also supported, as in other iteration constructs.</p>
 <h3 id="15-3-for-loops">15.3 <code>for</code> loops</h3>
-<p>Jik has two <code>for</code> patterns: numeric ranges and vector / dictionary iteration.</p>
+<p>Jik has two <code>for</code> patterns: numeric ranges and string / vector / dictionary iteration.</p>
 <p><strong>Numeric <code>for</code>:</strong></p>
 <pre><code class="language-jik">n := 100
 for i = 0, n:
@@ -148,6 +148,11 @@ config := {&quot;foo&quot;: 12, &quot;bar&quot;: 1}
 
 for key, value in config:
     print(key, &quot;: &quot;, value)
+end
+
+text := &quot;Jik&quot;
+for index, ch in text:
+    print(index, &quot;: &quot;, ch)
 end</code></pre>
 <p>---</p>
         </article>
