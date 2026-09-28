@@ -153,19 +153,6 @@
   <li>A newly allocated one-byte string.</li>
 </ul>
 <p>---</p>
-<h3 id="concat-foreign-left-string-foreign-right-string-region-region-string"><code>concat(foreign left: String, foreign right: String, region: Region) -&gt; String</code></h3>
-<p>Concatenate two strings.</p>
-<p><strong>Parameters</strong></p>
-<ol>
-  <li><code>foreign left: String</code> - Left string.</li>
-  <li><code>foreign right: String</code> - Right string.</li>
-  <li><code>region: Region</code> - Allocation region for the result.</li>
-</ol>
-<p><strong>Returns</strong></p>
-<ul>
-  <li>Concatenated string.</li>
-</ul>
-<p>---</p>
 <h3 id="compare-foreign-left-string-foreign-right-string-int"><code>compare(foreign left: String, foreign right: String) -&gt; int</code></h3>
 <p>Compare two strings lexicographically by byte value.</p>
 <p><strong>Parameters</strong></p>
@@ -176,6 +163,22 @@
 <p><strong>Returns</strong></p>
 <ul>
   <li>A value less than zero if <code>left</code> precedes <code>right</code>, zero if they are equal, or a value greater than zero if <code>left</code> follows <code>right</code>.</li>
+</ul>
+<p>---</p>
+<h3 id="contains-foreign-s-string-foreign-needle-string-bool"><code>contains(foreign s: String, foreign needle: String) -&gt; bool</code></h3>
+<p>Return whether <code>s</code> contains <code>needle</code> as a substring.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign s: String</code> - Source string.</li>
+  <li><code>foreign needle: String</code> - Substring to search for.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> if <code>needle</code> occurs in <code>s</code>, otherwise <code>false</code>.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>An empty <code>needle</code> is contained in every string, including an empty string.</li>
 </ul>
 <p>---</p>
 <h3 id="ends-with-foreign-s-string-foreign-suffix-string-bool"><code>ends_with(foreign s: String, foreign suffix: String) -&gt; bool</code></h3>

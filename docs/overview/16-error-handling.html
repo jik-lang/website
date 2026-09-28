@@ -104,7 +104,7 @@
 <p>Jik uses <strong>throwing functions</strong> and structured handling at the call site. The current model is centered around four language constructs:</p>
 <ul>
   <li><code>throws func</code> marks a function as one which may fail</li>
-  <li><code>fail(String[, int])</code> marks failure inside a throwing function</li>
+  <li><code>fail(String)</code>, <code>fail(int)</code>, or <code>fail(String, int)</code> marks failure inside a throwing function</li>
   <li><code>try ... except ... end</code> handles a failure locally</li>
   <li><code>must f(...)</code> requires a throwing call to succeed</li>
 </ul>
@@ -117,7 +117,7 @@
     end
     return x / y
 end</code></pre>
-<p>Inside such a function, <code>fail(...)</code> marks the operation as failed. <code>fail(msg)</code> uses the default error code <code>1</code>, while <code>fail(msg, code)</code> lets you set an explicit integer error code. <code>fail(...)</code> also terminates the current control-flow path. Any statement that follows <code>fail(...)</code> in the same block is unreachable and is a compile error.</p>
+<p>Inside such a function, calling <code>fail(...)</code> marks the operation as failed regardless of the error code. The code is application-defined: <code>fail(msg)</code> uses the default code <code>1</code>, while <code>fail(code)</code> and <code>fail(msg, code)</code> let you supply one. Code-only failures have an empty <code>error_msg()</code>. <code>fail(...)</code> also terminates the current control-flow path. Any statement that follows <code>fail(...)</code> in the same block is unreachable and is a compile error.</p>
 <h3 id="16-2-handling-failures-with-try-except">16.2 Handling failures with <code>try / except</code></h3>
 <p>A throwing call can be wrapped in a <code>try</code> block:</p>
 <pre><code class="language-jik">try x := div_safe(3, 0):

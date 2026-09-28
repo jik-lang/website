@@ -101,7 +101,7 @@
         <article class="docs-content">
 <h1 id="io">io</h1>
 <p>File I/O utilities.</p>
-<p>This module provides a minimal wrapper around basic C stdio file operations. Supported file modes are currently <code>&quot;r&quot;</code> for reading, <code>&quot;w&quot;</code> for writing, and <code>&quot;a&quot;</code> for appending. All operations throw on error.</p>
+<p>This module provides a minimal wrapper around basic C stdio file operations. Supported file modes are <code>&quot;r&quot;</code>, <code>&quot;w&quot;</code>, and <code>&quot;a&quot;</code> for text, and <code>&quot;rb&quot;</code>, <code>&quot;wb&quot;</code>, and <code>&quot;ab&quot;</code> for binary data. All operations throw on error.</p>
 <h2 id="types">Types</h2>
 <h3 id="file"><code>File</code></h3>
 <p>Opaque file handle.</p>
@@ -135,7 +135,8 @@
 </ul>
 <p><strong>Notes</strong></p>
 <ul>
-  <li>Supported modes are <code>&quot;r&quot;</code> (read), <code>&quot;w&quot;</code> (write), and <code>&quot;a&quot;</code> (append).</li>
+  <li>Supported text modes are <code>&quot;r&quot;</code> (read), <code>&quot;w&quot;</code> (write), and <code>&quot;a&quot;</code> (append).</li>
+  <li>Binary modes are <code>&quot;rb&quot;</code>, <code>&quot;wb&quot;</code>, and <code>&quot;ab&quot;</code>.</li>
 </ul>
 <p>---</p>
 <h3 id="throws-read-foreign-file-file-region-region-string"><code>throws read(foreign file: File, region: Region) -&gt; String</code></h3>
@@ -155,7 +156,27 @@
 </ul>
 <p><strong>Notes</strong></p>
 <ul>
-  <li>The file must have been opened in read mode.</li>
+  <li>The file must have been opened with <code>&quot;r&quot;</code>. Embedded NUL bytes cause an error.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-read-bytes-foreign-file-file-region-region-bytes-bytes"><code>throws read_bytes(foreign file: File, region: Region) -&gt; bytes::Bytes</code></h3>
+<p>Read all bytes from a binary file, starting at the beginning.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign file: File</code> - Seekable file handle opened with <code>&quot;rb&quot;</code>.</li>
+  <li><code>region: Region</code> - Allocation region for the returned bytes.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Full file contents, including any NUL bytes.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+  <li>Files larger than <code>INT32_MAX</code> bytes are rejected.</li>
 </ul>
 <p>---</p>
 <h3 id="throws-read-file-foreign-path-string-region-region-string"><code>throws read_file(foreign path: String, region: Region) -&gt; String</code></h3>
@@ -167,11 +188,27 @@
 <p><strong>Parameters</strong></p>
 <ol>
   <li><code>foreign path: String</code> - File path.</li>
-  <li><code>region: Region</code> - Allocation region for file handle state and the returned string.</li>
+  <li><code>region: Region</code> - Allocation region for the returned string.</li>
 </ol>
 <p><strong>Returns</strong></p>
 <ul>
   <li>Full file contents.</li>
+</ul>
+<p>---</p>
+<h3 id="throws-read-file-bytes-foreign-path-string-region-region-bytes-bytes"><code>throws read_file_bytes(foreign path: String, region: Region) -&gt; bytes::Bytes</code></h3>
+<p>Read an entire file as bytes by path.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - File path.</li>
+  <li><code>region: Region</code> - Allocation region for the returned bytes.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>Full file contents, including any NUL bytes.</li>
 </ul>
 <p>---</p>
 <h3 id="throws-write-file-file-foreign-text-string-void"><code>throws write(file: File, foreign text: String) -&gt; void</code></h3>
@@ -187,8 +224,20 @@
 </ol>
 <p><strong>Notes</strong></p>
 <ul>
-  <li>The file must have been opened in write or append mode.</li>
+  <li>The file must have been opened with <code>&quot;w&quot;</code> or <code>&quot;a&quot;</code>.</li>
 </ul>
+<p>---</p>
+<h3 id="throws-write-bytes-file-file-foreign-data-bytes-bytes-void"><code>throws write_bytes(file: File, foreign data: bytes::Bytes) -&gt; void</code></h3>
+<p>Write all bytes to a binary file.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>file: File</code> - File handle opened with <code>&quot;wb&quot;</code> or <code>&quot;ab&quot;</code>.</li>
+  <li><code>foreign data: bytes::Bytes</code> - Bytes to write.</li>
+</ol>
 <p>---</p>
 <h3 id="write-stderr-text-string-void"><code>write_stderr(text: String) -&gt; void</code></h3>
 <p>Write a string to standard error.</p>
@@ -201,7 +250,7 @@
   <li><code>text: String</code> - String to write.</li>
 </ol>
 <p>---</p>
-<h3 id="throws-write-file-foreign-path-string-foreign-text-string-region-region-void"><code>throws write_file(foreign path: String, foreign text: String, region: Region) -&gt; void</code></h3>
+<h3 id="throws-write-file-foreign-path-string-foreign-text-string-void"><code>throws write_file(foreign path: String, foreign text: String) -&gt; void</code></h3>
 <p>Write a string to a file by path, truncating existing contents.</p>
 <p><strong>Behavior</strong></p>
 <ul>
@@ -211,7 +260,18 @@
 <ol>
   <li><code>foreign path: String</code> - File path.</li>
   <li><code>foreign text: String</code> - String to write.</li>
-  <li><code>region: Region</code> - Allocation region for file handle state.</li>
+</ol>
+<p>---</p>
+<h3 id="throws-write-file-bytes-foreign-path-string-foreign-data-bytes-bytes-void"><code>throws write_file_bytes(foreign path: String, foreign data: bytes::Bytes) -&gt; void</code></h3>
+<p>Write bytes to a file by path, truncating existing contents.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws on failure.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>foreign path: String</code> - File path.</li>
+  <li><code>foreign data: bytes::Bytes</code> - Bytes to write.</li>
 </ol>
 <p>---</p>
         </article>

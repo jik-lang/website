@@ -235,8 +235,8 @@ label2 := copy(label)</code></pre>
 <p><strong>Example</strong></p>
 <pre><code class="language-jik">v := [10 of 1]
 assert(len(v) == 10)</code></pre>
-<h4 id="fail-string-int-void"><code>fail(String[, int]) -&gt; void</code></h4>
-<p>Marks the current throwing function as failed. See <a href="./16-error-handling.html">Error Handling</a>.</p>
+<h4 id="fail-void"><code>fail(...) -&gt; void</code></h4>
+<p>Accepts <code>fail(String)</code>, <code>fail(int)</code>, or <code>fail(String, int)</code>. Marks the current throwing function as failed. Error descriptions and the meaning of codes are application-defined. Code-only failures have an empty message. See <a href="./16-error-handling.html">Error Handling</a>.</p>
 <h4 id="error-msg-region-string"><code>error_msg([Region]) -&gt; String</code></h4>
 <p>Returns the current error message. Most commonly used inside <code>except</code>. See <a href="./16-error-handling.html">Error Handling</a>.</p>
 <h4 id="error-code-int"><code>error_code() -&gt; int</code></h4>
