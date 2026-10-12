@@ -137,7 +137,8 @@ func main():
     // _ is this function's local region: created on entry
     // and destroyed when main returns.
     label := hyphenate("region based memory", _)
-    println(label)
+    message := concat("Label: ", label, "!")
+    println(message)
 end`
   },
 
