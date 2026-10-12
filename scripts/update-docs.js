@@ -426,6 +426,32 @@ function localizeShellLinks(html, currentOutputPath) {
   });
 }
 
+function overviewNavigation(page, pages) {
+  const chapters = pages
+    .filter((entry) => /^docs\/overview\/\d+-[^/]+\.md$/.test(entry.sourcePath))
+    .sort((left, right) => left.sourcePath.localeCompare(right.sourcePath, "en", { numeric: true }));
+  const overview = pages.find((entry) => entry.sourcePath === "docs/overview.md");
+  const index = chapters.findIndex((entry) => entry.sourcePath === page.sourcePath);
+  const links = [];
+  const link = (target, label, direction, rel = "") =>
+    `<a class="docs-chapter-${direction}" href="${escapeHtml(relativeOutputLink(page.outputPath, target.outputPath))}"${rel ? ` rel="${rel}"` : ""}>${label}</a>`;
+
+  if (page.sourcePath === "docs/overview.md" && chapters.length) {
+    links.push(link(chapters[0], `Start reading: ${escapeHtml(chapters[0].title)} &rarr;`, "next", "next"));
+  } else if (index !== -1) {
+    if (index > 0) {
+      links.push(link(chapters[index - 1], `&larr; Previous: ${escapeHtml(chapters[index - 1].title)}`, "previous", "prev"));
+    }
+    if (index < chapters.length - 1) {
+      links.push(link(chapters[index + 1], `Next: ${escapeHtml(chapters[index + 1].title)} &rarr;`, "next", "next"));
+    } else if (overview) {
+      links.push(link(overview, "Back to Language Overview &rarr;", "next"));
+    }
+  }
+
+  return links.length ? `<nav class="docs-chapter-nav" aria-label="Language overview chapters">\n  ${links.join("\n  ")}\n</nav>` : "";
+}
+
 function renderPage(page, pages, header, footer) {
   const localizedHeader = localizeShellLinks(header, page.outputPath);
   const localizedFooter = localizeShellLinks(footer, page.outputPath);
@@ -458,6 +484,7 @@ ${docsNav(pages, page.outputPath, "            ")}
         </details>
         <article class="docs-content">
 ${page.html}
+${overviewNavigation(page, pages)}
         </article>
       </div>
     </main>
@@ -588,4 +615,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { plainText, renderMarkdown, searchSections };
+module.exports = { overviewNavigation, plainText, renderMarkdown, searchSections };

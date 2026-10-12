@@ -201,6 +201,10 @@ Jik*         runtime C types</code></pre>
 <p>Every module begins in platform <code>all</code>. A <code>@platform</code> directive selects the platform for later build directives in the same physical file; <code>@platform(all)</code> restores platform-independent behavior. <code>@profile</code> additionally selects the native compiler target required by later build directives: <code>@profile(windows-x64-mingw)</code> for MinGW on Windows or <code>@profile(linux-x64-gnu)</code> for GNU toolchains on Linux. <code>@profile(all)</code> removes this restriction. A directive guarded by a profile is active only when both its platform and profile match; this lets an FFI module reject an incompatible native toolchain before compilation. MSVC is not currently a supported native build profile. Relative paths are resolved from the file containing the directive.</p>
 <p>Requirements are collected transitively from every reachable module. <code>@includedir</code> adds header search directories, <code>@libdir</code> adds library search directories, <code>@link</code> links named libraries, and <code>@copy</code> copies files beside the executable after a successful compilation. Each directive accepts one or more comma-separated string arguments.</p>
 <p>---</p>
+<nav class="docs-chapter-nav" aria-label="Language overview chapters">
+  <a class="docs-chapter-previous" href="./16-error-handling.html" rel="prev">&larr; Previous: 16. Error handling</a>
+  <a class="docs-chapter-next" href="./18-builtins.html" rel="next">Next: 18. Builtins &rarr;</a>
+</nav>
         </article>
       </div>
     </main>

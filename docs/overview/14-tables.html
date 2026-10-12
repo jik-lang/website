@@ -137,6 +137,10 @@ name := TokenNames[token]</code></pre>
 <p>Imported tables use normal module qualification:</p>
 <pre><code class="language-jik">label := protocol::OpcodeNames[opcode]</code></pre>
 <p>Tables support lookup only. Their entries cannot be reassigned, and tables cannot be passed as values, iterated, queried with <code>len</code>, or used as types. A lookup of a composite entry still returns the shared composite value, so its contents may be mutated; use <code>copy</code> when an independent value is required. Unlike <code>Dict</code>, a table has a fixed enum or variant key set, is checked for completeness at compile time, and never returns <code>Option[T]</code>.</p>
+<nav class="docs-chapter-nav" aria-label="Language overview chapters">
+  <a class="docs-chapter-previous" href="./13-dictionaries.html" rel="prev">&larr; Previous: 13. Dictionaries</a>
+  <a class="docs-chapter-next" href="./15-control-flow.html" rel="next">Next: 15. Control Flow &rarr;</a>
+</nav>
         </article>
       </div>
     </main>

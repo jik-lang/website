@@ -137,6 +137,10 @@ c1.set_port(8080) // shorthand for set_port(c1, 8080)</code></pre>
 <p>For an imported struct, the function is resolved in the module that defines the struct. This is just method-like syntactic sugar for an ordinary function call.</p>
 <p>Recursive struct cycles must pass through <code>Option[...]</code>. For example, <code>next: Option[Node]</code> is valid, while <code>next: Node</code> and <code>items: Vec[Node]</code> are compile errors.</p>
 <p>---</p>
+<nav class="docs-chapter-nav" aria-label="Language overview chapters">
+  <a class="docs-chapter-previous" href="./06-variables-and-assignment.html" rel="prev">&larr; Previous: 6. Variables and Assignment</a>
+  <a class="docs-chapter-next" href="./08-memory-management.html" rel="next">Next: 8. Memory management in Jik &rarr;</a>
+</nav>
         </article>
       </div>
     </main>

@@ -3,7 +3,27 @@ const fs = require("node:fs");
 const path = require("node:path");
 const test = require("node:test");
 
-const { plainText, renderMarkdown, searchSections } = require("../scripts/update-docs");
+const { overviewNavigation, plainText, renderMarkdown, searchSections } = require("../scripts/update-docs");
+
+test("overview navigation follows chapter order and handles the start and end", () => {
+  const page = (name, title) => ({ sourcePath: `docs/${name}.md`, outputPath: `docs/${name}.html`, title });
+  const overview = page("overview", "Language Overview");
+  const first = page("overview/01-introduction", "1. Introduction");
+  const middle = page("overview/02-running", "2. Running & Building");
+  const last = page("overview/19-library", "19. Standard Library");
+  const reference = page("cli", "CLI");
+  const pages = [last, reference, middle, overview, first];
+
+  assert.match(overviewNavigation(overview, pages), /href="\.\/overview\/01-introduction.html" rel="next">Start reading:/);
+  assert.doesNotMatch(overviewNavigation(first, pages), /Previous:/);
+  assert.match(overviewNavigation(first, pages), /Next: 2. Running &amp; Building/);
+  assert.match(overviewNavigation(middle, pages), /href="\.\/01-introduction.html" rel="prev"/);
+  assert.match(overviewNavigation(middle, pages), /href="\.\/19-library.html" rel="next"/);
+  assert.match(overviewNavigation(last, pages), /href="\.\.\/overview.html">Back to Language Overview/);
+  assert.doesNotMatch(overviewNavigation(last, pages), /rel="next"/);
+  assert.equal(overviewNavigation(reference, pages), "");
+  assert.equal(overviewNavigation(overview, [overview]), "");
+});
 
 test("generates GitHub source links in development notes and roadmap", () => {
   const markdown = fs.readFileSync(path.join(__dirname, "fixtures/docs/development.md"), "utf8");
