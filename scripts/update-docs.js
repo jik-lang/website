@@ -437,15 +437,15 @@ function overviewNavigation(page, pages) {
     `<a class="docs-chapter-${direction}" href="${escapeHtml(relativeOutputLink(page.outputPath, target.outputPath))}"${rel ? ` rel="${rel}"` : ""}>${label}</a>`;
 
   if (page.sourcePath === "docs/overview.md" && chapters.length) {
-    links.push(link(chapters[0], `Start reading: ${escapeHtml(chapters[0].title)} &rarr;`, "next", "next"));
+    links.push(link(chapters[0], `Start reading: ${escapeHtml(chapters[0].title)}`, "next", "next"));
   } else if (index !== -1) {
     if (index > 0) {
-      links.push(link(chapters[index - 1], `&larr; Previous: ${escapeHtml(chapters[index - 1].title)}`, "previous", "prev"));
+      links.push(link(chapters[index - 1], `Previous: ${escapeHtml(chapters[index - 1].title)}`, "previous", "prev"));
     }
     if (index < chapters.length - 1) {
-      links.push(link(chapters[index + 1], `Next: ${escapeHtml(chapters[index + 1].title)} &rarr;`, "next", "next"));
+      links.push(link(chapters[index + 1], `Next: ${escapeHtml(chapters[index + 1].title)}`, "next", "next"));
     } else if (overview) {
-      links.push(link(overview, "Back to Language Overview &rarr;", "next"));
+      links.push(link(overview, "Back to Language Overview", "next"));
     }
   }
 
