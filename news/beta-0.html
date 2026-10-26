@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jik v0.1.0-beta.0: Jik now compiles itself! - Jik News</title>
+    <meta name="description" content="Jik v0.1.0-beta.0 marks the first beta and a major milestone: a self-hosted compiler written in Jik, with a verified multi-stage bootstrap.">
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="header-logo" href="../index.html" aria-label="Jik home">
+          <img src="../assets/jik-logo-mark.png" alt="">
+        </a>
+        <button class="menu-toggle" type="button" aria-label="Open navigation menu" aria-controls="site-navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="site-navigation" class="site-nav" aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../news.html">News</a>
+          <a href="../install.html">Install</a>
+          <a href="../examples.html">Examples</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../packages.html">Packages</a>
+          <a href="https://github.com/jik-lang/jik">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="container section news-post">
+        <p><a href="../news.html">All news</a></p>
+        <p class="news-date">Published <time datetime="2026-10-26">October 26, 2026</time></p>
+        <h2>Jik v0.1.0-beta.0: Jik now compiles itself!</h2>
+        <p>
+          <strong>Jik now builds its own compiler.</strong> With v0.1.0-beta.0,
+          development of the language moves into Jik itself: the
+          <a href="https://github.com/jik-lang/jik/tree/main/src/jik">compiler written in Jik</a>
+          can compile its own source, while the original C compiler becomes a
+          frozen bootstrap seed. Jik is self-hosted, and its first beta begins
+          a new phase of development.
+        </p>
+        <p>
+          Jik has become the language used to develop Jik. Its type system,
+          region-based memory model, standard library, and error handling now
+          work together in the program responsible for building the language
+          itself. The compiler is a substantial, practical use of Jik and a
+          foundation for what comes next.
+        </p>
+
+        <h3>Developing Jik in Jik</h3>
+        <p>
+          Continuing compiler development in Jik makes it much easier to
+          implement new features and explore ideas for the language. Compiler
+          work can use Jik's own abstractions, and improvements to the language
+          can feed back into the way its compiler is developed. The C seed stays
+          frozen; new compiler and language development happens in Jik.
+        </p>
+        <p>
+          Beta brings two goals: making Jik more reliable and continuing to grow
+          the language. Fixing compiler and support-library issues, expanding
+          tests, and stabilizing existing behavior go alongside exploring and
+          adding new language features and extending the standard library.
+          Self-hosting makes that next phase easier to pursue.
+          Bugs and changes are still expected during beta, and experience from
+          real programs will help guide both fixes and new features.
+        </p>
+
+        <h3>How Jik builds itself</h3>
+        <p>
+          The compiler in <code>src/jik/</code> takes Jik source and generates C,
+          which Clang or GCC turns into an executable. That includes the compiler's
+          own source: a Jik compiler can build the next Jik compiler through the
+          same compilation path used for other programs.
+        </p>
+        <p>
+          The bundled C seed in <code>src/seed/</code> gets the build started.
+          For this release, a source build needs Make and Clang or GCC;
+          it does not require an installed Jik compiler or a compiler download.
+          The frozen C seed can build the current Jik compiler. As Jik evolves,
+          future compiler versions may require an earlier Jik compiler to build them.
+        </p>
+
+        <p>
+          The release build verifies self-hosting across three stages: the C
+          seed builds stage 1, stage 1 builds stage 2, and stage 2 builds stage 3.
+          Each stage runs the compiler and language tests. Stages 2 and 3 must
+          generate byte-for-byte identical C for the compiler, both with and
+          without the embedded runtime. The release archive packages the tested
+          stage-2 executable.
+        </p>
+        <p>
+          This gives compiler development a repeatable check: successive
+          self-hosted compilers must agree on the C they produce for themselves.
+        </p>
+
+        <h3>Try it and help shape the beta</h3>
+        <p>
+          See the <a href="../install.html">installation guide</a> to get started,
+          explore the <a href="../docs/overview.html">language overview</a>, or
+          browse the <a href="../examples.html">examples</a>. To inspect how Jik
+          compiles itself, start with <code>src/jik/main.jik</code> in the
+          <a href="https://github.com/jik-lang/jik">compiler repository</a>.
+        </p>
+        <p>
+          If you find a bug, please <a href="https://github.com/jik-lang/jik/issues">open an issue</a>
+          with a small reproducer, your platform, and the compiler version.
+          You can also share what you are building and discuss the beta on
+          <a href="https://discord.gg/cnA8X5yKeA">Discord</a>.
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>&copy; 2026 Radovan Horvat. Jik is MIT licensed.</span>
+        <span>
+          Contact: <a href="mailto:contact@jik-lang.org">contact@jik-lang.org</a>
+          &middot;
+          <a href="https://discord.gg/cnA8X5yKeA">Discord</a>
+          &middot;
+          <a href="https://github.com/jik-lang/jik/issues">Report an issue</a>
+        </span>
+        <iframe src="https://github.com/sponsors/radovanhorvat/button" title="Sponsor radovanhorvat" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+      </div>
+    </footer>
+    <script src="../script.js"></script>
+  </body>
+</html>
