@@ -41,7 +41,7 @@
           <a href="./index.html">Jik Docs</a>
           <a href="./cli.html">Jik CLI Reference</a>
           <a href="./grammar.html" aria-current="page">Jik Grammar Reference</a>
-          <a href="./known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./known-issues.html">Known limitations</a>
           <a href="./overview/19-standard-library.html">Jik Standard Library</a>
           <a href="./overview.html">Jik Language Overview</a>
           <a href="./development.html">Development notes and roadmap</a>
@@ -74,7 +74,7 @@
             <a href="./index.html">Jik Docs</a>
             <a href="./cli.html">Jik CLI Reference</a>
             <a href="./grammar.html" aria-current="page">Jik Grammar Reference</a>
-            <a href="./known-issues.html">Known Issues and Current Limitations</a>
+            <a href="./known-issues.html">Known limitations</a>
             <a href="./overview/19-standard-library.html">Jik Standard Library</a>
             <a href="./overview.html">Jik Language Overview</a>
             <a href="./development.html">Development notes and roadmap</a>
@@ -100,16 +100,15 @@
         </details>
         <article class="docs-content">
 <h1 id="jik-grammar-reference">Jik Grammar Reference</h1>
-<p>This document is an implementation-derived grammar reference for Jik. It is based on the current lexer and parser in <code>src/jik/lexer.c</code> and <code>src/jik/parser.c</code>.</p>
-<p>It is intended to describe the accepted surface syntax of the language. It is not yet a complete formal language specification, because some forms are resolved later during semantic analysis.</p>
+<p>This page describes Jik <code>0.1.0-beta.0</code> syntax. It follows the <a href="https://github.com/jik-lang/jik/blob/main/src/jik/lexer/lexer.jik">lexer</a> and <a href="https://github.com/jik-lang/jik/blob/main/src/jik/parser/parser.jik">parser</a>, including <a href="https://github.com/jik-lang/jik/blob/main/src/jik/parser/expressions.jik">expressions</a> and <a href="https://github.com/jik-lang/jik/blob/main/src/jik/parser/statements.jik">statements</a>.</p>
 <h2 id="scope">Scope</h2>
 <ul>
-  <li>This grammar describes syntax, not full typing or region semantics.</li>
-  <li>Some constructs are context-sensitive. In particular:
+  <li>Type and region rules are described in the <a href="./overview.html">language guide</a>.</li>
+  <li>The meaning of some expressions depends on their types:
 <ul>
   <li><code>Type.Member</code> may denote enum values or variant tags.</li>
-  <li><code>value.Member</code> denotes a variant payload unwrap when <code>value</code> has a variant type.</li>
-  <li>allocation suffixes such as <code>[r]</code>, <code>[.x]</code>, and <code>@</code> are syntactically regular, but semantically restricted.</li>
+  <li><code>value.Member</code> accesses a variant's payload when <code>value</code> has a variant type.</li>
+  <li>Allocation suffixes such as <code>[r]</code>, <code>[.x]</code>, and <code>@</code> must follow the region rules.</li>
 </ul></li>
   <li>Newlines are significant between statements and after block headers.</li>
 </ul>
@@ -392,16 +391,14 @@ v.INT</code></pre>
 <pre><code class="language-ebnf">call_expr ::= qualified_identifier &quot;(&quot; [ args ] &quot;)&quot;
 args      ::= expr { &quot;,&quot; expr }</code></pre>
 <p><code>receiver.name(args)</code> is a uniform function call. <code>push</code>, <code>pop</code>, <code>len</code>, <code>clear</code>, and <code>copy</code> support this form for any receiver type accepted by the corresponding builtin. Otherwise, <code>receiver</code> must have a struct or variant type and <code>name</code> must be an ordinary function in that type's defining module whose first parameter has an explicit annotation for the receiver's type. It is shorthand for a normal call with <code>receiver</code> as the first argument.</p>
-<p>Special implementation rule:</p>
-<ul>
-  <li><code>unwrap(x)</code> is parsed specially and treated as equivalent to <code>x?</code>.</li>
-</ul>
+<p>The builtin <code>unwrap(x)</code> extracts an option's value, like <code>x?</code>.</p>
 <h3 id="struct-literals">Struct Literals</h3>
 <pre><code class="language-ebnf">struct_literal ::= qualified_identifier &quot;{&quot;
-                   [ struct_field { &quot;,&quot; struct_field } ]
+                   [ struct_field { &quot;,&quot; struct_field } [ &quot;,&quot; ] ]
                    &quot;}&quot;
 
-struct_field ::= identifier &quot;=&quot; expr</code></pre>
+struct_field ::= identifier [ &quot;=&quot; expr ]</code></pre>
+<p><code>Point{x}</code> is short for <code>Point{x = x}</code>.</p>
 <h3 id="variant-literals">Variant Literals</h3>
 <pre><code class="language-ebnf">variant_literal ::= qualified_identifier &quot;.&quot; identifier &quot;{&quot; [ expr ] &quot;}&quot;</code></pre>
 <p>Examples:</p>
@@ -421,19 +418,20 @@ Value.EOF{}</code></pre>
                  &quot;}&quot;
 
 dict_entry ::= expr &quot;:&quot; expr</code></pre>
-<p>Keys are checked semantically and must be of type <code>String</code>.</p>
-<h2 id="semantic-resolution-notes">Semantic Resolution Notes</h2>
-<p>These forms are parsed first and refined later:</p>
+<p>Dictionary keys must be of type <code>String</code>.</p>
+<h2 id="checks-after-parsing">Checks after parsing</h2>
+<p>Some names are resolved after parsing:</p>
 <ul>
-  <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an enum value during semantic analysis.</li>
-  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten as a variant tag marker during semantic analysis. Constructing a variant value always requires braces.</li>
+  <li><code>EnumName.VALUE</code> is initially parsed as member access, then rewritten as an enum value once the compiler knows its type.</li>
+  <li><code>VariantName.TAG</code> is initially parsed as member access, then rewritten as a variant tag marker once the compiler knows its type. Constructing a variant value always requires braces.</li>
   <li><code>value.TAG</code> remains member access and is resolved as checked payload access when <code>value</code> has a variant type.</li>
 </ul>
-<h2 id="current-implementation-gaps-and-constraints">Current Implementation Gaps and Constraints</h2>
+<h2 id="limits">Limits</h2>
 <ul>
   <li>Top-level typed globals are not currently parsed.</li>
   <li><code>match</code> supports payload-binding and payloadless variant-tag patterns; richer patterns are not part of the current parser.</li>
 </ul>
+
         </article>
       </div>
     </main>

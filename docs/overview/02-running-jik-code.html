@@ -41,7 +41,7 @@
           <a href="../index.html">Jik Docs</a>
           <a href="../cli.html">Jik CLI Reference</a>
           <a href="../grammar.html">Jik Grammar Reference</a>
-          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../known-issues.html">Known limitations</a>
           <a href="./19-standard-library.html">Jik Standard Library</a>
           <a href="../overview.html">Jik Language Overview</a>
           <a href="../development.html">Development notes and roadmap</a>
@@ -74,7 +74,7 @@
             <a href="../index.html">Jik Docs</a>
             <a href="../cli.html">Jik CLI Reference</a>
             <a href="../grammar.html">Jik Grammar Reference</a>
-            <a href="../known-issues.html">Known Issues and Current Limitations</a>
+            <a href="../known-issues.html">Known limitations</a>
             <a href="./19-standard-library.html">Jik Standard Library</a>
             <a href="../overview.html">Jik Language Overview</a>
             <a href="../development.html">Development notes and roadmap</a>
@@ -111,9 +111,9 @@ end</code></pre>
 <pre><code>jik run hello.jik</code></pre>
 <p>This command:</p>
 <ol>
-  <li>Translates all reachable Jik source files into a <strong>single C file</strong>.</li>
-  <li>Compiles that C file with the C compiler given by the <code>JIK_CC</code> environment variable.</li>
-  <li>Produces an executable and runs it.</li>
+  <li>Translates the program and its imports into one C file.</li>
+  <li>Compiles that C file with the selected C compiler.</li>
+  <li>Runs the program and removes the temporary build files.</li>
 </ol>
 <p>In other words, <code>jik run</code> is: <strong>translate -&gt; compile -&gt; run</strong>, in one step.</p>
 <p>Two other important commands are:</p>
@@ -121,14 +121,14 @@ end</code></pre>
   <li><code>jik tran hello.jik</code> to translate the program to C without compiling it</li>
   <li><code>jik build hello.jik</code> to translate and compile the program without running it</li>
 </ul>
-<p>For performance-oriented builds, <code>jik tran</code>, <code>jik build</code>, and <code>jik run</code> also support <code>--unsafe-no-bounds-checks</code>, which disables runtime vector bounds checks for generated <code>v[i]</code> reads and writes.</p>
+<p><code>jik tran</code>, <code>jik build</code>, and <code>jik run</code> also support <code>--unsafe-no-bounds-checks</code>, which disables runtime vector bounds checks for generated <code>v[i]</code> reads and writes.</p>
 <p>So the three most common commands are:</p>
 <ul>
   <li><code>run</code>: translate, compile, and run</li>
   <li><code>build</code>: translate and compile</li>
   <li><code>tran</code>: translate only</li>
 </ul>
-<p>By default, Jik uses the C compiler specified by the <code>JIK_CC</code> environment variable. You can also choose a compiler explicitly with the <code>--cc</code> option when invoking <code>jik</code>.</p>
+<p>Choose a C compiler with <code>--cc clang</code> or <code>--cc gcc</code>, or set <code>JIK_CC</code> to choose a default. If neither is set, Jik looks for <code>clang</code>, <code>gcc</code>, then <code>cc</code>.</p>
 <p>To get a list of commands and help for each one:</p>
 <pre><code>jik help</code></pre>
 <p>For a full list of commands and options, see the <a href="../cli.html">Jik CLI reference</a>.</p>

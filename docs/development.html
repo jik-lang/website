@@ -41,7 +41,7 @@
           <a href="./index.html">Jik Docs</a>
           <a href="./cli.html">Jik CLI Reference</a>
           <a href="./grammar.html">Jik Grammar Reference</a>
-          <a href="./known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./known-issues.html">Known limitations</a>
           <a href="./overview/19-standard-library.html">Jik Standard Library</a>
           <a href="./overview.html">Jik Language Overview</a>
           <a href="./development.html" aria-current="page">Development notes and roadmap</a>
@@ -74,7 +74,7 @@
             <a href="./index.html">Jik Docs</a>
             <a href="./cli.html">Jik CLI Reference</a>
             <a href="./grammar.html">Jik Grammar Reference</a>
-            <a href="./known-issues.html">Known Issues and Current Limitations</a>
+            <a href="./known-issues.html">Known limitations</a>
             <a href="./overview/19-standard-library.html">Jik Standard Library</a>
             <a href="./overview.html">Jik Language Overview</a>
             <a href="./development.html" aria-current="page">Development notes and roadmap</a>
@@ -102,11 +102,12 @@
 <h1 id="development-notes-and-roadmap">Development notes and roadmap</h1>
 <h2 id="repository-layout">Repository layout</h2>
 <ul>
-  <li><code>src/jik/</code> - C seed compiler source</li>
-  <li><a href="https://github.com/jik-lang/jik/tree/main/src/bootstrap/"><code>src/bootstrap/</code></a> - Jik bootstrap compiler source (work in progress)</li>
+  <li><a href="https://github.com/jik-lang/jik/tree/main/src/jik/"><code>src/jik/</code></a> - primary compiler source, written in Jik</li>
+  <li><code>src/seed/</code> - C seed compiler source</li>
   <li><code>jiklib/</code> - Jik standard library modules</li>
   <li><code>support/</code> - Jik support library</li>
-  <li><code>test/</code> - test suite</li>
+  <li><code>test/jik/</code> - maintained compiler and language tests</li>
+  <li><code>test/seed/</code> - frozen seed compiler tests</li>
   <li><code>docs/</code> - language and development documentation</li>
   <li><code>examples/</code> - example Jik programs</li>
   <li><code>assets/</code> - repository assets</li>
@@ -114,22 +115,34 @@
   <li><code>tools/</code> - development tools, including syntax highlighting</li>
 </ul>
 <h2 id="building-and-testing">Building and testing</h2>
-<p>Build the C seed compiler from the repository root with <code>make</code>. Build the Jik bootstrap compiler as <code>jik1</code> with <code>make boot</code>. Run the test suite with <code>make test</code>.</p>
-<h2 id="release-archives">Release archives</h2>
-<p>Run <code>make release-archive VERSION=&lt;version&gt;</code> to create a compiler archive in <code>artifacts/</code>. Archives include the complete <code>examples/</code> directory alongside the compiler, standard library, support files, and documentation.</p>
+<p>Run these commands from the repository root with Make and Clang or GCC:</p>
+<pre><code class="language-sh">make                       # Build jik using the bundled C seed
+make test                  # Build jik and run compiler/language tests
+make clean                 # Remove generated build and release outputs
+make help                  # Show available build commands</code></pre>
+<p>Use <code>make</code> for everyday development. It compiles <code>src/seed/</code> as <code>jik-seed</code>, then builds <code>src/jik/main.jik</code> as <code>jik</code>. No installed Jik or download is required. Both executables are rebuilt on each call and have <code>.exe</code> on Windows.</p>
+<p>Use <code>make CC=gcc</code> or <code>make CC=clang</code> to select the C compiler. Quote assignments containing spaces, for example <code>&quot;CC=C:/Program Files/LLVM/bin/clang.exe&quot;</code>.</p>
+<p><code>make test-seed</code> runs the seed's frozen tests. <code>make test-bootstrap-full</code> runs those tests, then builds and tests three optimized compilers:</p>
+<pre><code class="language-text">jik-seed -&gt; jik-stage1 -&gt; jik-stage2 -&gt; jik-stage3</code></pre>
+<p>Stages 2 and 3 must generate identical C, both with and without the embedded runtime. Comparison output is retained in <code>build/bootstrap-sequence/</code>.</p>
+<p>Compiler executables stay at the repository root and use the checkout's <code>jiklib/</code>, <code>support/</code>, and <code>docs/</code> directly. CLI builds clean up their temporary C automatically. New language features belong in <code>src/jik/</code>; the bootstrap strategy can be revisited if the seed can no longer build the compiler.</p>
+<h2 id="release-builds">Release builds</h2>
+<p><code>make release</code> performs the full bootstrap above and stages the exact tested stage-2 compiler as <code>release/jik</code> (<code>release/jik.exe</code> on Windows). The development compiler is built by the C seed with default optimization; the release compiler is built by the self-hosted stage-1 compiler with <code>-O3</code> and receives full self-hosting verification. Both implement the same language.</p>
+<p><code>make release-archive VERSION=v0.1.0-beta.0</code> performs the same checks and creates an archive in <code>artifacts/</code>, containing the stage-2 executable named <code>jik</code>/<code>jik.exe</code>, <code>LICENSE</code>, <code>jiklib/</code>, <code>support/</code>, <code>docs/</code>, and <code>examples/</code>. Stage 3 verifies self-hosting; it is not distributed.</p>
 <h2 id="roadmap">Roadmap</h2>
-<h3 id="0-1-0-alpha-x-implementation-stabilisation-and-bootstrapping">0.1.0-alpha.x — implementation stabilisation and bootstrapping</h3>
+<h3 id="0-1-0-beta-0">0.1.0-beta.0</h3>
 <ul>
   <li>Keep the intended language syntax stable.</li>
   <li>Find and fix compiler and support-library issues.</li>
   <li>Extend the standard library where needed.</li>
   <li>Expand the test suite.</li>
-  <li>Bootstrap the implementation by <a href="https://github.com/jik-lang/jik/tree/main/src/bootstrap/">rewriting Jik in Jik</a></li>
+  <li>Build and test the <a href="https://github.com/jik-lang/jik/tree/main/src/jik/">compiler written in Jik</a>.</li>
 </ul>
 <h3 id="later">Later</h3>
 <ul>
   <li>Add concurrency support</li>
 </ul>
+
         </article>
       </div>
     </main>

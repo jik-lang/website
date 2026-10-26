@@ -41,7 +41,7 @@
           <a href="./index.html">Jik Docs</a>
           <a href="./cli.html" aria-current="page">Jik CLI Reference</a>
           <a href="./grammar.html">Jik Grammar Reference</a>
-          <a href="./known-issues.html">Known Issues and Current Limitations</a>
+          <a href="./known-issues.html">Known limitations</a>
           <a href="./overview/19-standard-library.html">Jik Standard Library</a>
           <a href="./overview.html">Jik Language Overview</a>
           <a href="./development.html">Development notes and roadmap</a>
@@ -74,7 +74,7 @@
             <a href="./index.html">Jik Docs</a>
             <a href="./cli.html" aria-current="page">Jik CLI Reference</a>
             <a href="./grammar.html">Jik Grammar Reference</a>
-            <a href="./known-issues.html">Known Issues and Current Limitations</a>
+            <a href="./known-issues.html">Known limitations</a>
             <a href="./overview/19-standard-library.html">Jik Standard Library</a>
             <a href="./overview.html">Jik Language Overview</a>
             <a href="./development.html">Development notes and roadmap</a>
@@ -100,21 +100,22 @@
         </details>
         <article class="docs-content">
 <h1 id="jik-cli-reference">Jik CLI Reference</h1>
-<p>The <code>jik</code> command-line tool is used to parse, check, translate, build, and runs Jik programs. Usage is:</p>
+<p>Use <code>jik</code> to check, translate, build, and run Jik programs:</p>
 <pre><code class="language-sh">jik &lt;command&gt; [&lt;args&gt;...] [--&lt;option&gt; [&lt;value&gt;]]...</code></pre>
 <p>Run <code>jik help</code> to list available commands, or <code>jik help &lt;topic&gt;</code> to show help for a command, language topic, or standard library entry.</p>
 <p>Command arguments come before command options. For example, use <code>jik run hello.jik --cc clang</code>.</p>
 <h2 id="commands">Commands</h2>
 <h3 id="jik-run"><code>jik run &lt;filepath&gt;</code></h3>
-<p>Translate a Jik source file to C, compile it with the selected C compiler, run the executable, and then remove the executable.</p>
+<p>Translate a Jik source file to C, compile it with the selected C compiler, run the executable, and then remove the temporary build files.</p>
 <p>Options:</p>
 <ul>
   <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
   <li><code>--ccflags &lt;args&gt;</code>: Extra C compiler arguments.</li>
-  <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
+  <li><code>--release</code>: Compile with <code>-O3</code> optimization.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
   <li><code>--region-tree</code>: Print the runtime region lifetime hierarchy.</li>
+  <li><code>--dump-ast</code>: Print the parsed syntax tree.</li>
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
 </ul>
 <p>Example:</p>
@@ -126,14 +127,15 @@
 <p>Translate a Jik source file to C and compile it to an executable.</p>
 <p>Options:</p>
 <ul>
-  <li><code>--out &lt;filepath&gt;</code>: Write the executable to this path. When omitted, the default output path is <code>&lt;input_file&gt;.exe</code> on Windows and <code>&lt;input_file&gt;</code> on Linux.</li>
+  <li><code>--out &lt;filepath&gt;</code>: Write the executable to this path. When omitted, the default is the input path without <code>.jik</code>, with <code>.exe</code> added on Windows.</li>
   <li><code>--cc &lt;compiler_name&gt;</code>: C compiler to use.</li>
   <li><code>--ccflags &lt;args&gt;</code>: Extra C compiler arguments.</li>
   <li><code>--preview</code>: Print the compiler command without running it or creating an executable.</li>
-  <li><code>--release</code>: Build with release-oriented host compiler flags.</li>
+  <li><code>--release</code>: Compile with <code>-O3</code> optimization.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
   <li><code>--region-tree</code>: Print the runtime region lifetime hierarchy.</li>
+  <li><code>--dump-ast</code>: Print the parsed syntax tree.</li>
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
 </ul>
 <p>Example:</p>
@@ -145,23 +147,25 @@
 <p>Translate a Jik source file to C.</p>
 <p>Options:</p>
 <ul>
-  <li><code>--out &lt;filepath&gt;</code>: Write the generated C to this path. When omitted, the default output path is <code>&lt;input-basename&gt;.c</code>.</li>
+  <li><code>--out &lt;filepath&gt;</code>: Write the generated C to this path. When omitted, the default is the input path with <code>.jik</code> replaced by <code>.c</code>.</li>
   <li><code>--embed-core</code>: Embed the Jik support library into the generated translation.</li>
   <li><code>--emit-source-loc</code>: Emit <code>// source: path:line:column</code> comments before generated declarations that correspond to Jik source declarations.</li>
   <li><code>--format-c</code>: Format the generated C file in place with <code>clang-format</code>.</li>
   <li><code>--unsafe-no-bounds-checks</code>: Disable runtime vector bounds checks</li>
   <li><code>--region-stats</code>: Print runtime region statistics at program exit.</li>
   <li><code>--region-tree</code>: Print the runtime region lifetime hierarchy.</li>
+  <li><code>--dump-ast</code>: Print the parsed syntax tree.</li>
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
 </ul>
 <p>Generated C includes the Jik support header as <code>#include &quot;core.h&quot;</code>. For manual compilation, include the support include directory from <code>jik env</code>'s <code>core_include=&lt;path&gt;</code> value, or use <code>--embed-core</code> to write a self-contained C translation.</p>
 <p>Example:</p>
 <pre><code class="language-sh">jik tran hello.jik --embed-core</code></pre>
 <h3 id="jik-check"><code>jik check &lt;filepath&gt;</code></h3>
-<p>Parse and analyze a Jik source file.</p>
+<p>Check syntax, types, and regions without generating C or running a C compiler.</p>
 <p>Options:</p>
 <ul>
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
+  <li><code>--dump-ast</code>: Print the parsed syntax tree.</li>
 </ul>
 <p>Example:</p>
 <pre><code class="language-sh">jik check hello.jik</code></pre>
@@ -187,7 +191,7 @@ jik help jik/io</code></pre>
 <ol>
   <li>The <code>--cc &lt;compiler_name&gt;</code> option.</li>
   <li>The <code>JIK_CC</code> environment variable.</li>
-  <li>The host default compiler, when available.</li>
+  <li>The first available compiler from <code>clang</code>, <code>gcc</code>, then <code>cc</code>.</li>
 </ol>
 <p>If no compiler is found, <code>jik run</code> and <code>jik build</code> fail before compilation.</p>
 <h2 id="package-imports">Package Imports</h2>
@@ -204,12 +208,13 @@ use &quot;pkg/csv/utils/foo&quot;</code></pre>
 <p>Use <code>jik env</code> to check the currently resolved value. It is printed as <code>pkg_path=&lt;path&gt;</code>. If <code>JIK_PKG_PATH</code> is not set and a program imports <code>pkg/...</code>, compilation fails with a package path error.</p>
 <h2 id="common-workflows">Common Workflows</h2>
 <ul>
-  <li>Use <code>jik check &lt;file&gt;</code> for a fast parse and semantic check.</li>
+  <li>Use <code>jik check &lt;file&gt;</code> to check syntax, types, and regions.</li>
   <li>Use <code>jik run &lt;file&gt;</code> while developing a program.</li>
   <li>Use <code>jik tran &lt;file&gt;</code> when you want to inspect or format the generated C.</li>
   <li>Use <code>jik build &lt;file&gt; --release</code> when you want an optimized executable.</li>
   <li>Use <code>jik env</code> to debug how the CLI resolved paths and compiler settings.</li>
 </ul>
+
         </article>
       </div>
     </main>

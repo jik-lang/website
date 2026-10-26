@@ -41,7 +41,7 @@
           <a href="../index.html">Jik Docs</a>
           <a href="../cli.html">Jik CLI Reference</a>
           <a href="../grammar.html">Jik Grammar Reference</a>
-          <a href="../known-issues.html">Known Issues and Current Limitations</a>
+          <a href="../known-issues.html">Known limitations</a>
           <a href="../overview/19-standard-library.html">Jik Standard Library</a>
           <a href="../overview.html">Jik Language Overview</a>
           <a href="../development.html">Development notes and roadmap</a>
@@ -74,7 +74,7 @@
             <a href="../index.html">Jik Docs</a>
             <a href="../cli.html">Jik CLI Reference</a>
             <a href="../grammar.html">Jik Grammar Reference</a>
-            <a href="../known-issues.html">Known Issues and Current Limitations</a>
+            <a href="../known-issues.html">Known limitations</a>
             <a href="../overview/19-standard-library.html">Jik Standard Library</a>
             <a href="../overview.html">Jik Language Overview</a>
             <a href="../development.html">Development notes and roadmap</a>
@@ -110,6 +110,7 @@
 <h2 id="types">Types</h2>
 <h3 id="strbuf-2"><code>StrBuf</code></h3>
 <p>Opaque string buffer allocated in a <code>Region</code>.</p>
+<p>Default construction creates an empty buffer in the chosen region.</p>
 <h2 id="functions">Functions</h2>
 <h3 id="append-buf-strbuf-foreign-text-string-void"><code>append(buf: StrBuf, foreign text: String) -&gt; void</code></h3>
 <p>Append a string to the end of the buffer.</p>
@@ -161,6 +162,17 @@
   <li>A new <code>StrBuf</code>.</li>
 </ul>
 <p>---</p>
+<h3 id="new-empty-region-region-strbuf"><code>new_empty(region: Region) -&gt; StrBuf</code></h3>
+<p>Create an empty buffer. Jik also uses this function for default construction of <code>StrBuf</code> fields.</p>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>region: Region</code> - Allocation region.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li>An empty <code>StrBuf</code>.</li>
+</ul>
+<p>---</p>
 <h3 id="pop-buf-strbuf-char"><code>pop(buf: StrBuf) -&gt; char</code></h3>
 <p>Pop a single byte from the end of the buffer.</p>
 <p><strong>Parameters</strong></p>
@@ -190,6 +202,7 @@
 <ul>
   <li>Contents of the buffer as a String.</li>
 </ul>
+
         </article>
       </div>
     </main>
