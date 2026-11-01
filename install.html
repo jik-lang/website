@@ -39,7 +39,8 @@
           <h1>Install Jik</h1>
           <p>
             Download the latest release archive for your platform, extract it,
-            and run <code>jik</code>.
+            and add Jik to your <code>PATH</code>.
+            To run or build programs, you also need a C compiler: GCC or Clang.
           </p>
         </div>
       </section>
@@ -71,66 +72,84 @@
       </section>
 
       <section class="container section">
-        <h2>Install Jik</h2>
+        <h2>1. Set up Jik and a C compiler</h2>
 
         <h3>Windows</h3>
         <ol>
           <li>Download the Windows x64 ZIP from the latest release.</li>
-          <li>Extract it to a stable location, for example <code>C:\tools\jik</code>.</li>
-          <li>Add that directory to your user or system <code>PATH</code>.</li>
-          <li>Open a new terminal and verify the compiler works.</li>
+          <li>Extract the whole archive to a stable location, for example <code>C:\tools\jik</code>. Keep its files and folders together.</li>
+          <li>Add the directory containing <code>jik.exe</code> to your user <code>PATH</code>. Search the Start menu for "Edit environment variables for your account", edit <code>Path</code>, and add the directory as a new entry.</li>
+          <li>Open a new terminal and check that Jik is available:</li>
         </ol>
         <pre><code>jik help</code></pre>
+        <p>If you do not already have GCC or Clang installed, choose one of these portable GCC toolchains:</p>
+        <ul>
+          <li><a href="https://winlibs.com/">WinLibs</a>: Download a Win64 / x86_64 GCC build, extract it, and add its <code>mingw64\bin</code> directory to your user <code>PATH</code>.</li>
+          <li><a href="https://github.com/skeeto/w64devkit">w64devkit</a>: Download the x64 kit, extract it, and add its <code>bin</code> directory to your user <code>PATH</code>.</li>
+        </ul>
+        <p>Open a new terminal after changing <code>PATH</code>, then check the C compiler:</p>
+        <pre><code>gcc --version</code></pre>
+        <p>If you use Clang instead, check <code>clang --version</code>.</p>
 
         <h3>Linux</h3>
+        <p>
+          The Linux download is for x64 systems with glibc 2.34 or newer.
+          On older systems, use a newer distribution or <a href="https://github.com/jik-lang/jik#building-jik-from-source">build Jik from source</a>.
+        </p>
+        <p>On Ubuntu or Debian, install GCC and the tools used below:</p>
+        <pre><code>sudo apt update
+sudo apt install build-essential curl ca-certificates
+gcc --version</code></pre>
+        <p>
+          On other distributions, use your package manager to install GCC or Clang,
+          the C development headers, and curl. If a C compiler is already set up,
+          you can keep using it.
+        </p>
         <ol>
-          <li>Download and extract the Linux x64 archive into a directory owned by your user.</li>
-          <li>Add that directory to <code>PATH</code>.</li>
-          <li>Verify the compiler from a new shell.</li>
+          <li>Download and extract Jik into your home directory with the commands below.</li>
+          <li>The <code>export</code> command makes Jik available in the current terminal.</li>
+          <li>Run <code>jik help</code> to check the installation.</li>
         </ol>
+        <!-- RELEASE_LINUX_START -->
         <pre><code>mkdir -p "$HOME/.local/share/jik"
-curl -L -o /tmp/jik-linux-x64.tar.gz \
+curl --fail -L -o /tmp/jik-linux-x64.tar.gz \
   https://github.com/jik-lang/jik/releases/download/v0.1.0-beta.1/jik-v0.1.0-beta.1-linux-x64.tar.gz
 tar -xzf /tmp/jik-linux-x64.tar.gz -C "$HOME/.local/share/jik" --strip-components=1
 export PATH="$HOME/.local/share/jik:$PATH"
 jik help</code></pre>
+        <!-- RELEASE_LINUX_END -->
         <p>
-          Note: the Linux x64 archive requires glibc 2.34 or newer. On older WSL/Linux distributions, use a newer distro image or build Jik from source.
-          To make <code>jik</code> available in new terminals, add
-          <code>$HOME/.local/share/jik</code> to your shell startup file.
+          To keep Jik available in new terminals, add this line to your shell's
+          startup file (for Bash, <code>~/.bashrc</code>; for Zsh, <code>~/.zshrc</code>),
+          then open a new terminal:
         </p>
+        <pre><code>export PATH="$HOME/.local/share/jik:$PATH"</code></pre>
 
       </section>
 
       <div class="install-setup-band">
       <section class="container section">
-        <h2>Configure a Host C Compiler</h2>
+        <h2>2. Create and run a project</h2>
         <p>
-          <code>jik run</code> and <code>jik build</code> need a host C compiler.
-          On Windows, these portable GCC toolchains are easy ways to get one:
+          In a directory where you keep your projects, run the following commands.
+          Choose a location where a directory named <code>hello</code> does not already exist.
         </p>
-        <ul>
-          <li><a href="https://winlibs.com/">WinLibs</a>: Extract a MinGW-w64 GCC build and add its <code>mingw64/bin</code> directory to <code>PATH</code>.</li>
-          <li><a href="https://github.com/skeeto/w64devkit">w64devkit</a>: Extract the kit and add its <code>bin</code> directory to <code>PATH</code>.</li>
-        </ul>
+        <pre><code>jik new hello
+cd hello
+jik run src/hello.jik</code></pre>
         <p>
-          In the terminal where you will run Jik, check <code>gcc --version</code>.
-          Set <code>JIK_CC=gcc</code> to use GCC by default. For a single command,
-          you can instead run <code>jik run hello.jik --cc gcc</code>.
+          The first command creates the source file and a README. The last command
+          runs the program. You should see <code>Hello, world!</code> in the terminal.
         </p>
-      </section>
-
-      <section class="container section">
-        <h2>Test the Installation</h2>
-        <p>Create a file named <code>hello.jik</code>:</p>
-
-        <pre><code>func main():
-    println("Hello, Jik!")
-end</code></pre>
-
         <p>
-          Run it with <code>jik run hello.jik</code>. See the
-          <a href="docs/cli.html">CLI reference</a> for more commands.
+          Jik looks for Clang, GCC, then <code>cc</code> automatically.
+          To choose a compiler for this run, use:
+        </p>
+        <pre><code>jik run src/hello.jik --cc gcc</code></pre>
+        <p>
+          Use <code>--cc clang</code> for Clang. You can also set the
+          <code>JIK_CC</code> environment variable to choose a default compiler.
+          See the <a href="docs/cli.html">CLI reference</a> for more commands.
         </p>
       </section>
       </div>
@@ -147,10 +166,17 @@ end</code></pre>
       <section class="container section">
         <h2>VS Code Extension</h2>
         <p>
-          Download the <code>.vsix</code> file from the same release and install
-          it from VS Code's Extensions view, or from a terminal.
+          Download the <code>.vsix</code> file from the latest release above.
+          In VS Code's Extensions view, open the <code>...</code> menu, choose
+          <strong>Install from VSIX...</strong>, and select the downloaded file.
         </p>
-        <pre><code>code --install-extension jik-language-tools-*.vsix</code></pre>
+        <p>
+          Or, if the <code>code</code> command is available, open a terminal in
+          the folder containing the downloaded file and run:
+        </p>
+        <!-- RELEASE_VSCODE_START -->
+        <pre><code>code --install-extension "./jik-language-tools-v0.1.0-beta.1.vsix"</code></pre>
+        <!-- RELEASE_VSCODE_END -->
       </section>
 
     </main>

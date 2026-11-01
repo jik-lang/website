@@ -130,6 +130,29 @@ function latestReleaseCard(release, options = {}) {
   ].join("\n");
 }
 
+function linuxInstallCommands(asset) {
+  if (!asset) {
+    return '        <p>No Linux x64 archive is available for this release. See <a href="https://github.com/jik-lang/jik#building-jik-from-source">building Jik from source</a>.</p>';
+  }
+
+  return [
+    '        <pre><code>mkdir -p "$HOME/.local/share/jik"',
+    'curl --fail -L -o /tmp/jik-linux-x64.tar.gz \\',
+    `  ${escapeHtml(asset.browser_download_url)}`,
+    'tar -xzf /tmp/jik-linux-x64.tar.gz -C "$HOME/.local/share/jik" --strip-components=1',
+    'export PATH="$HOME/.local/share/jik:$PATH"',
+    'jik help</code></pre>'
+  ].join("\n");
+}
+
+function vscodeInstallCommand(asset) {
+  if (!asset) {
+    return '        <p>No VS Code extension is available for this release.</p>';
+  }
+
+  return `        <pre><code>${escapeHtml(`code --install-extension "./${asset.name}"`)}</code></pre>`;
+}
+
 function replaceGeneratedBlock(page, startMarker, endMarker, content) {
   const escapedStart = startMarker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const escapedEnd = endMarker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -169,11 +192,29 @@ async function main() {
     latestReleaseCard(releases[0], { indent: 8 })
   );
 
+  installPage = replaceGeneratedBlock(
+    installPage,
+    "<!-- RELEASE_LINUX_START -->",
+    "<!-- RELEASE_LINUX_END -->",
+    linuxInstallCommands(releases[0].assets.linux)
+  );
+
+  installPage = replaceGeneratedBlock(
+    installPage,
+    "<!-- RELEASE_VSCODE_START -->",
+    "<!-- RELEASE_VSCODE_END -->",
+    vscodeInstallCommand(releases[0].assets.vscode)
+  );
+
   fs.writeFileSync(installPath, installPage);
   console.log(`Updated install.html with latest release ${releases[0].tag}`);
 }
 
-main().catch((error) => {
-  console.error(error.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { linuxInstallCommands, normalizeRelease, replaceGeneratedBlock, vscodeInstallCommand };

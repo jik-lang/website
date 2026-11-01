@@ -31,7 +31,8 @@ npm.cmd run update
 ```
 
 This updates the generated documentation pages, latest release card, and the package
-list on `packages.html`, and the example sources on `examples.html`. The package list is read from the `## Packages`
+list on `packages.html`, and the example sources on `examples.html`. It also keeps
+the Linux download and VS Code extension installation commands in sync with the latest release. The package list is read from the `## Packages`
 section of the
 [`jik-packages` README](https://github.com/jik-lang/jik-packages#packages).
 To test the flow with fixtures:
