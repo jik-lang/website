@@ -129,6 +129,32 @@ function rewriteHref(currentSourcePath, currentOutputPath, href, knownDocs) {
   return relativeOutputLink(currentOutputPath, outputPathForSource(targetSourcePath), hash);
 }
 
+function resolveNumberedAnchors(pages) {
+  const anchorsByPath = new Map(pages.map((page) => {
+    const ids = [...page.html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
+    const aliases = new Map();
+    for (const id of ids) {
+      const alias = id.replace(/^(\d+(?:-\d+)+)-/, (_match, section) => `${section.replaceAll("-", "")}-`);
+      if (alias !== id) {
+        aliases.set(alias, aliases.has(alias) ? null : id);
+      }
+    }
+    return [page.outputPath, { ids: new Set(ids), aliases }];
+  }));
+
+  for (const page of pages) {
+    page.html = page.html.replace(/href="([^"#]*)#([^"\s]+)"/g, (match, hrefPath, anchor) => {
+      const targetPath = hrefPath
+        ? path.posix.normalize(path.posix.join(path.posix.dirname(page.outputPath), hrefPath))
+        : page.outputPath;
+      const target = anchorsByPath.get(targetPath);
+      if (!target || target.ids.has(anchor)) return match;
+      const resolved = target.aliases.get(anchor);
+      return resolved ? `href="${hrefPath}#${resolved}"` : match;
+    });
+  }
+}
+
 function inlineMarkdown(text, currentSourcePath, currentOutputPath, knownDocs) {
   const tokens = [];
   const token = (html) => {
@@ -587,6 +613,8 @@ async function main() {
     })
     .sort(sortDocs);
 
+  resolveNumberedAnchors(pages);
+
   cleanGeneratedDocs(path.join(root, "docs"));
 
   const searchIndex = pages.flatMap(searchSections);
@@ -615,4 +643,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { overviewNavigation, plainText, renderMarkdown, searchSections };
+module.exports = { overviewNavigation, plainText, renderMarkdown, resolveNumberedAnchors, searchSections };

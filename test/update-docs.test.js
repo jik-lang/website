@@ -3,7 +3,23 @@ const fs = require("node:fs");
 const path = require("node:path");
 const test = require("node:test");
 
-const { overviewNavigation, plainText, renderMarkdown, searchSections } = require("../scripts/update-docs");
+const { overviewNavigation, plainText, renderMarkdown, resolveNumberedAnchors, searchSections } = require("../scripts/update-docs");
+
+test("resolves numbered section links within and between generated docs", () => {
+  const pages = [
+    {
+      outputPath: "docs/overview/memory.html",
+      html: '<a href="#843-region-safe-functions">Regions</a><h4 id="8-4-3-region-safe-functions">8.4.3 Region-safe functions</h4><a href="./variables.html#63-binding">Binding</a><a href="#8-4-3-region-safe-functions">Existing</a><a href="https://example.com/#843-region-safe-functions">External</a><a href="#999-missing">Missing</a>'
+    },
+    { outputPath: "docs/overview/variables.html", html: '<h3 id="6-3-binding">6.3 Binding</h3>' }
+  ];
+  resolveNumberedAnchors(pages);
+  assert.match(pages[0].html, /href="#8-4-3-region-safe-functions">Regions/);
+  assert.match(pages[0].html, /href="\.\/variables.html#6-3-binding"/);
+  assert.match(pages[0].html, /href="#8-4-3-region-safe-functions">Existing/);
+  assert.match(pages[0].html, /href="https:\/\/example.com\/#843-region-safe-functions"/);
+  assert.match(pages[0].html, /href="#999-missing"/);
+});
 
 test("overview navigation follows chapter order and handles the start and end", () => {
   const page = (name, title) => ({ sourcePath: `docs/${name}.md`, outputPath: `docs/${name}.html`, title });
