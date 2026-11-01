@@ -138,6 +138,22 @@
   <li><code>true</code> only for directories.</li>
 </ul>
 <p>---</p>
+<h3 id="throws-is-link-foreign-path-string-bool"><code>throws is_link(foreign path: String) -&gt; bool</code></h3>
+<p>Inspect the path itself for a symbolic link or Windows reparse point.</p>
+<p>On POSIX, detect symbolic links without following their targets. On Windows, detect reparse points, including symbolic links and directory junctions.</p>
+<p><strong>Behavior</strong></p>
+<ul>
+  <li>Throws if the path cannot be inspected, including when it does not exist.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ol>
+  <li><code>path: String</code> - Filesystem path.</li>
+</ol>
+<p><strong>Returns</strong></p>
+<ul>
+  <li><code>true</code> for a symbolic link (POSIX) or reparse point (Windows).</li>
+</ul>
+<p>---</p>
 <h3 id="throws-mkdir-path-string-void"><code>throws mkdir(path: String) -&gt; void</code></h3>
 <p>Create a directory.</p>
 <p><strong>Behavior</strong></p>

@@ -100,7 +100,7 @@
         </details>
         <article class="docs-content">
 <h1 id="known-limitations">Known limitations</h1>
-<p>Jik <code>0.1.0-beta.0</code> is the first beta release. Bugs and changes are still expected.</p>
+<p>Jik is in beta. Bugs and changes are still expected.</p>
 <h2 id="platforms-and-tools">Platforms and tools</h2>
 <ul>
   <li>Windows x64 and Linux x64 are the tested release platforms. Use Clang or GCC; MSVC is not supported.</li>
@@ -111,7 +111,6 @@
 <p>The bundled C seed still runs build commands through a shell. Paths containing special shell characters may cause problems. The primary Jik compiler passes program arguments directly, without a shell.</p>
 <h2 id="memory">Memory</h2>
 <ul>
-  <li>Very large allocations can make size calculations wrap around. These cases are not fully checked.</li>
   <li>Region memory may not meet the alignment needed by some C types.</li>
 </ul>
 

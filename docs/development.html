@@ -128,9 +128,9 @@ make help                  # Show available build commands</code></pre>
 <p>Compiler executables stay at the repository root and use the checkout's <code>jiklib/</code>, <code>support/</code>, and <code>docs/</code> directly. CLI builds clean up their temporary C automatically. New language features belong in <code>src/jik/</code>; the bootstrap strategy can be revisited if the seed can no longer build the compiler.</p>
 <h2 id="release-builds">Release builds</h2>
 <p><code>make release</code> performs the full bootstrap above and stages the exact tested stage-2 compiler as <code>release/jik</code> (<code>release/jik.exe</code> on Windows). The development compiler is built by the C seed with default optimization; the release compiler is built by the self-hosted stage-1 compiler with <code>-O3</code> and receives full self-hosting verification. Both implement the same language.</p>
-<p><code>make release-archive VERSION=v0.1.0-beta.0</code> performs the same checks and creates an archive in <code>artifacts/</code>, containing the stage-2 executable named <code>jik</code>/<code>jik.exe</code>, <code>LICENSE</code>, <code>jiklib/</code>, <code>support/</code>, <code>docs/</code>, and <code>examples/</code>. Stage 3 verifies self-hosting; it is not distributed.</p>
+<p><code>make release-archive VERSION=...</code>, with <code>VERSION</code> set to the release tag including its leading <code>v</code>, performs the same checks and creates an archive in <code>artifacts/</code>, containing the stage-2 executable named <code>jik</code>/<code>jik.exe</code>, <code>LICENSE</code>, <code>jiklib/</code>, <code>support/</code>, <code>docs/</code>, and <code>examples/</code>. Stage 3 verifies self-hosting; it is not distributed.</p>
 <h2 id="roadmap">Roadmap</h2>
-<h3 id="0-1-0-beta-0">0.1.0-beta.0</h3>
+<h3 id="beta-series">Beta series</h3>
 <ul>
   <li>Keep the intended language syntax stable.</li>
   <li>Find and fix compiler and support-library issues.</li>

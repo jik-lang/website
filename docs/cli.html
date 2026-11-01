@@ -105,7 +105,13 @@
 <p>Run <code>jik help</code> to list available commands, or <code>jik help &lt;topic&gt;</code> to show help for a command, language topic, or standard library entry.</p>
 <p>Command arguments come before command options. For example, use <code>jik run hello.jik --cc clang</code>.</p>
 <h2 id="commands">Commands</h2>
-<h3 id="jik-run"><code>jik run &lt;filepath&gt;</code></h3>
+<h3 id="jik-new"><code>jik new &lt;directory&gt;</code></h3>
+<p>Create a minimal project containing <code>src/&lt;project-name&gt;.jik</code>, <code>.gitignore</code>, and <code>README.md</code>. The source filename uses the destination directory's name. The destination must not exist, and its parent directory must already exist. Git is not required and no Git repository is initialized.</p>
+<pre><code class="language-sh">jik new my-project
+cd my-project
+jik run src/my-project.jik</code></pre>
+<p>The README describes how to run, check, and build the program. The <code>.gitignore</code> excludes the generated executable and C files alongside the source in <code>src/</code>.</p>
+<h3 id="jik-run-options"><code>jik run &lt;filepath&gt; [options] [-- &lt;args&gt;...]</code></h3>
 <p>Translate a Jik source file to C, compile it with the selected C compiler, run the executable, and then remove the temporary build files.</p>
 <p>Options:</p>
 <ul>
@@ -119,7 +125,9 @@
   <li><code>--verbose</code>: Print detailed pipeline status information.</li>
 </ul>
 <p>Example:</p>
-<pre><code class="language-sh">jik run hello.jik --cc clang</code></pre>
+<pre><code class="language-sh">jik run hello.jik --cc clang
+jik run hello.jik --cc clang -- &quot;hello world&quot; --verbose</code></pre>
+<p>Arguments after <code>--</code> are passed unchanged to the program, including empty strings and values beginning with <code>-</code>. Put compiler options before <code>--</code>. The program's <code>main(args)</code> receives the executable path at index 0, followed by these arguments.</p>
 <p><code>--region-tree</code> draws one row per runtime region. Region IDs show creation order, and indentation shows nested lifetimes:</p>
 <pre><code class="language-text">R1 examples/hello::main.local
   R2 src/parser::parse.local</code></pre>
@@ -169,6 +177,27 @@
 </ul>
 <p>Example:</p>
 <pre><code class="language-sh">jik check hello.jik</code></pre>
+<h3 id="jik-test-input-options"><code>jik test [input] [options]</code></h3>
+<p>Discover, build, and run tests. Input defaults to the current directory. Directories are searched recursively for <code>test_*.jik</code> files; an explicitly selected <code>.jik</code> file may have any name.</p>
+<p>Tests are top-level <code>test_*</code> functions taking exactly one <code>jik/testing::TestSuite</code> parameter, returning <code>void</code>, and declared without <code>throws</code>. Types may be inferred:</p>
+<pre><code class="language-jik">use &quot;jik/testing&quot; as testing
+
+func test_addition(suite):
+    testing::suite_assert(suite, 2 + 2 == 4, site())
+end</code></pre>
+<pre><code class="language-sh">jik test
+jik test tests
+jik test tests/math_spec.jik
+jik test tests --list
+jik test tests --emit-suite suite.jik</code></pre>
+<p>Options:</p>
+<ul>
+  <li><code>--list</code>: Print discovered module/function names and totals, then stop.</li>
+  <li><code>--emit-suite &lt;file&gt;</code>: Write the generated runner, then stop. The destination must not exist. The runner references the original source files and can be executed with <code>jik run &lt;file&gt;</code>.</li>
+  <li>Compiler and runtime options are the same as for <code>jik run</code>, including <code>--cc</code>, <code>--release</code>, and <code>--verbose</code>.</li>
+</ul>
+<p><code>--list</code> and <code>--emit-suite</code> are mutually exclusive and need no C compiler. Type and region checks occur when the suite is compiled.</p>
+<p>Files run in relative path order, with functions in declaration order. Tests inherit the current working directory. Discovery skips linked directories, rejects a linked directory input, and stays within the selected input rather than expanding to imported dependencies. Temporary build files are cleaned up on completion or failure.</p>
 <h3 id="jik-env"><code>jik env</code></h3>
 <p>Print resolved Jik configuration values as <code>key=value</code> lines, including the Jik version, platform, root directory, <code>jiklib</code> path, package path, support include path, selected C compiler, its reported target, and Jik's normalized compiler profile.</p>
 <p>Example:</p>
